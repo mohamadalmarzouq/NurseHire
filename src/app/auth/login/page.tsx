@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,19 +31,31 @@ export default function LoginPage() {
       })
 
       const data = await response.json()
+      console.log('Login response:', data)
+      console.log('Response status:', response.status)
 
       if (data.success) {
         // Save user data to localStorage for dashboard display
         localStorage.setItem('user', JSON.stringify(data.user))
-        // Redirect based on user role
-        if (data.user.role === 'ADMIN') {
-          router.push('/admin/dashboard')
-        } else if (data.user.role === 'NURSE') {
-          router.push('/nurse/dashboard')
-        } else {
-          router.push('/mother/dashboard')
-        }
+        console.log('Redirecting to dashboard for role:', data.user.role)
+        
+        setSuccess(true)
+        
+        // Redirect based on user role with a small delay to show success message
+        setTimeout(() => {
+          if (data.user.role === 'ADMIN') {
+            console.log('Redirecting to admin dashboard')
+            router.push('/admin/dashboard')
+          } else if (data.user.role === 'NURSE') {
+            console.log('Redirecting to nurse dashboard')
+            router.push('/nurse/dashboard')
+          } else {
+            console.log('Redirecting to mother dashboard')
+            router.push('/mother/dashboard')
+          }
+        }, 1000)
       } else {
+        console.error('Login failed:', data.error)
         setError(data.error || 'Login failed')
       }
     } catch (error) {
@@ -82,6 +95,15 @@ export default function LoginPage() {
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
                 {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg text-sm">
+                <div className="flex items-center">
+                  <div className="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
+                  Login successful! Redirecting to your dashboard...
+                </div>
               </div>
             )}
 
