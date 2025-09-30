@@ -173,7 +173,7 @@ export default function NurseProfilePage() {
             {/* Profile Header */}
             <div className="card">
               <div className="flex items-start space-x-6">
-                <div className="w-24 h-24 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-24 h-24 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
                   {nurse.profileImageUrl ? (
                     <img
                       src={nurse.profileImageUrl}

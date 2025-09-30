@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Heart, Upload, CheckCircle, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Heart, CheckCircle, AlertCircle } from 'lucide-react'
+import FileUpload from '@/components/FileUpload'
 
 export default function NurseRegisterPage() {
   const [formData, setFormData] = useState({
@@ -18,7 +19,8 @@ export default function NurseRegisterPage() {
     languages: [] as string[],
     availability: [] as string[],
   })
-  const [cvFile, setCvFile] = useState<File | null>(null)
+  const [cvFile, setCvFile] = useState<string>('')
+  const [profileImage, setProfileImage] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -43,6 +45,8 @@ export default function NurseRegisterPage() {
           role: 'NURSE',
           email: 'nurse@example.com', // This would come from auth
           password: 'password123', // This would come from auth
+          cvUrl: cvFile,
+          profileImageUrl: profileImage,
         }),
       })
 
@@ -79,10 +83,20 @@ export default function NurseRegisterPage() {
     }))
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setCvFile(e.target.files[0])
-    }
+  const handleCvUpload = (fileUrl: string, fileName: string) => {
+    setCvFile(fileUrl)
+  }
+
+  const handleProfileImageUpload = (fileUrl: string, fileName: string) => {
+    setProfileImage(fileUrl)
+  }
+
+  const handleRemoveCv = () => {
+    setCvFile('')
+  }
+
+  const handleRemoveProfileImage = () => {
+    setProfileImage('')
   }
 
   if (success) {
@@ -308,36 +322,31 @@ export default function NurseRegisterPage() {
               />
             </div>
 
+            {/* Profile Image Upload */}
+            <div>
+              <FileUpload
+                label="Profile Image (Optional)"
+                description="Upload a professional photo"
+                accept=".jpg,.jpeg,.png,.webp"
+                maxSize={2 * 1024 * 1024} // 2MB
+                onFileSelect={handleProfileImageUpload}
+                currentFile={profileImage}
+                onRemove={handleRemoveProfileImage}
+              />
+            </div>
+
             {/* CV Upload */}
             <div>
-              <label className="label">CV Upload *</label>
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-neutral-300 rounded-lg hover:border-neutral-400 transition-colors">
-                <div className="space-y-1 text-center">
-                  <Upload className="mx-auto h-12 w-12 text-neutral-400" />
-                  <div className="flex text-sm text-neutral-600">
-                    <label htmlFor="cv-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-primary-600 hover:text-primary-500 focus-within:outline-none">
-                      <span>Upload CV</span>
-                      <input
-                        id="cv-upload"
-                        name="cv-upload"
-                        type="file"
-                        accept=".pdf,.doc,.docx"
-                        onChange={handleFileChange}
-                        className="sr-only"
-                        required
-                      />
-                    </label>
-                    <p className="pl-1">or drag and drop</p>
-                  </div>
-                  <p className="text-xs text-neutral-500">PDF, DOC, DOCX up to 10MB</p>
-                </div>
-              </div>
-              {cvFile && (
-                <p className="mt-2 text-sm text-green-600 flex items-center">
-                  <CheckCircle className="w-4 h-4 mr-1" />
-                  {cvFile.name} selected
-                </p>
-              )}
+              <FileUpload
+                label="CV Upload *"
+                description="Upload your CV or resume"
+                accept=".pdf,.doc,.docx"
+                maxSize={5 * 1024 * 1024} // 5MB
+                onFileSelect={handleCvUpload}
+                currentFile={cvFile}
+                onRemove={handleRemoveCv}
+                required
+              />
             </div>
 
             {/* Terms */}

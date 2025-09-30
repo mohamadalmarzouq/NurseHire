@@ -238,7 +238,7 @@ export default function NursesPage() {
                 {filteredNurses.map((nurse) => (
                   <div key={nurse.id} className="card-hover">
                     <div className="flex items-start space-x-4 mb-4">
-                      <div className="w-16 h-16 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-16 h-16 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
                         {nurse.profileImageUrl ? (
                           <img
                             src={nurse.profileImageUrl}
