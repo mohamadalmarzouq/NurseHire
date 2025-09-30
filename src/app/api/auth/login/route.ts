@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json()
+    console.log('Login attempt for:', email)
 
     if (!email || !password) {
       return NextResponse.json(
@@ -14,6 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     const user = await authenticateUser(email, password)
+    console.log('Authentication result:', user ? 'success' : 'failed')
 
     if (!user) {
       return NextResponse.json(

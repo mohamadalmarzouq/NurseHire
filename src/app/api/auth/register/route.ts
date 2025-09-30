@@ -9,21 +9,31 @@ export async function POST(request: NextRequest) {
     console.log('Registration request body:', body)
     
     // Validate common fields
-    const base = baseRegisterSchema.parse(body)
+    let base
+    try {
+      base = baseRegisterSchema.parse(body)
+    } catch (error: any) {
+      console.error('Validation error:', error.errors)
+      return NextResponse.json(
+        { error: 'Invalid input data: ' + error.errors?.map((e: any) => e.message).join(', ') },
+        { status: 400 }
+      )
+    }
+    
     const { email, password, role, name, confirmPassword } = base
     
     // Validate role-specific payload and build profileData
     let profileData: any = {}
-    if (role === 'MOTHER') {
-      profileData = motherProfileSchema.parse(body)
-    } else if (role === 'NURSE') {
-      profileData = nurseProfileSchema.parse(body)
-    }
-
-    if (!email || !password || !role || !name) {
-      console.log('Missing required fields:', { email: !!email, password: !!password, role: !!role, name: !!name })
+    try {
+      if (role === 'MOTHER') {
+        profileData = motherProfileSchema.parse(body)
+      } else if (role === 'NURSE') {
+        profileData = nurseProfileSchema.parse(body)
+      }
+    } catch (error: any) {
+      console.error('Profile validation error:', error.errors)
       return NextResponse.json(
-        { error: 'Email, password, role, and name are required' },
+        { error: 'Invalid profile data: ' + error.errors?.map((e: any) => e.message).join(', ') },
         { status: 400 }
       )
     }
