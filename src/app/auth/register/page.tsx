@@ -33,6 +33,7 @@ export default function RegisterPage() {
     }
 
     try {
+      console.log('Sending registration data:', formData)
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
@@ -42,6 +43,7 @@ export default function RegisterPage() {
       })
 
       const data = await response.json()
+      console.log('Registration response:', data)
 
       if (data.success) {
         // Redirect based on user role
@@ -53,9 +55,11 @@ export default function RegisterPage() {
           router.push('/mother/dashboard')
         }
       } else {
+        console.error('Registration failed:', data.error)
         setError(data.error || 'Registration failed')
       }
     } catch (error) {
+      console.error('Registration error:', error)
       setError('Something went wrong. Please try again.')
     } finally {
       setIsLoading(false)

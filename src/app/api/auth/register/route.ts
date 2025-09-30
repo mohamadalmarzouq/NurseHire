@@ -4,9 +4,13 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password, role, name, confirmPassword, ...profileData } = await request.json()
+    const body = await request.json()
+    console.log('Registration request body:', body)
+    
+    const { email, password, role, name, confirmPassword, ...profileData } = body
 
     if (!email || !password || !role || !name) {
+      console.log('Missing required fields:', { email: !!email, password: !!password, role: !!role, name: !!name })
       return NextResponse.json(
         { error: 'Email, password, role, and name are required' },
         { status: 400 }
