@@ -28,14 +28,13 @@ export default function LoginPage() {
 
       if (data.success) {
         console.log('Login successful, role:', data.user.role)
-        // Redirect based on role
+        // Redirect based on role - use replace for a clean redirect
         const path = data.user.role === 'ADMIN' ? '/admin/dashboard' 
           : data.user.role === 'NURSE' ? '/nurse/dashboard' 
           : '/mother/dashboard'
         
         console.log('Redirecting to:', path)
-        alert('Login successful! Redirecting to ' + path)
-        window.location.href = path
+        window.location.replace(path)
       } else {
         console.error('Login failed:', data.error)
         setError(data.error || 'Login failed')
