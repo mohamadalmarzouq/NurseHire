@@ -13,7 +13,7 @@ export default function HomePage() {
               <span className="text-gradient">Kuwait</span>
             </h1>
             <p className="text-xl text-neutral-600 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Connect with qualified, vetted nurses for your newborn's care. 
+              Connect with qualified, vetted nurses for your newborn&apos;s care. 
               Safe, professional, and caring service you can trust.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -38,7 +38,7 @@ export default function HomePage() {
                 <Shield className="w-6 h-6 text-primary-600" />
               </div>
               <h3 className="font-semibold text-lg">MOH License Verified</h3>
-              <p className="text-neutral-600 text-sm">All nurses are licensed and verified by Kuwait's Ministry of Health</p>
+              <p className="text-neutral-600 text-sm">All nurses are licensed and verified by Kuwait&apos;s Ministry of Health</p>
             </div>
             <div className="flex flex-col items-center space-y-3">
               <div className="w-12 h-12 bg-secondary-100 rounded-full flex items-center justify-center">
@@ -144,7 +144,7 @@ export default function HomePage() {
               <div className="text-center">
                 <Heart className="w-16 h-16 text-primary-600 mx-auto mb-6" />
                 <h3 className="text-2xl font-bold text-neutral-900 mb-4">
-                  Your Baby's Safety is Our Priority
+                  Your Baby&apos;s Safety is Our Priority
                 </h3>
                 <p className="text-neutral-600 text-lg">
                   Every nurse on our platform is carefully vetted to ensure your newborn receives the best possible care.
