@@ -13,6 +13,8 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
+    console.log('Login form submitted with:', { email: formData.email })
+
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
@@ -20,20 +22,27 @@ export default function LoginPage() {
         body: JSON.stringify(formData),
       })
 
+      console.log('Login response status:', res.status)
       const data = await res.json()
+      console.log('Login response data:', data)
 
       if (data.success) {
+        console.log('Login successful, role:', data.user.role)
         // Redirect based on role
         const path = data.user.role === 'ADMIN' ? '/admin/dashboard' 
           : data.user.role === 'NURSE' ? '/nurse/dashboard' 
           : '/mother/dashboard'
         
+        console.log('Redirecting to:', path)
+        alert('Login successful! Redirecting to ' + path)
         window.location.href = path
       } else {
+        console.error('Login failed:', data.error)
         setError(data.error || 'Login failed')
         setLoading(false)
       }
     } catch (err) {
+      console.error('Login exception:', err)
       setError('Something went wrong')
       setLoading(false)
     }
