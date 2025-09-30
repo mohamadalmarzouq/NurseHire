@@ -9,53 +9,22 @@ export default function MotherDashboard() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Get user data from localStorage or API
-    const getUserData = async () => {
+    const loadUser = async () => {
       try {
-        // Check if user is logged in by looking for auth token
-        const token = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('auth-token='))
-          ?.split('=')[1]
-
-        if (token) {
-          // In a real app, you'd validate the token and get user data from API
-          // For now, we'll get it from localStorage or show a default
-          const savedUser = localStorage.getItem('user')
-          if (savedUser) {
-            setUser(JSON.parse(savedUser))
-          } else {
-            // Fallback to mock data if no saved user
-            setUser({
-              name: 'Mother',
-              email: 'mother@example.com',
-              profile: {
-                name: 'Mother User',
-                phone: 'Not set',
-                location: 'Not set'
-              }
-            })
-          }
-        } else {
-          // No token, redirect to login
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (!res.ok) {
           window.location.href = '/auth/login'
+          return
         }
-      } catch (error) {
-        console.error('Error getting user data:', error)
-        setUser({
-          name: 'Mother',
-          email: 'mother@example.com',
-          profile: {
-            name: 'Mother User',
-            phone: 'Not set',
-            location: 'Not set'
-          }
-        })
+        const data = await res.json()
+        if (data?.authenticated) setUser(data.user)
+      } catch (e) {
+        console.error(e)
+      } finally {
+        setIsLoading(false)
       }
-      setIsLoading(false)
     }
-
-    getUserData()
+    loadUser()
   }, [])
 
   if (isLoading) {

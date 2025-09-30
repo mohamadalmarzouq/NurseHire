@@ -1,13 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { hashPassword, generateToken } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { baseRegisterSchema, motherProfileSchema, nurseProfileSchema } from '@/lib/validation'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     console.log('Registration request body:', body)
     
-    const { email, password, role, name, confirmPassword, ...profileData } = body
+    // Validate common fields
+    const base = baseRegisterSchema.parse(body)
+    const { email, password, role, name, confirmPassword } = base
+    
+    // Validate role-specific payload and build profileData
+    let profileData: any = {}
+    if (role === 'MOTHER') {
+      profileData = motherProfileSchema.parse(body)
+    } else if (role === 'NURSE') {
+      profileData = nurseProfileSchema.parse(body)
+    }
 
     if (!email || !password || !role || !name) {
       console.log('Missing required fields:', { email: !!email, password: !!password, role: !!role, name: !!name })
