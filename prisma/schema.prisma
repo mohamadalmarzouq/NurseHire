@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  MOTHER
+  NURSE
+  ADMIN
+}
+
+enum NurseStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum BookingStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      UserRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  motherProfile MotherProfile?
+  nurseProfile  NurseProfile?
+  adminProfile  AdminProfile?
+
+  // Chat relations
+  sentMessages     Message[] @relation("MessageSender")
+  receivedMessages Message[] @relation("MessageReceiver")
+
+  // Booking relations
+  sentBookings     Booking[] @relation("BookingRequester")
+  receivedBookings Booking[] @relation("BookingNurse")
+
+  // Review relations
+  reviewsGiven   Review[] @relation("ReviewGiver")
+  reviewsReceived Review[] @relation("ReviewReceiver")
+
+  @@map("users")
+}
+
+model MotherProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  name      String
+  phone     String?
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("mother_profiles")
+}
+
+model NurseProfile {
+  id                    String      @id @default(cuid())
+  userId                String      @unique
+  name                  String
+  age                   Int
+  totalExperience       Int
+  kuwaitExperience      Int
+  partTimeSalary        Int
+  nightShiftSalary      Int
+  aboutMe               String?
+  cvUrl                 String?
+  profileImageUrl       String?
+  status                NurseStatus @default(PENDING)
+  languages             String[]    @default([])
+  availability          String[]    @default([])
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("nurse_profiles")
+}
+
+model AdminProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("admin_profiles")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  senderId  String
+  receiverId String
+  content   String
+  fileUrl   String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  sender   User @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model Booking {
+  id          String        @id @default(cuid())
+  requesterId String
+  nurseId     String
+  status      BookingStatus @default(PENDING)
+  message     String?
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  requester User @relation("BookingRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  nurse     User @relation("BookingNurse", fields: [nurseId], references: [id], onDelete: Cascade)
+
+  @@map("bookings")
+}
+
+model Review {
+  id          String @id @default(cuid())
+  giverId     String
+  receiverId  String
+  appearance  Int    // 1-5 stars
+  attitude    Int    // 1-5 stars
+  knowledge   Int    // 1-5 stars
+  hygiene     Int    // 1-5 stars
+  salary      Int    // 1-5 stars
+  comment     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  giver    User @relation("ReviewGiver", fields: [giverId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReviewReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@unique([giverId, receiverId])
+  @@map("reviews")
+}
