@@ -19,6 +19,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,14 +47,19 @@ export default function RegisterPage() {
       console.log('Registration response:', data)
 
       if (data.success) {
-        // Redirect based on user role
-        if (data.user.role === 'ADMIN') {
-          router.push('/admin/dashboard')
-        } else if (data.user.role === 'NURSE') {
-          router.push('/nurse/dashboard')
-        } else {
-          router.push('/mother/dashboard')
-        }
+        // Save user data to localStorage for dashboard display
+        localStorage.setItem('user', JSON.stringify(data.user))
+        setSuccess(true)
+        // Redirect after a short delay to show success message
+        setTimeout(() => {
+          if (data.user.role === 'ADMIN') {
+            router.push('/admin/dashboard')
+          } else if (data.user.role === 'NURSE') {
+            router.push('/nurse/dashboard')
+          } else {
+            router.push('/mother/dashboard')
+          }
+        }, 2000)
       } else {
         console.error('Registration failed:', data.error)
         setError(data.error || 'Registration failed')
@@ -121,6 +127,15 @@ export default function RegisterPage() {
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
                 {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg text-sm">
+                <div className="flex items-center">
+                  <div className="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
+                  Account created successfully! Redirecting to your dashboard...
+                </div>
               </div>
             )}
 

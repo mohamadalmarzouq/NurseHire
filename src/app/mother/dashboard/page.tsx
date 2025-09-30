@@ -9,17 +9,53 @@ export default function MotherDashboard() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // In a real app, you'd get this from auth context or API
-    setUser({
-      name: 'Sarah',
-      email: 'sarah@example.com',
-      profile: {
-        name: 'Sarah Johnson',
-        phone: '+965 1234 5678',
-        location: 'Kuwait City'
+    // Get user data from localStorage or API
+    const getUserData = async () => {
+      try {
+        // Check if user is logged in by looking for auth token
+        const token = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('auth-token='))
+          ?.split('=')[1]
+
+        if (token) {
+          // In a real app, you'd validate the token and get user data from API
+          // For now, we'll get it from localStorage or show a default
+          const savedUser = localStorage.getItem('user')
+          if (savedUser) {
+            setUser(JSON.parse(savedUser))
+          } else {
+            // Fallback to mock data if no saved user
+            setUser({
+              name: 'Mother',
+              email: 'mother@example.com',
+              profile: {
+                name: 'Mother User',
+                phone: 'Not set',
+                location: 'Not set'
+              }
+            })
+          }
+        } else {
+          // No token, redirect to login
+          window.location.href = '/auth/login'
+        }
+      } catch (error) {
+        console.error('Error getting user data:', error)
+        setUser({
+          name: 'Mother',
+          email: 'mother@example.com',
+          profile: {
+            name: 'Mother User',
+            phone: 'Not set',
+            location: 'Not set'
+          }
+        })
       }
-    })
-    setIsLoading(false)
+      setIsLoading(false)
+    }
+
+    getUserData()
   }, [])
 
   if (isLoading) {
@@ -46,6 +82,9 @@ export default function MotherDashboard() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-700">Welcome, {user?.profile?.name || 'Mother'}!</span>
+              <Link href="/auth/login" className="text-primary-600 hover:text-primary-700 font-medium">
+                Sign In
+              </Link>
               <button className="text-gray-500 hover:text-gray-700">
                 <Settings className="w-5 h-5" />
               </button>
