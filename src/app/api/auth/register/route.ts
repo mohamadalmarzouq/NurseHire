@@ -26,9 +26,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    })
+    let existingUser
+    try {
+      existingUser = await prisma.user.findUnique({
+        where: { email },
+      })
+    } catch (dbError) {
+      console.error('Database error checking existing user:', dbError)
+      return NextResponse.json(
+        { error: 'Database connection error. Please try again.' },
+        { status: 500 }
+      )
+    }
 
     if (existingUser) {
       return NextResponse.json(
@@ -41,45 +50,54 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await hashPassword(password)
 
     // Create user and profile in a transaction
-    const result = await prisma.$transaction(async (tx) => {
-      // Create user
-      const user = await tx.user.create({
-        data: {
-          email,
-          password: hashedPassword,
-          role,
-        },
+    let result
+    try {
+      result = await prisma.$transaction(async (tx) => {
+        // Create user
+        const user = await tx.user.create({
+          data: {
+            email,
+            password: hashedPassword,
+            role,
+          },
+        })
+
+        // Create profile based on role
+        let profile
+        if (role === 'MOTHER') {
+          profile = await tx.motherProfile.create({
+            data: {
+              userId: user.id,
+              name,
+              ...profileData,
+            },
+          })
+        } else if (role === 'NURSE') {
+          profile = await tx.nurseProfile.create({
+            data: {
+              userId: user.id,
+              name,
+              ...profileData,
+            },
+          })
+        } else if (role === 'ADMIN') {
+          profile = await tx.adminProfile.create({
+            data: {
+              userId: user.id,
+              name,
+            },
+          })
+        }
+
+        return { user, profile }
       })
-
-      // Create profile based on role
-      let profile
-      if (role === 'MOTHER') {
-        profile = await tx.motherProfile.create({
-          data: {
-            userId: user.id,
-            name,
-            ...profileData,
-          },
-        })
-      } else if (role === 'NURSE') {
-        profile = await tx.nurseProfile.create({
-          data: {
-            userId: user.id,
-            name,
-            ...profileData,
-          },
-        })
-      } else if (role === 'ADMIN') {
-        profile = await tx.adminProfile.create({
-          data: {
-            userId: user.id,
-            name,
-          },
-        })
-      }
-
-      return { user, profile }
-    })
+    } catch (dbError) {
+      console.error('Database error creating user:', dbError)
+      return NextResponse.json(
+        { error: 'Failed to create account. Please try again.' },
+        { status: 500 }
+      )
+    }
 
     const token = generateToken({
       id: result.user.id,
