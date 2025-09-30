@@ -32,6 +32,8 @@ export default function LoginPage() {
       const data = await response.json()
 
       if (data.success) {
+        // Save user data to localStorage for dashboard display
+        localStorage.setItem('user', JSON.stringify(data.user))
         // Redirect based on user role
         if (data.user.role === 'ADMIN') {
           router.push('/admin/dashboard')
