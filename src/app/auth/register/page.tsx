@@ -31,7 +31,6 @@ export default function RegisterPage() {
       const data = await res.json()
 
       if (data.success) {
-        // Redirect based on role
         const path = data.user.role === 'ADMIN' ? '/admin/dashboard' 
           : data.user.role === 'NURSE' ? '/nurse/dashboard' 
           : '/mother/dashboard'
@@ -61,7 +60,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              I am a...
+              I am a *
             </label>
             <select
               required
@@ -78,7 +77,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
+              Full Name *
             </label>
             <input
               type="text"
@@ -91,7 +90,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              Email *
             </label>
             <input
               type="email"
@@ -104,7 +103,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+              Password *
             </label>
             <input
               type="password"
@@ -117,7 +116,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password
+              Confirm Password *
             </label>
             <input
               type="password"
@@ -158,7 +157,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Creating account...' : 'Create Account'}
           </button>
