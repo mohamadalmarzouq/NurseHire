@@ -41,26 +41,27 @@ export default function LoginPage() {
         
         setSuccess(true)
         
-        // Redirect based on user role with a small delay to show success message
+        // Redirect based on user role
+        const redirectPath = data.user.role === 'ADMIN' 
+          ? '/admin/dashboard' 
+          : data.user.role === 'NURSE' 
+          ? '/nurse/dashboard' 
+          : '/mother/dashboard'
+        
+        console.log('Redirecting to:', redirectPath)
+        
+        // Use window.location for a hard redirect to ensure it works
         setTimeout(() => {
-          if (data.user.role === 'ADMIN') {
-            console.log('Redirecting to admin dashboard')
-            router.push('/admin/dashboard')
-          } else if (data.user.role === 'NURSE') {
-            console.log('Redirecting to nurse dashboard')
-            router.push('/nurse/dashboard')
-          } else {
-            console.log('Redirecting to mother dashboard')
-            router.push('/mother/dashboard')
-          }
+          window.location.href = redirectPath
         }, 1000)
       } else {
         console.error('Login failed:', data.error)
         setError(data.error || 'Login failed')
+        setIsLoading(false)
       }
     } catch (error) {
+      console.error('Login error:', error)
       setError('Something went wrong. Please try again.')
-    } finally {
       setIsLoading(false)
     }
   }
