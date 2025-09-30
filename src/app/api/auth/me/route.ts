@@ -14,12 +14,17 @@ export async function GET(request: NextRequest) {
     
     if (!payload) return NextResponse.json({ authenticated: false }, { status: 401 })
 
-    const user = await prisma.user.findUnique({
-      where: { id: payload.id },
-      include: { motherProfile: true, nurseProfile: true, adminProfile: true },
-    })
-
-    console.log('User found:', user ? 'yes' : 'no')
+    let user
+    try {
+      user = await prisma.user.findUnique({
+        where: { id: payload.id },
+        include: { motherProfile: true, nurseProfile: true, adminProfile: true },
+      })
+      console.log('User found:', user ? 'yes' : 'no')
+    } catch (dbError) {
+      console.error('Database error in auth me:', dbError)
+      return NextResponse.json({ authenticated: false, error: 'Database error' }, { status: 500 })
+    }
 
     if (!user) return NextResponse.json({ authenticated: false }, { status: 401 })
 

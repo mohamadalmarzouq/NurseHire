@@ -11,15 +11,28 @@ export default function MotherDashboard() {
   useEffect(() => {
     const loadUser = async () => {
       try {
+        console.log('Loading user from /api/auth/me...')
         const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        console.log('Auth me response status:', res.status)
+        
         if (!res.ok) {
+          console.log('Auth me failed, redirecting to login')
           window.location.href = '/auth/login'
           return
         }
+        
         const data = await res.json()
-        if (data?.authenticated) setUser(data.user)
+        console.log('Auth me data:', data)
+        
+        if (data?.authenticated) {
+          setUser(data.user)
+        } else {
+          console.log('Not authenticated, redirecting to login')
+          window.location.href = '/auth/login'
+        }
       } catch (e) {
-        console.error(e)
+        console.error('Error loading user:', e)
+        window.location.href = '/auth/login'
       } finally {
         setIsLoading(false)
       }

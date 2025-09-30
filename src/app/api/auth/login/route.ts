@@ -29,6 +29,9 @@ export async function POST(request: NextRequest) {
       email: user.email,
       role: user.role,
     })
+    
+    console.log('Generated token for user:', user.id)
+    console.log('JWT_SECRET present:', !!process.env.JWT_SECRET)
 
     const response = NextResponse.json({
       success: true,
@@ -47,6 +50,8 @@ export async function POST(request: NextRequest) {
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60, // 7 days
     })
+    
+    console.log('Cookie set successfully')
 
     return response
   } catch (error) {
