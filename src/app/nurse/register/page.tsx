@@ -8,6 +8,9 @@ import FileUpload from '@/components/FileUpload'
 
 export default function NurseRegisterPage() {
   const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
     name: '',
     age: '',
     totalExperience: '',
@@ -34,6 +37,12 @@ export default function NurseRegisterPage() {
     setIsLoading(true)
     setError('')
 
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match')
+      setIsLoading(false)
+      return
+    }
+
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -43,8 +52,6 @@ export default function NurseRegisterPage() {
         body: JSON.stringify({
           ...formData,
           role: 'NURSE',
-          email: 'nurse@example.com', // This would come from auth
-          password: 'password123', // This would come from auth
           cvUrl: cvFile,
           profileImageUrl: profileImage,
         }),
@@ -159,6 +166,49 @@ export default function NurseRegisterPage() {
                 {error}
               </div>
             )}
+
+            {/* Account Information */}
+            <div>
+              <h3 className="text-lg font-semibold text-neutral-900 mb-4">Account Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="label">Email Address *</label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="input-field"
+                    placeholder="Enter your email"
+                  />
+                </div>
+                <div>
+                  <label className="label">Password *</label>
+                  <input
+                    type="password"
+                    name="password"
+                    required
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="input-field"
+                    placeholder="Create a password"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="label">Confirm Password *</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    required
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="input-field"
+                    placeholder="Confirm your password"
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* Personal Information */}
             <div>

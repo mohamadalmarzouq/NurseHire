@@ -4,11 +4,19 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password, role, name, ...profileData } = await request.json()
+    const { email, password, role, name, confirmPassword, ...profileData } = await request.json()
 
     if (!email || !password || !role || !name) {
       return NextResponse.json(
         { error: 'Email, password, role, and name are required' },
+        { status: 400 }
+      )
+    }
+
+    // Validate password confirmation
+    if (password !== confirmPassword) {
+      return NextResponse.json(
+        { error: 'Passwords do not match' },
         { status: 400 }
       )
     }
