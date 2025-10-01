@@ -83,9 +83,15 @@ export default function MotherBookingsPage() {
               <Link href="/mother/dashboard" className="text-gray-600 hover:text-gray-900">
                 Dashboard
               </Link>
-              <Link href="/auth/login" className="text-primary-600 hover:text-primary-700 font-medium">
-                Sign In
-              </Link>
+              <button 
+                onClick={() => {
+                  document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+                  window.location.href = '/auth/login'
+                }}
+                className="text-red-500 hover:text-red-700 text-sm"
+              >
+                Sign Out
+              </button>
             </div>
           </div>
         </div>
