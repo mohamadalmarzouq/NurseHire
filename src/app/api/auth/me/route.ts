@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     
     if (!cookie) return NextResponse.json({ authenticated: false }, { status: 401 })
 
-    const payload = verifyToken(cookie)
+    const payload = await verifyToken(cookie)
     console.log('Token payload:', payload)
     
     if (!payload) return NextResponse.json({ authenticated: false }, { status: 401 })

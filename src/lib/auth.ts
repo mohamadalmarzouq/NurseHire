@@ -1,8 +1,9 @@
-import jwt from 'jsonwebtoken'
+import { SignJWT, jwtVerify } from 'jose'
 import bcrypt from 'bcryptjs'
 import { prisma } from './prisma'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret'
+const getSecretKey = () => new TextEncoder().encode(JWT_SECRET)
 
 export interface UserPayload {
   id: string
@@ -18,16 +19,24 @@ export async function verifyPassword(password: string, hashedPassword: string): 
   return bcrypt.compare(password, hashedPassword)
 }
 
-export function generateToken(payload: UserPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
+export async function generateToken(payload: UserPayload): Promise<string> {
+  const token = await new SignJWT({ ...payload })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('7d')
+    .sign(getSecretKey())
+  
+  return token
 }
 
-export function verifyToken(token: string): UserPayload | null {
+export async function verifyToken(token: string): Promise<UserPayload | null> {
   try {
-    console.log('Verifying token with secret:', JWT_SECRET?.substring(0, 10) + '...')
-    const verified = jwt.verify(token, JWT_SECRET) as UserPayload
-    console.log('Token verified successfully:', verified)
-    return verified
+    const { payload } = await jwtVerify(token, getSecretKey())
+    return {
+      id: payload.id as string,
+      email: payload.email as string,
+      role: payload.role as 'MOTHER' | 'NURSE' | 'ADMIN',
+    }
   } catch (error) {
     console.error('Token verification failed:', error)
     return null
