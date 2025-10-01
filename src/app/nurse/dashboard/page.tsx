@@ -185,7 +185,11 @@ export default function NurseDashboard() {
                 <Edit className="w-4 h-4 inline mr-1" />
                 Edit Profile
               </Link>
-              <Link href="/nurses/1" className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-center">
+              <Link 
+                href={user?.id ? `/nurses/${user.id}` : '/nurses'} 
+                target="_blank"
+                className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-center"
+              >
                 <Eye className="w-4 h-4 inline mr-1" />
                 View Public
               </Link>

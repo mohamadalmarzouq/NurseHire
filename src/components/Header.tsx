@@ -1,11 +1,31 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
-import { Menu, X, User, Heart, Shield } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Menu, X, User, Heart, Shield, LogOut } from 'lucide-react'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userRole, setUserRole] = useState<string | null>(null)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          if (data?.authenticated) {
+            setIsLoggedIn(true)
+            setUserRole(data.user.role)
+          }
+        }
+      } catch (e) {
+        // Not logged in
+      }
+    }
+    checkAuth()
+  }, [])
 
   return (
     <header className="bg-white shadow-soft sticky top-0 z-50">
@@ -37,12 +57,35 @@ export default function Header() {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/auth/login" className="text-neutral-600 hover:text-primary-600 transition-colors">
-              Sign In
-            </Link>
-            <Link href="/auth/register" className="btn-primary">
-              Get Started
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <Link 
+                  href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'NURSE' ? '/nurse/dashboard' : '/mother/dashboard'}
+                  className="text-neutral-600 hover:text-primary-600 transition-colors"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => {
+                    document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+                    window.location.href = '/'
+                  }}
+                  className="text-red-500 hover:text-red-700 transition-colors flex items-center"
+                >
+                  <LogOut className="w-4 h-4 mr-1" />
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/login" className="text-neutral-600 hover:text-primary-600 transition-colors">
+                  Sign In
+                </Link>
+                <Link href="/auth/register" className="btn-primary">
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -87,20 +130,44 @@ export default function Header() {
                 About
               </Link>
               <div className="border-t border-neutral-200 pt-4 px-4 space-y-2">
-                <Link 
-                  href="/auth/login" 
-                  className="block text-neutral-600 hover:text-primary-600 transition-colors py-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Sign In
-                </Link>
-                <Link 
-                  href="/auth/register" 
-                  className="block btn-primary text-center"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Get Started
-                </Link>
+                {isLoggedIn ? (
+                  <>
+                    <Link 
+                      href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'NURSE' ? '/nurse/dashboard' : '/mother/dashboard'}
+                      className="block text-neutral-600 hover:text-primary-600 transition-colors py-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => {
+                        document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+                        window.location.href = '/'
+                        setIsMenuOpen(false)
+                      }}
+                      className="block w-full text-left text-red-500 hover:text-red-700 transition-colors py-2"
+                    >
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link 
+                      href="/auth/login" 
+                      className="block text-neutral-600 hover:text-primary-600 transition-colors py-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Sign In
+                    </Link>
+                    <Link 
+                      href="/auth/register" 
+                      className="block btn-primary text-center"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Get Started
+                    </Link>
+                  </>
+                )}
               </div>
             </nav>
           </div>
