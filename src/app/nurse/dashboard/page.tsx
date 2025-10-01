@@ -57,7 +57,13 @@ export default function NurseDashboard() {
               <button className="text-gray-500 hover:text-gray-700">
                 <Settings className="w-5 h-5" />
               </button>
-              <button className="text-gray-500 hover:text-gray-700">
+              <button 
+                onClick={() => {
+                  document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+                  window.location.href = '/auth/login'
+                }}
+                className="text-red-500 hover:text-red-700"
+              >
                 <LogOut className="w-5 h-5" />
               </button>
             </div>
@@ -185,14 +191,13 @@ export default function NurseDashboard() {
                 <Edit className="w-4 h-4 inline mr-1" />
                 Edit Profile
               </Link>
-              <Link 
-                href={user?.id ? `/nurses/${user.id}` : '/nurses'} 
-                target="_blank"
-                className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-center"
-              >
-                <Eye className="w-4 h-4 inline mr-1" />
-                View Public
-              </Link>
+                      <Link 
+                        href="/nurse/public-profile"
+                        className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-center"
+                      >
+                        <Eye className="w-4 h-4 inline mr-1" />
+                        View Public
+                      </Link>
             </div>
           </div>
 
