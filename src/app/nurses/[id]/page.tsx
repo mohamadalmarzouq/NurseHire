@@ -40,62 +40,26 @@ export default function NurseProfilePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [showBookingModal, setShowBookingModal] = useState(false)
 
-  // Mock data for demonstration
   useEffect(() => {
-    const mockNurse: Nurse = {
-      id: params.id as string,
-      name: 'Sarah Ahmed',
-      age: 32,
-      totalExperience: 8,
-      kuwaitExperience: 5,
-      partTimeSalary: 25,
-      nightShiftSalary: 35,
-      aboutMe: 'Experienced newborn care specialist with 8 years of experience. I am passionate about providing the best care for your little ones and ensuring their safety and comfort. I have extensive experience in handling newborns, including feeding, bathing, and monitoring their health. I am certified in infant CPR and emergency care, and I stay updated with the latest practices in neonatal care.',
-      averageRating: 4.8,
-      reviewCount: 24,
-      languages: ['English', 'Arabic', 'Hindi'],
-      availability: ['Part-time', 'Night Shift', 'Emergency'],
+    const loadNurseProfile = async () => {
+      try {
+        const res = await fetch(`/api/nurses/${params.id}`, { cache: 'no-store' })
+        if (!res.ok) {
+          setIsLoading(false)
+          return
+        }
+        const data = await res.json()
+        if (data.nurse) {
+          setNurse(data.nurse)
+          setReviews(data.reviews || [])
+        }
+      } catch (e) {
+        console.error('Error loading nurse profile:', e)
+      } finally {
+        setIsLoading(false)
+      }
     }
-
-    const mockReviews: Review[] = [
-      {
-        id: '1',
-        giverName: 'Fatima M.',
-        appearance: 5,
-        attitude: 5,
-        knowledge: 5,
-        hygiene: 5,
-        salary: 4,
-        comment: 'Sarah is absolutely wonderful! She took excellent care of my newborn and was always punctual and professional. Highly recommended!',
-        createdAt: '2024-01-15',
-      },
-      {
-        id: '2',
-        giverName: 'Aisha K.',
-        appearance: 5,
-        attitude: 5,
-        knowledge: 5,
-        hygiene: 5,
-        salary: 5,
-        comment: 'Sarah has been a blessing for our family. Her experience and gentle approach made us feel completely at ease.',
-        createdAt: '2024-01-10',
-      },
-      {
-        id: '3',
-        giverName: 'Mariam A.',
-        appearance: 4,
-        attitude: 5,
-        knowledge: 5,
-        hygiene: 5,
-        salary: 4,
-        comment: 'Professional and caring. Sarah helped us establish a good routine for our baby.',
-        createdAt: '2024-01-05',
-      },
-    ]
-
-    setNurse(mockNurse)
-    setReviews(mockReviews)
-    setIsLoading(false)
+    loadNurseProfile()
   }, [params.id])
 
   const renderStars = (rating: number) => {
