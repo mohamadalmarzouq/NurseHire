@@ -16,6 +16,7 @@ export function middleware(request: NextRequest) {
 
   const token = request.cookies.get('auth-token')?.value
   console.log('Middleware check - pathname:', pathname, 'token present:', !!token)
+  console.log('JWT_SECRET in middleware:', process.env.JWT_SECRET?.substring(0, 10) + '...')
   
   if (!token) {
     console.log('No token, redirecting to login')
