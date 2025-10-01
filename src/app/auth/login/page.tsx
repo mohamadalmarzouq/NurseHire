@@ -37,11 +37,13 @@ export default function LoginPage() {
         window.location.replace(path)
       } else {
         console.error('Login failed:', data.error)
+        alert('Login failed: ' + (data.error || 'Unknown error'))
         setError(data.error || 'Login failed')
         setLoading(false)
       }
     } catch (err) {
       console.error('Login exception:', err)
+      alert('Login error: ' + err)
       setError('Something went wrong')
       setLoading(false)
     }

@@ -37,10 +37,12 @@ export default function RegisterPage() {
         
         window.location.href = path
       } else {
+        alert('Registration failed: ' + (data.error || 'Unknown error'))
         setError(data.error || 'Registration failed')
         setLoading(false)
       }
     } catch (err) {
+      alert('Registration error: ' + err)
       setError('Something went wrong')
       setLoading(false)
     }
