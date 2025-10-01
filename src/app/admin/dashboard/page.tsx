@@ -17,14 +17,21 @@ export default function AdminDashboard() {
   const [pendingNurses, setPendingNurses] = useState<any[]>([])
 
   useEffect(() => {
-    // In a real app, you'd get this from auth context or API
-    setUser({
-      name: 'Admin',
-      email: 'admin@nursehire.com',
-      profile: {
-        name: 'Admin User'
+    const loadUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (!res.ok) {
+          window.location.href = '/auth/login'
+          return
+        }
+        const data = await res.json()
+        if (data?.authenticated) setUser(data.user)
+      } catch (e) {
+        console.error(e)
+        window.location.href = '/auth/login'
       }
-    })
+    }
+    loadUser()
     
     // Mock data - in real app, fetch from API
     setStats({

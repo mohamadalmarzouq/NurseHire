@@ -9,28 +9,23 @@ export default function NurseDashboard() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // In a real app, you'd get this from auth context or API
-    setUser({
-      name: 'Nurse',
-      email: 'nurse@example.com',
-      profile: {
-        name: 'Aisha Al-Rashid',
-        age: 28,
-        totalExperience: 5,
-        kuwaitExperience: 3,
-        partTimeSalary: 25,
-        nightShiftSalary: 35,
-        aboutMe: 'Experienced newborn care specialist with 5 years of experience.',
-        phone: '+965 9876 5432',
-        location: 'Hawalli',
-        languages: ['English', 'Arabic'],
-        availability: ['Part-time', 'Night Shift'],
-        isApproved: false,
-        cvUrl: '/uploads/sample-cv.pdf',
-        profileImageUrl: '/uploads/sample-profile.jpg'
+    const loadUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (!res.ok) {
+          window.location.href = '/auth/login'
+          return
+        }
+        const data = await res.json()
+        if (data?.authenticated) setUser(data.user)
+      } catch (e) {
+        console.error(e)
+        window.location.href = '/auth/login'
+      } finally {
+        setIsLoading(false)
       }
-    })
-    setIsLoading(false)
+    }
+    loadUser()
   }, [])
 
   if (isLoading) {
