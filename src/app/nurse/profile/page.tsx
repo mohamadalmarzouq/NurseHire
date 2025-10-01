@@ -2,12 +2,30 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, User, Save, Edit } from 'lucide-react'
+import { ArrowLeft, User, Save, Edit, LogOut } from 'lucide-react'
 
 export default function NurseProfilePage() {
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    age: '',
+    totalExperience: '',
+    kuwaitExperience: '',
+    partTimeSalary: '',
+    nightShiftSalary: '',
+    aboutMe: '',
+    phone: '',
+    location: '',
+    languages: [] as string[],
+    availability: [] as string[],
+  })
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const languageOptions = ['English', 'Arabic', 'Hindi', 'Urdu', 'Filipino', 'Bengali', 'Malayalam', 'Tamil']
+  const availabilityOptions = ['Part-time', 'Night Shift', 'Emergency', 'Weekends', 'Full-time']
 
   useEffect(() => {
     const loadUser = async () => {
@@ -18,7 +36,23 @@ export default function NurseProfilePage() {
           return
         }
         const data = await res.json()
-        if (data?.authenticated) setUser(data.user)
+        if (data?.authenticated) {
+          setUser(data.user)
+          const profile = data.user.nurseProfile
+          setFormData({
+            name: profile?.name || '',
+            age: profile?.age || '',
+            totalExperience: profile?.totalExperience || '',
+            kuwaitExperience: profile?.kuwaitExperience || '',
+            partTimeSalary: profile?.partTimeSalary || '',
+            nightShiftSalary: profile?.nightShiftSalary || '',
+            aboutMe: profile?.aboutMe || '',
+            phone: profile?.phone || '',
+            location: profile?.location || '',
+            languages: profile?.languages || [],
+            availability: profile?.availability || [],
+          })
+        }
       } catch (e) {
         console.error(e)
         window.location.href = '/auth/login'
@@ -28,6 +62,53 @@ export default function NurseProfilePage() {
     }
     loadUser()
   }, [])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleMultiSelectChange = (name: string, value: string) => {
+    setFormData(prev => {
+      const currentArray = (prev as any)[name] as string[]
+      if (currentArray.includes(value)) {
+        return { ...prev, [name]: currentArray.filter(item => item !== value) }
+      } else {
+        return { ...prev, [name]: [...currentArray, value] }
+      }
+    })
+  }
+
+  const handleSave = async () => {
+    setError('')
+    setSuccess('')
+    
+    try {
+      const res = await fetch('/api/nurse/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to update profile')
+      }
+
+      setSuccess('Profile updated successfully!')
+      setIsEditing(false)
+      
+      // Reload user data
+      const userRes = await fetch('/api/auth/me', { cache: 'no-store' })
+      if (userRes.ok) {
+        const userData = await userRes.json()
+        if (userData?.authenticated) setUser(userData.user)
+      }
+    } catch (err) {
+      setError('Failed to update profile. Please try again.')
+    }
+  }
 
   if (isLoading) {
     return (
@@ -40,14 +121,30 @@ export default function NurseProfilePage() {
     )
   }
 
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg text-red-600">Authentication failed. Please log in again.</p>
+          <Link href="/auth/login" className="mt-4 inline-block bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700">
+            Go to Login
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-2xl font-bold text-primary-600">
-              NurseHire
-            </Link>
+          <div className="flex justify-between h-16 items-center">
+            <div className="flex items-center">
+              <Link href="/" className="text-2xl font-bold text-primary-600">
+                NurseHire
+              </Link>
+            </div>
             <div className="flex items-center space-x-4">
               <Link href="/nurse/dashboard" className="text-gray-600 hover:text-gray-900">
                 Dashboard
@@ -57,9 +154,9 @@ export default function NurseProfilePage() {
                   document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
                   window.location.href = '/auth/login'
                 }}
-                className="text-red-500 hover:text-red-700 text-sm"
+                className="text-red-500 hover:text-red-700"
               >
-                Sign Out
+                <LogOut className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -67,74 +164,281 @@ export default function NurseProfilePage() {
       </header>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <Link href="/nurse/dashboard" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-          <p className="text-gray-600 mt-2">Manage your nurse profile information</p>
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <Link href="/nurse/dashboard" className="flex items-center text-gray-600 hover:text-gray-900 mb-2">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Link>
+            <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
+            <p className="text-gray-600 mt-1">Manage your nurse profile information</p>
+          </div>
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center"
+            >
+              <Edit className="w-4 h-4 mr-2" /> Edit Profile
+            </button>
+          ) : (
+            <button
+              onClick={handleSave}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center"
+            >
+              <Save className="w-4 h-4 mr-2" /> Save Changes
+            </button>
+          )}
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Profile Information</h2>
-            <button
-              onClick={() => setIsEditing(!isEditing)}
-              className="flex items-center text-blue-600 hover:text-blue-700"
-            >
-              <Edit className="w-4 h-4 mr-1" />
-              {isEditing ? 'Cancel' : 'Edit Profile'}
-            </button>
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm mb-4">
+            {error}
           </div>
+        )}
+        {success && (
+          <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg text-sm mb-4">
+            {success}
+          </div>
+        )}
 
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                <input
-                  type="text"
-                  disabled={!isEditing}
-                  value={user?.profile?.name || ''}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input
-                  type="email"
-                  disabled
-                  value={user?.email || ''}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
-                <input
-                  type="number"
-                  disabled={!isEditing}
-                  value={user?.profile?.age || ''}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                <input
-                  type="tel"
-                  disabled={!isEditing}
-                  value={user?.profile?.phone || ''}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50"
-                />
-              </div>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Profile Image */}
+            <div className="flex flex-col items-center">
+              <img
+                src={user?.nurseProfile?.profileImageUrl || '/default-avatar.png'}
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover border-4 border-primary-100 shadow-md"
+              />
+              {isEditing && (
+                <button className="mt-3 text-primary-600 hover:underline text-sm">
+                  Change Profile Image
+                </button>
+              )}
             </div>
 
-            {isEditing && (
-              <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                <Save className="w-4 h-4 inline mr-2" />
-                Save Changes
-              </button>
+            {/* Personal Information */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Personal Information</h2>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Name</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="mt-1 block w-full input-field"
+                    />
+                  ) : (
+                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.name || 'Not set'}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Email</label>
+                  <p className="mt-1 text-gray-900">{user?.email || 'Not set'}</p>
+                  <p className="text-xs text-gray-500">Email cannot be changed</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Age</label>
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      name="age"
+                      value={formData.age}
+                      onChange={handleChange}
+                      className="mt-1 block w-full input-field"
+                    />
+                  ) : (
+                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.age || 'Not set'}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Phone</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="mt-1 block w-full input-field"
+                    />
+                  ) : (
+                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.phone || 'Not set'}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Location</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleChange}
+                      className="mt-1 block w-full input-field"
+                    />
+                  ) : (
+                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.location || 'Not set'}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* About Me */}
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">About Me</h2>
+            {isEditing ? (
+              <textarea
+                name="aboutMe"
+                value={formData.aboutMe}
+                onChange={handleChange}
+                rows={4}
+                className="mt-1 block w-full input-field"
+                placeholder="Tell mothers about yourself, your experience, and what makes you special..."
+              ></textarea>
+            ) : (
+              <p className="mt-1 text-gray-900">{user?.nurseProfile?.aboutMe || 'Not set'}</p>
             )}
           </div>
+
+          {/* Experience & Rates */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Experience</h2>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Total Experience (years)</label>
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      name="totalExperience"
+                      value={formData.totalExperience}
+                      onChange={handleChange}
+                      className="mt-1 block w-full input-field"
+                    />
+                  ) : (
+                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.totalExperience || 'Not set'}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Kuwait Experience (years)</label>
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      name="kuwaitExperience"
+                      value={formData.kuwaitExperience}
+                      onChange={handleChange}
+                      className="mt-1 block w-full input-field"
+                    />
+                  ) : (
+                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.kuwaitExperience || 'Not set'}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Rates (KD/hour)</h2>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Part-time Rate</label>
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      name="partTimeSalary"
+                      value={formData.partTimeSalary}
+                      onChange={handleChange}
+                      className="mt-1 block w-full input-field"
+                    />
+                  ) : (
+                    <p className="mt-1 text-gray-900">KD {user?.nurseProfile?.partTimeSalary || 'Not set'}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Night Shift Rate</label>
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      name="nightShiftSalary"
+                      value={formData.nightShiftSalary}
+                      onChange={handleChange}
+                      className="mt-1 block w-full input-field"
+                    />
+                  ) : (
+                    <p className="mt-1 text-gray-900">KD {user?.nurseProfile?.nightShiftSalary || 'Not set'}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Languages */}
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Languages</h2>
+            {isEditing ? (
+              <div className="flex flex-wrap gap-2">
+                {languageOptions.map(lang => (
+                  <button
+                    key={lang}
+                    type="button"
+                    onClick={() => handleMultiSelectChange('languages', lang)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      formData.languages.includes(lang)
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-1 text-gray-900">{user?.nurseProfile?.languages?.join(', ') || 'Not set'}</p>
+            )}
+          </div>
+
+          {/* Availability */}
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Availability</h2>
+            {isEditing ? (
+              <div className="flex flex-wrap gap-2">
+                {availabilityOptions.map(avail => (
+                  <button
+                    key={avail}
+                    type="button"
+                    onClick={() => handleMultiSelectChange('availability', avail)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      formData.availability.includes(avail)
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {avail}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-1 text-gray-900">{user?.nurseProfile?.availability?.join(', ') || 'Not set'}</p>
+            )}
+          </div>
+
+          {isEditing && (
+            <div className="mt-8 flex space-x-4">
+              <button
+                onClick={() => setIsEditing(false)}
+                className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-center"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                className="flex-1 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors text-center"
+              >
+                Save Changes
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
