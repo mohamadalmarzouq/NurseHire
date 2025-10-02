@@ -29,50 +29,22 @@ export default function NursesPage() {
   })
   const [isLoading, setIsLoading] = useState(true)
 
-  // Mock data for demonstration
   useEffect(() => {
-    const mockNurses: Nurse[] = [
-      {
-        id: '1',
-        name: 'Sarah Ahmed',
-        age: 32,
-        totalExperience: 8,
-        kuwaitExperience: 5,
-        partTimeSalary: 25,
-        nightShiftSalary: 35,
-        aboutMe: 'Experienced newborn care specialist with 8 years of experience. Passionate about providing the best care for your little ones.',
-        averageRating: 4.8,
-        reviewCount: 24,
-      },
-      {
-        id: '2',
-        name: 'Fatima Al-Zahra',
-        age: 28,
-        totalExperience: 6,
-        kuwaitExperience: 4,
-        partTimeSalary: 22,
-        nightShiftSalary: 32,
-        aboutMe: 'Dedicated nurse specializing in newborn care. Certified in infant CPR and emergency care.',
-        averageRating: 4.9,
-        reviewCount: 18,
-      },
-      {
-        id: '3',
-        name: 'Aisha Mohammed',
-        age: 35,
-        totalExperience: 12,
-        kuwaitExperience: 8,
-        partTimeSalary: 30,
-        nightShiftSalary: 40,
-        aboutMe: 'Senior nurse with extensive experience in neonatal care. Available for both part-time and night shifts.',
-        averageRating: 4.7,
-        reviewCount: 31,
-      },
-    ]
-    
-    setNurses(mockNurses)
-    setFilteredNurses(mockNurses)
-    setIsLoading(false)
+    const loadNurses = async () => {
+      try {
+        const res = await fetch('/api/nurses', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setNurses(data.nurses || [])
+          setFilteredNurses(data.nurses || [])
+        }
+      } catch (e) {
+        console.error('Error loading nurses:', e)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadNurses()
   }, [])
 
   // Filter nurses based on search and filters

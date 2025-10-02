@@ -7,6 +7,7 @@ import { Search, Heart, MessageCircle, Star, Calendar, User, Settings, LogOut } 
 export default function MotherDashboard() {
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [recentNurses, setRecentNurses] = useState<any[]>([])
 
   useEffect(() => {
     const loadUser = async () => {
@@ -38,6 +39,21 @@ export default function MotherDashboard() {
       }
     }
     loadUser()
+  }, [])
+
+  useEffect(() => {
+    const loadRecentNurses = async () => {
+      try {
+        const res = await fetch('/api/nurses?limit=3', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setRecentNurses(data.nurses || [])
+        }
+      } catch (e) {
+        console.error('Error loading recent nurses:', e)
+      }
+    }
+    loadRecentNurses()
   }, [])
 
   if (isLoading) {
@@ -145,14 +161,31 @@ export default function MotherDashboard() {
 
         {/* Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Recent Bookings */}
+          {/* Recent Nurses */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Bookings</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Nurses</h2>
             <div className="space-y-4">
-              <div className="border-l-4 border-yellow-400 pl-4 py-2">
-                <p className="text-sm text-gray-600">No recent bookings</p>
-                <p className="text-xs text-gray-500">Start by finding a nurse to book</p>
-              </div>
+              {recentNurses.length === 0 ? (
+                <div className="border-l-4 border-yellow-400 pl-4 py-2">
+                  <p className="text-sm text-gray-600">No approved nurses available</p>
+                  <p className="text-xs text-gray-500">Check back later for new nurses</p>
+                </div>
+              ) : (
+                recentNurses.map((nurse) => (
+                  <div key={nurse.id} className="border-l-4 border-green-400 pl-4 py-2">
+                    <p className="text-sm font-medium text-gray-900">{nurse.name}</p>
+                    <p className="text-xs text-gray-500">
+                      {nurse.totalExperience} years experience • KD {nurse.partTimeSalary}/hour
+                    </p>
+                    <Link 
+                      href={`/nurses/${nurse.id}`}
+                      className="text-xs text-primary-600 hover:underline"
+                    >
+                      View Profile
+                    </Link>
+                  </div>
+                ))
+              )}
             </div>
             <Link href="/nurses" className="mt-4 inline-flex items-center text-primary-600 hover:text-primary-700">
               Find nurses <Search className="w-4 h-4 ml-1" />
@@ -195,9 +228,12 @@ export default function MotherDashboard() {
               <p className="mt-1 text-sm text-gray-900">{user?.profile?.location || 'Not set'}</p>
             </div>
           </div>
-          <button className="mt-4 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
+          <Link 
+            href="/mother/profile"
+            className="mt-4 inline-block bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+          >
             Edit Profile
-          </button>
+          </Link>
         </div>
       </div>
     </div>
