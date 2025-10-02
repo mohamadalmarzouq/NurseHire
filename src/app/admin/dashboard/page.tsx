@@ -32,63 +32,95 @@ export default function AdminDashboard() {
       }
     }
     loadUser()
-    
-    // Mock data - in real app, fetch from API
-    setStats({
-      totalNurses: 12,
-      pendingApprovals: 3,
-      approvedNurses: 9,
-      totalMothers: 45,
-      totalBookings: 23
-    })
-    
-    setPendingNurses([
-      {
-        id: 1,
-        name: 'Aisha Al-Rashid',
-        email: 'aisha@example.com',
-        totalExperience: 5,
-        kuwaitExperience: 3,
-        submittedAt: '2024-09-30T10:00:00Z'
-      },
-      {
-        id: 2,
-        name: 'Fatima Hassan',
-        email: 'fatima@example.com',
-        totalExperience: 3,
-        kuwaitExperience: 1,
-        submittedAt: '2024-09-29T15:30:00Z'
-      },
-      {
-        id: 3,
-        name: 'Mariam Al-Sabah',
-        email: 'mariam@example.com',
-        totalExperience: 7,
-        kuwaitExperience: 5,
-        submittedAt: '2024-09-28T09:15:00Z'
-      }
-    ])
-    
-    setIsLoading(false)
   }, [])
 
-  const handleApproveNurse = (nurseId: number) => {
-    // In real app, call API to approve nurse
-    setPendingNurses(prev => prev.filter(nurse => nurse.id !== nurseId))
-    setStats(prev => ({
-      ...prev,
-      pendingApprovals: prev.pendingApprovals - 1,
-      approvedNurses: prev.approvedNurses + 1
-    }))
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const res = await fetch('/api/admin/stats', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setStats(data.stats)
+        }
+      } catch (e) {
+        console.error('Error loading stats:', e)
+      }
+    }
+    loadStats()
+  }, [])
+
+  useEffect(() => {
+    const loadPendingNurses = async () => {
+      try {
+        const res = await fetch('/api/admin/pending-nurses', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setPendingNurses(data.nurses)
+        }
+      } catch (e) {
+        console.error('Error loading pending nurses:', e)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadPendingNurses()
+  }, [])
+
+  const handleApproveNurse = async (nurseId: string) => {
+    try {
+      const res = await fetch(`/api/admin/nurses/${nurseId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'approve' }),
+      })
+
+      if (res.ok) {
+        // Remove from pending list and update stats
+        setPendingNurses(prev => prev.filter(nurse => nurse.id !== nurseId))
+        setStats(prev => ({
+          ...prev,
+          pendingApprovals: prev.pendingApprovals - 1,
+          approvedNurses: prev.approvedNurses + 1
+        }))
+        alert('Nurse approved successfully!')
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to approve nurse')
+      }
+    } catch (error) {
+      console.error('Error approving nurse:', error)
+      alert('Failed to approve nurse')
+    }
   }
 
-  const handleRejectNurse = (nurseId: number) => {
-    // In real app, call API to reject nurse
-    setPendingNurses(prev => prev.filter(nurse => nurse.id !== nurseId))
-    setStats(prev => ({
-      ...prev,
-      pendingApprovals: prev.pendingApprovals - 1
-    }))
+  const handleRejectNurse = async (nurseId: string) => {
+    try {
+      const res = await fetch(`/api/admin/nurses/${nurseId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'reject' }),
+      })
+
+      if (res.ok) {
+        // Remove from pending list and update stats
+        setPendingNurses(prev => prev.filter(nurse => nurse.id !== nurseId))
+        setStats(prev => ({
+          ...prev,
+          pendingApprovals: prev.pendingApprovals - 1
+        }))
+        alert('Nurse rejected successfully!')
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to reject nurse')
+      }
+    } catch (error) {
+      console.error('Error rejecting nurse:', error)
+      alert('Failed to reject nurse')
+    }
   }
 
   if (isLoading) {
@@ -114,11 +146,17 @@ export default function AdminDashboard() {
               </Link>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-gray-700">Welcome, {user?.profile?.name || 'Admin'}!</span>
+              <span className="text-gray-700">Welcome, {user?.adminProfile?.name || 'Admin'}!</span>
               <button className="text-gray-500 hover:text-gray-700">
                 <Settings className="w-5 h-5" />
               </button>
-              <button className="text-gray-500 hover:text-gray-700">
+              <button 
+                onClick={() => {
+                  document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+                  window.location.href = '/auth/login'
+                }}
+                className="text-red-500 hover:text-red-700"
+              >
                 <LogOut className="w-5 h-5" />
               </button>
             </div>
@@ -226,8 +264,12 @@ export default function AdminDashboard() {
                       <div className="mt-2 flex items-center space-x-4 text-xs text-gray-500">
                         <span>{nurse.totalExperience} years total experience</span>
                         <span>{nurse.kuwaitExperience} years in Kuwait</span>
+                        <span>KD {nurse.partTimeSalary}/hour part-time</span>
                         <span>Submitted {new Date(nurse.submittedAt).toLocaleDateString()}</span>
                       </div>
+                      {nurse.aboutMe && (
+                        <p className="text-xs text-gray-600 mt-2 line-clamp-2">{nurse.aboutMe}</p>
+                      )}
                     </div>
                     <div className="flex items-center space-x-2">
                       <Link 
