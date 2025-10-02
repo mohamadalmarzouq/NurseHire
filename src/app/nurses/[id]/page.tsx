@@ -39,6 +39,8 @@ export default function NurseProfilePage() {
   const [reviews, setReviews] = useState<Review[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showBookingModal, setShowBookingModal] = useState(false)
+  const [bookingMessage, setBookingMessage] = useState('')
+  const [isBooking, setIsBooking] = useState(false)
 
   useEffect(() => {
     const loadNurseProfile = async () => {
@@ -75,6 +77,38 @@ export default function NurseProfilePage() {
 
   const getAverageRating = (review: Review) => {
     return (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5
+  }
+
+  const handleBookingRequest = async () => {
+    if (!nurse) return
+    
+    setIsBooking(true)
+    try {
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nurseId: nurse.id,
+          message: bookingMessage,
+        }),
+      })
+
+      if (res.ok) {
+        alert('Booking request sent successfully!')
+        setShowBookingModal(false)
+        setBookingMessage('')
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to send booking request')
+      }
+    } catch (error) {
+      console.error('Error sending booking request:', error)
+      alert('Failed to send booking request')
+    } finally {
+      setIsBooking(false)
+    }
   }
 
   if (isLoading) {
@@ -339,24 +373,24 @@ export default function NurseProfilePage() {
                 <textarea
                   className="input-field h-24 resize-none"
                   placeholder="Tell the nurse about your needs..."
+                  value={bookingMessage}
+                  onChange={(e) => setBookingMessage(e.target.value)}
                 />
               </div>
               <div className="flex space-x-4">
                 <button
                   onClick={() => setShowBookingModal(false)}
                   className="flex-1 btn-secondary"
+                  disabled={isBooking}
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
-                    // Handle booking logic
-                    setShowBookingModal(false)
-                    alert('Booking request sent!')
-                  }}
+                  onClick={handleBookingRequest}
                   className="flex-1 btn-primary"
+                  disabled={isBooking}
                 >
-                  Send Request
+                  {isBooking ? 'Sending...' : 'Send Request'}
                 </button>
               </div>
             </div>

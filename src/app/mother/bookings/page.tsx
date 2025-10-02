@@ -7,32 +7,41 @@ import { ArrowLeft, Calendar, Clock, User, MessageCircle, CheckCircle, XCircle, 
 export default function MotherBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
-    // Mock data - in real app, fetch from API
-    setBookings([
-      {
-        id: 1,
-        nurseName: 'Aisha Al-Rashid',
-        nurseImage: '/uploads/sample-nurse.jpg',
-        status: 'PENDING',
-        message: 'I need help with my newborn for the weekend',
-        requestedDate: '2024-10-05',
-        requestedTime: '9:00 AM - 5:00 PM',
-        createdAt: '2024-09-30T10:00:00Z'
-      },
-      {
-        id: 2,
-        nurseName: 'Fatima Hassan',
-        nurseImage: '/uploads/sample-nurse2.jpg',
-        status: 'ACCEPTED',
-        message: 'Looking for night shift care',
-        requestedDate: '2024-10-03',
-        requestedTime: '10:00 PM - 6:00 AM',
-        createdAt: '2024-09-29T15:30:00Z'
+    const loadUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (!res.ok) {
+          window.location.href = '/auth/login'
+          return
+        }
+        const data = await res.json()
+        if (data?.authenticated) setUser(data.user)
+      } catch (e) {
+        console.error(e)
+        window.location.href = '/auth/login'
       }
-    ])
-    setIsLoading(false)
+    }
+    loadUser()
+  }, [])
+
+  useEffect(() => {
+    const loadBookings = async () => {
+      try {
+        const res = await fetch('/api/bookings', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setBookings(data.bookings || [])
+        }
+      } catch (e) {
+        console.error('Error loading bookings:', e)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadBookings()
   }, [])
 
   const getStatusColor = (status: string) => {
@@ -128,17 +137,21 @@ export default function MotherBookingsPage() {
                       <User className="w-6 h-6 text-gray-600" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900">{booking.nurseName}</h3>
-                      <p className="text-gray-600 mt-1">{booking.message}</p>
+                      <h3 className="text-lg font-semibold text-gray-900">{booking.nurse.name}</h3>
+                      <p className="text-gray-600 mt-1">{booking.message || 'No message provided'}</p>
                       <div className="flex items-center space-x-4 mt-3 text-sm text-gray-500">
-                        <div className="flex items-center">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          {booking.requestedDate}
-                        </div>
-                        <div className="flex items-center">
-                          <Clock className="w-4 h-4 mr-1" />
-                          {booking.requestedTime}
-                        </div>
+                        {booking.startDate && (
+                          <div className="flex items-center">
+                            <Calendar className="w-4 h-4 mr-1" />
+                            {new Date(booking.startDate).toLocaleDateString()}
+                          </div>
+                        )}
+                        {booking.endDate && (
+                          <div className="flex items-center">
+                            <Clock className="w-4 h-4 mr-1" />
+                            {new Date(booking.endDate).toLocaleDateString()}
+                          </div>
+                        )}
                         <div>
                           Requested {new Date(booking.createdAt).toLocaleDateString()}
                         </div>
@@ -150,9 +163,12 @@ export default function MotherBookingsPage() {
                       {getStatusIcon(booking.status)}
                       <span className="ml-1">{booking.status}</span>
                     </span>
-                    <button className="text-primary-600 hover:text-primary-700 p-2">
+                    <Link 
+                      href={`/nurses/${booking.nurse.id}`}
+                      className="text-primary-600 hover:text-primary-700 p-2"
+                    >
                       <MessageCircle className="w-5 h-5" />
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
