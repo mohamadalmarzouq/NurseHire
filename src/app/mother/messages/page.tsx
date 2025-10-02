@@ -9,37 +9,91 @@ export default function MotherMessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<any>(null)
   const [newMessage, setNewMessage] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
-    // Mock data - in real app, fetch from API
-    setConversations([
-      {
-        id: 1,
-        nurseName: 'Aisha Al-Rashid',
-        nurseImage: '/uploads/sample-nurse.jpg',
-        lastMessage: 'Thank you for choosing me! I\'m excited to help with your newborn.',
-        lastMessageTime: '2024-09-30T14:30:00Z',
-        unreadCount: 2,
-        isOnline: true
-      },
-      {
-        id: 2,
-        nurseName: 'Fatima Hassan',
-        nurseImage: '/uploads/sample-nurse2.jpg',
-        lastMessage: 'I can start this weekend if that works for you.',
-        lastMessageTime: '2024-09-29T16:45:00Z',
-        unreadCount: 0,
-        isOnline: false
+    const loadUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (!res.ok) {
+          window.location.href = '/auth/login'
+          return
+        }
+        const data = await res.json()
+        if (data?.authenticated) setUser(data.user)
+      } catch (e) {
+        console.error(e)
+        window.location.href = '/auth/login'
       }
-    ])
-    setIsLoading(false)
+    }
+    loadUser()
   }, [])
 
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      // In real app, send message via API
-      console.log('Sending message:', newMessage)
-      setNewMessage('')
+  useEffect(() => {
+    const loadConversations = async () => {
+      try {
+        const res = await fetch('/api/messages', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setConversations(data.conversations || [])
+        }
+      } catch (e) {
+        console.error('Error loading conversations:', e)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadConversations()
+  }, [])
+
+  const handleSendMessage = async () => {
+    if (newMessage.trim() && selectedConversation) {
+      try {
+        const res = await fetch('/api/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            receiverId: selectedConversation.partnerId,
+            content: newMessage,
+          }),
+        })
+
+        if (res.ok) {
+          // Reload conversations to get updated messages
+          const conversationsRes = await fetch('/api/messages', { cache: 'no-store' })
+          if (conversationsRes.ok) {
+            const data = await conversationsRes.json()
+            setConversations(data.conversations || [])
+            
+            // Update selected conversation
+            const updatedConv = data.conversations.find((c: any) => c.partnerId === selectedConversation.partnerId)
+            if (updatedConv) {
+              setSelectedConversation(updatedConv)
+            }
+          }
+          setNewMessage('')
+        }
+      } catch (e) {
+        console.error('Error sending message:', e)
+      }
+    }
+  }
+
+  const loadConversation = async (conversation: any) => {
+    try {
+      const res = await fetch(`/api/messages/${conversation.partnerId}`, { cache: 'no-store' })
+      if (res.ok) {
+        const data = await res.json()
+        setSelectedConversation({
+          ...conversation,
+          messages: data.messages || [],
+          otherUser: data.otherUser,
+        })
+      }
+    } catch (e) {
+      console.error('Error loading conversation:', e)
     }
   }
 
@@ -111,27 +165,29 @@ export default function MotherMessagesPage() {
                 ) : (
                   conversations.map((conversation) => (
                     <div
-                      key={conversation.id}
+                      key={conversation.partnerId}
                       className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
-                        selectedConversation?.id === conversation.id ? 'bg-primary-50' : ''
+                        selectedConversation?.partnerId === conversation.partnerId ? 'bg-primary-50' : ''
                       }`}
-                      onClick={() => setSelectedConversation(conversation)}
+                      onClick={() => loadConversation(conversation)}
                     >
                       <div className="flex items-center space-x-3">
                         <div className="relative">
                           <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
                             <span className="text-sm font-medium text-gray-600">
-                              {conversation.nurseName.split(' ').map((n: string) => n[0]).join('')}
+                              {conversation.partnerName.split(' ').map((n: string) => n[0]).join('')}
                             </span>
                           </div>
-                          {conversation.isOnline && (
-                            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                          {conversation.unreadCount > 0 && (
+                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white flex items-center justify-center">
+                              <span className="text-xs text-white font-bold">{conversation.unreadCount}</span>
+                            </div>
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
                             <h3 className="text-sm font-medium text-gray-900 truncate">
-                              {conversation.nurseName}
+                              {conversation.partnerName}
                             </h3>
                             <span className="text-xs text-gray-500">
                               {new Date(conversation.lastMessageTime).toLocaleDateString()}
@@ -140,13 +196,6 @@ export default function MotherMessagesPage() {
                           <p className="text-sm text-gray-600 truncate mt-1">
                             {conversation.lastMessage}
                           </p>
-                          {conversation.unreadCount > 0 && (
-                            <div className="flex justify-end mt-1">
-                              <span className="bg-primary-600 text-white text-xs rounded-full px-2 py-1">
-                                {conversation.unreadCount}
-                              </span>
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>
@@ -164,13 +213,13 @@ export default function MotherMessagesPage() {
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                         <span className="text-sm font-medium text-gray-600">
-                          {selectedConversation.nurseName.split(' ').map((n: string) => n[0]).join('')}
+                          {selectedConversation.partnerName.split(' ').map((n: string) => n[0]).join('')}
                         </span>
                       </div>
                       <div>
-                        <h3 className="font-medium text-gray-900">{selectedConversation.nurseName}</h3>
+                        <h3 className="font-medium text-gray-900">{selectedConversation.partnerName}</h3>
                         <p className="text-sm text-gray-500">
-                          {selectedConversation.isOnline ? 'Online' : 'Offline'}
+                          {selectedConversation.partnerRole === 'NURSE' ? 'Nurse' : 'Mother'}
                         </p>
                       </div>
                     </div>
@@ -179,24 +228,28 @@ export default function MotherMessagesPage() {
                   {/* Messages */}
                   <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
                     <div className="space-y-4">
-                      <div className="flex justify-end">
-                        <div className="bg-primary-600 text-white px-4 py-2 rounded-lg max-w-xs">
-                          <p className="text-sm">Hi! I'm interested in booking you for newborn care.</p>
-                          <p className="text-xs text-primary-200 mt-1">2:30 PM</p>
+                      {selectedConversation.messages && selectedConversation.messages.length > 0 ? (
+                        selectedConversation.messages.map((message: any) => (
+                          <div key={message.id} className={`flex ${message.senderId === user?.id ? 'justify-end' : 'justify-start'}`}>
+                            <div className={`px-4 py-2 rounded-lg max-w-xs ${
+                              message.senderId === user?.id 
+                                ? 'bg-primary-600 text-white' 
+                                : 'bg-white text-gray-900 shadow-sm'
+                            }`}>
+                              <p className="text-sm">{message.content}</p>
+                              <p className={`text-xs mt-1 ${
+                                message.senderId === user?.id ? 'text-primary-200' : 'text-gray-500'
+                              }`}>
+                                {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center text-gray-500 py-8">
+                          <p>No messages yet. Start the conversation!</p>
                         </div>
-                      </div>
-                      <div className="flex justify-start">
-                        <div className="bg-white text-gray-900 px-4 py-2 rounded-lg max-w-xs shadow-sm">
-                          <p className="text-sm">Hello! Thank you for your interest. I'd be happy to help with your newborn care needs.</p>
-                          <p className="text-xs text-gray-500 mt-1">2:32 PM</p>
-                        </div>
-                      </div>
-                      <div className="flex justify-end">
-                        <div className="bg-primary-600 text-white px-4 py-2 rounded-lg max-w-xs">
-                          <p className="text-sm">Great! What are your rates for weekend care?</p>
-                          <p className="text-xs text-primary-200 mt-1">2:35 PM</p>
-                        </div>
-                      </div>
+                      )}
                     </div>
                   </div>
 

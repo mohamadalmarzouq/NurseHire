@@ -7,40 +7,41 @@ import { ArrowLeft, Star, User, Calendar, MessageCircle } from 'lucide-react'
 export default function MotherReviewsPage() {
   const [reviews, setReviews] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
-    // Mock data - in real app, fetch from API
-    setReviews([
-      {
-        id: 1,
-        nurseName: 'Aisha Al-Rashid',
-        nurseImage: '/uploads/sample-nurse.jpg',
-        overallRating: 4.8,
-        appearance: 5,
-        attitude: 5,
-        knowledge: 4,
-        hygiene: 5,
-        salary: 4,
-        comment: 'Aisha was absolutely wonderful with my newborn. She was gentle, knowledgeable, and very caring. Highly recommended!',
-        reviewDate: '2024-09-25T10:00:00Z',
-        bookingId: 'BK001'
-      },
-      {
-        id: 2,
-        nurseName: 'Fatima Hassan',
-        nurseImage: '/uploads/sample-nurse2.jpg',
-        overallRating: 4.2,
-        appearance: 4,
-        attitude: 4,
-        knowledge: 4,
-        hygiene: 4,
-        salary: 5,
-        comment: 'Good experience overall. Fatima was professional and my baby was comfortable with her.',
-        reviewDate: '2024-09-20T15:30:00Z',
-        bookingId: 'BK002'
+    const loadUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (!res.ok) {
+          window.location.href = '/auth/login'
+          return
+        }
+        const data = await res.json()
+        if (data?.authenticated) setUser(data.user)
+      } catch (e) {
+        console.error(e)
+        window.location.href = '/auth/login'
+      } finally {
+        setIsLoading(false)
       }
-    ])
-    setIsLoading(false)
+    }
+    loadUser()
+  }, [])
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        const res = await fetch('/api/reviews?type=given', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setReviews(data.reviews || [])
+        }
+      } catch (e) {
+        console.error('Error loading reviews:', e)
+      }
+    }
+    loadReviews()
   }, [])
 
   const renderStars = (rating: number) => {
@@ -133,16 +134,16 @@ export default function MotherReviewsPage() {
                       <User className="w-6 h-6 text-gray-600" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{review.nurseName}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">{review.receiver.name}</h3>
                       <div className="flex items-center space-x-2 mt-1">
                         <div className="flex items-center">
-                          {renderStars(review.overallRating)}
+                          {renderStars(review.averageRating)}
                         </div>
                         <span className="text-sm font-medium text-gray-900">
-                          {review.overallRating}
+                          {review.averageRating.toFixed(1)}
                         </span>
                         <span className="text-sm text-gray-500">
-                          ({getRatingLabel(review.overallRating)})
+                          ({getRatingLabel(review.averageRating)})
                         </span>
                       </div>
                     </div>
@@ -150,9 +151,8 @@ export default function MotherReviewsPage() {
                   <div className="text-right text-sm text-gray-500">
                     <div className="flex items-center">
                       <Calendar className="w-4 h-4 mr-1" />
-                      {new Date(review.reviewDate).toLocaleDateString()}
+                      {new Date(review.createdAt).toLocaleDateString()}
                     </div>
-                    <div className="mt-1">Booking #{review.bookingId}</div>
                   </div>
                 </div>
 
@@ -196,19 +196,18 @@ export default function MotherReviewsPage() {
                 </div>
 
                 {/* Comment */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-gray-700">{review.comment}</p>
-                </div>
+                {review.comment && (
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <p className="text-gray-700 text-sm leading-relaxed">{review.comment}</p>
+                  </div>
+                )}
 
                 {/* Actions */}
                 <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
                   <div className="text-sm text-gray-500">
-                    Review submitted on {new Date(review.reviewDate).toLocaleDateString()}
+                    Review submitted on {new Date(review.createdAt).toLocaleDateString()}
                   </div>
                   <div className="flex items-center space-x-2">
-                    <button className="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                      Edit Review
-                    </button>
                     <button className="text-gray-500 hover:text-gray-700 p-1">
                       <MessageCircle className="w-4 h-4" />
                     </button>
