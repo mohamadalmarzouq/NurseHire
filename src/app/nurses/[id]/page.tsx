@@ -41,6 +41,8 @@ export default function NurseProfilePage() {
   const [showBookingModal, setShowBookingModal] = useState(false)
   const [bookingMessage, setBookingMessage] = useState('')
   const [isBooking, setIsBooking] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
     const loadNurseProfile = async () => {
@@ -64,6 +66,24 @@ export default function NurseProfilePage() {
     loadNurseProfile()
   }, [params.id])
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          if (data?.authenticated) {
+            setUser(data.user)
+            setIsAuthenticated(true)
+          }
+        }
+      } catch (error) {
+        console.error('Error checking authentication:', error)
+      }
+    }
+    checkAuth()
+  }, [])
+
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
@@ -82,6 +102,13 @@ export default function NurseProfilePage() {
   const handleBookingRequest = async () => {
     if (!nurse) return
     
+    // Check authentication before proceeding
+    if (!isAuthenticated || user?.role !== 'MOTHER') {
+      alert('You must be logged in as a mother to book a nurse. Please sign in.')
+      setShowBookingModal(false)
+      return
+    }
+    
     setIsBooking(true)
     try {
       const res = await fetch('/api/bookings', {
@@ -96,16 +123,22 @@ export default function NurseProfilePage() {
       })
 
       if (res.ok) {
-        alert('Booking request sent successfully!')
+        alert('Booking request sent successfully! You can view your bookings in your dashboard.')
         setShowBookingModal(false)
         setBookingMessage('')
       } else {
         const error = await res.json()
-        alert(error.error || 'Failed to send booking request')
+        if (res.status === 401) {
+          alert('Please sign in to book a nurse.')
+        } else if (res.status === 403) {
+          alert('Only mothers can book nurses. Please sign in with a mother account.')
+        } else {
+          alert(error.error || 'Failed to send booking request. Please try again.')
+        }
       }
     } catch (error) {
       console.error('Error sending booking request:', error)
-      alert('Failed to send booking request')
+      alert('Failed to send booking request. Please check your connection and try again.')
     } finally {
       setIsBooking(false)
     }
@@ -342,18 +375,59 @@ export default function NurseProfilePage() {
                 </div>
               </div>
 
-              <button 
-                onClick={() => setShowBookingModal(true)}
-                className="w-full btn-primary mb-4"
-              >
-                <Calendar className="w-4 h-4 mr-2" />
-                Book This Nurse
-              </button>
-              
-              <button className="w-full btn-secondary">
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Send Message
-              </button>
+              {!isAuthenticated ? (
+                <div className="space-y-3">
+                  <Link 
+                    href="/auth/login"
+                    className="w-full btn-primary mb-4 block text-center"
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Sign In to Book
+                  </Link>
+                  <Link 
+                    href="/auth/login"
+                    className="w-full btn-secondary block text-center"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Sign In to Message
+                  </Link>
+                </div>
+              ) : user?.role !== 'MOTHER' ? (
+                <div className="space-y-3">
+                  <button 
+                    disabled
+                    className="w-full btn-primary mb-4 opacity-50 cursor-not-allowed"
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Only Mothers Can Book
+                  </button>
+                  <button 
+                    disabled
+                    className="w-full btn-secondary opacity-50 cursor-not-allowed"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Only Mothers Can Message
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <button 
+                    onClick={() => setShowBookingModal(true)}
+                    className="w-full btn-primary mb-4"
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Book This Nurse
+                  </button>
+                  
+                  <Link 
+                    href="/mother/messages"
+                    className="w-full btn-secondary block text-center"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Send Message
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -364,9 +438,21 @@ export default function NurseProfilePage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full">
             <h3 className="text-xl font-semibold text-neutral-900 mb-4">Book {nurse.name}</h3>
-            <p className="text-neutral-600 mb-6">
-              Send a booking request to {nurse.name}. They will review your request and get back to you.
-            </p>
+            {!isAuthenticated || user?.role !== 'MOTHER' ? (
+              <div className="text-center py-8">
+                <p className="text-red-600 mb-4">You must be logged in as a mother to book a nurse.</p>
+                <Link 
+                  href="/auth/login"
+                  className="btn-primary"
+                >
+                  Sign In as Mother
+                </Link>
+              </div>
+            ) : (
+              <>
+                <p className="text-neutral-600 mb-6">
+                  Send a booking request to {nurse.name}. They will review your request and get back to you.
+                </p>
             <div className="space-y-4">
               <div>
                 <label className="label">Message (Optional)</label>
@@ -394,6 +480,8 @@ export default function NurseProfilePage() {
                 </button>
               </div>
             </div>
+              </>
+            )}
           </div>
         </div>
       )}
