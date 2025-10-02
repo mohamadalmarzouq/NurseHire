@@ -72,9 +72,11 @@ export default function NurseProfilePage() {
         const res = await fetch('/api/auth/me', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
+          console.log('Auth data:', data) // Debug log
           if (data?.authenticated) {
             setUser(data.user)
             setIsAuthenticated(true)
+            console.log('User authenticated:', data.user) // Debug log
           }
         }
       } catch (error) {
@@ -141,6 +143,47 @@ export default function NurseProfilePage() {
       alert('Failed to send booking request. Please check your connection and try again.')
     } finally {
       setIsBooking(false)
+    }
+  }
+
+  const handleSendMessage = async () => {
+    if (!nurse) return
+    
+    // Check authentication before proceeding
+    if (!isAuthenticated || user?.role !== 'MOTHER') {
+      alert('You must be logged in as a mother to message a nurse. Please sign in.')
+      return
+    }
+    
+    try {
+      // Create a message to start the conversation
+      const res = await fetch('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          receiverId: nurse.id,
+          content: `Hello ${nurse.name}, I'm interested in your nursing services.`,
+        }),
+      })
+
+      if (res.ok) {
+        // Redirect to messages page
+        window.location.href = '/mother/messages'
+      } else {
+        const error = await res.json()
+        if (res.status === 401) {
+          alert('Please sign in to message a nurse.')
+        } else if (res.status === 403) {
+          alert('Only mothers can message nurses. Please sign in with a mother account.')
+        } else {
+          alert(error.error || 'Failed to send message. Please try again.')
+        }
+      }
+    } catch (error) {
+      console.error('Error sending message:', error)
+      alert('Failed to send message. Please check your connection and try again.')
     }
   }
 
@@ -412,20 +455,23 @@ export default function NurseProfilePage() {
               ) : (
                 <div className="space-y-3">
                   <button 
-                    onClick={() => setShowBookingModal(true)}
+                    onClick={() => {
+                      console.log('Booking button clicked, isAuthenticated:', isAuthenticated, 'user role:', user?.role)
+                      setShowBookingModal(true)
+                    }}
                     className="w-full btn-primary mb-4"
                   >
                     <Calendar className="w-4 h-4 mr-2" />
                     Book This Nurse
                   </button>
                   
-                  <Link 
-                    href="/mother/messages"
-                    className="w-full btn-secondary block text-center"
+                  <button 
+                    onClick={() => handleSendMessage()}
+                    className="w-full btn-secondary"
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
                     Send Message
-                  </Link>
+                  </button>
                 </div>
               )}
             </div>
@@ -441,6 +487,7 @@ export default function NurseProfilePage() {
             {!isAuthenticated || user?.role !== 'MOTHER' ? (
               <div className="text-center py-8">
                 <p className="text-red-600 mb-4">You must be logged in as a mother to book a nurse.</p>
+                <p className="text-sm text-gray-500 mb-4">Debug: isAuthenticated={isAuthenticated.toString()}, role={user?.role || 'none'}</p>
                 <Link 
                   href="/auth/login"
                   className="btn-primary"
