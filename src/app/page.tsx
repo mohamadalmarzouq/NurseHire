@@ -136,9 +136,12 @@ export default function HomePage() {
         <div className="nh-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
             <div className="flex flex-col justify-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900" style={{marginBottom:'14px'}}>
+              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900" style={{marginBottom:'10px'}}>
                 For Mothers
               </h2>
+              <div className="mb-4">
+                <span className="nh-badge nh-badge--info" style={{fontSize:'14px',padding:'6px 12px'}}>Verified • Flexible • Reviewed</span>
+              </div>
               <div className="space-y-5">
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
