@@ -114,6 +114,9 @@ export default function NurseProfilePage() {
   const handleBookingRequest = async () => {
     if (!nurse) return
     
+    console.log('Booking request - isAuthenticated:', isAuthenticated, 'user role:', user?.role)
+    console.log('Nurse ID:', nurse.id)
+    
     // Check authentication before proceeding
     if (!isAuthenticated || user?.role !== 'MOTHER') {
       alert('You must be logged in as a mother to book a nurse. Please sign in.')
@@ -123,6 +126,7 @@ export default function NurseProfilePage() {
     
     setIsBooking(true)
     try {
+      console.log('Sending booking request...')
       const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: {
@@ -134,18 +138,21 @@ export default function NurseProfilePage() {
         }),
       })
 
+      console.log('Booking response status:', res.status)
+      const responseData = await res.json()
+      console.log('Booking response data:', responseData)
+
       if (res.ok) {
         alert('Booking request sent successfully! You can view your bookings in your dashboard.')
         setShowBookingModal(false)
         setBookingMessage('')
       } else {
-        const error = await res.json()
         if (res.status === 401) {
           alert('Please sign in to book a nurse.')
         } else if (res.status === 403) {
           alert('Only mothers can book nurses. Please sign in with a mother account.')
         } else {
-          alert(error.error || 'Failed to send booking request. Please try again.')
+          alert(responseData.error || 'Failed to send booking request. Please try again.')
         }
       }
     } catch (error) {
