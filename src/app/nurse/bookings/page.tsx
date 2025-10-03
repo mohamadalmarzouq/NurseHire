@@ -9,9 +9,48 @@ export default function NurseBookingsPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    setBookings([])
-    setIsLoading(false)
+    const loadBookings = async () => {
+      try {
+        const res = await fetch('/api/bookings', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setBookings(data.bookings || [])
+        }
+      } catch (e) {
+        console.error('Error loading bookings:', e)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadBookings()
   }, [])
+
+  const handleBookingAction = async (bookingId: string, status: 'ACCEPTED' | 'DECLINED') => {
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status }),
+      })
+
+      if (res.ok) {
+        // Reload bookings to show updated status
+        const bookingsRes = await fetch('/api/bookings', { cache: 'no-store' })
+        if (bookingsRes.ok) {
+          const data = await bookingsRes.json()
+          setBookings(data.bookings || [])
+        }
+        alert(`Booking ${status.toLowerCase()} successfully!`)
+      } else {
+        alert('Failed to update booking status. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error updating booking:', error)
+      alert('Failed to update booking status. Please try again.')
+    }
+  }
 
   if (isLoading) {
     return (
@@ -71,20 +110,50 @@ export default function NurseBookingsPage() {
             bookings.map((booking) => (
               <div key={booking.id} className="bg-white rounded-lg shadow-sm p-6">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{booking.motherName}</h3>
-                    <p className="text-gray-600 mt-1">{booking.message}</p>
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                        <span className="text-green-600 font-medium text-sm">
+                          {booking.requester.name.charAt(0)}
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">{booking.requester.name}</h3>
+                        <p className="text-sm text-gray-500">{booking.requester.email}</p>
+                      </div>
+                    </div>
+                    {booking.message && (
+                      <p className="text-gray-600 mt-2 mb-3">{booking.message}</p>
+                    )}
+                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                      <span>Requested: {new Date(booking.createdAt).toLocaleDateString()}</span>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        booking.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                        booking.status === 'ACCEPTED' ? 'bg-green-100 text-green-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {booking.status}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex space-x-2">
-                    <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                      <CheckCircle className="w-4 h-4 inline mr-1" />
-                      Accept
-                    </button>
-                    <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
-                      <XCircle className="w-4 h-4 inline mr-1" />
-                      Decline
-                    </button>
-                  </div>
+                  {booking.status === 'PENDING' && (
+                    <div className="flex space-x-2 ml-4">
+                      <button 
+                        onClick={() => handleBookingAction(booking.id, 'ACCEPTED')}
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center"
+                      >
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        Accept
+                      </button>
+                      <button 
+                        onClick={() => handleBookingAction(booking.id, 'DECLINED')}
+                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center"
+                      >
+                        <XCircle className="w-4 h-4 mr-1" />
+                        Decline
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))

@@ -39,7 +39,7 @@ export default function NurseDashboard() {
     )
   }
 
-  const isApproved = user?.profile?.isApproved
+  const isApproved = user?.profile?.status === 'APPROVED'
 
   return (
     <div className="min-h-screen bg-gray-50">
