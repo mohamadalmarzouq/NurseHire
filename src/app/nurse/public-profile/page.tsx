@@ -34,8 +34,10 @@ export default function NursePublicProfilePage() {
           return
         }
         const data = await res.json()
-        if (data?.authenticated && data.user?.nurseProfile) {
-          const profile = data.user.nurseProfile
+        console.log('Auth data:', data) // Debug log
+        if (data?.authenticated && data.user?.profile) {
+          const profile = data.user.profile
+          console.log('Profile data:', profile) // Debug log
           setNurse({
             id: data.user.id,
             name: profile.name,
@@ -51,6 +53,11 @@ export default function NursePublicProfilePage() {
             languages: profile.languages || [],
             availability: profile.availability || [],
           })
+        } else {
+          console.log('No profile found or not authenticated')
+          console.log('Authenticated:', data?.authenticated)
+          console.log('User:', data?.user)
+          console.log('Profile:', data?.user?.profile)
         }
       } catch (e) {
         console.error('Error loading nurse profile:', e)
