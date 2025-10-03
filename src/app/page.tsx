@@ -104,12 +104,14 @@ export default function HomePage() {
       {/* How It Works */}
       <section className="nh-section">
         <div className="nh-container">
-          <div className="text-center mb-10">
-            <h2 className="nh-h2 mb-2">How It Works</h2>
-            <p className="nh-sub">Simple steps to find the perfect nurse for your newborn</p>
+          <div className="text-center" style={{marginBottom: '14px'}}>
+            <h2 className="nh-h2" style={{marginBottom:'8px'}}>How It Works</h2>
+            <div className="flex justify-center" style={{marginBottom:'14px'}}>
+              <span className="nh-badge nh-badge--info" style={{fontSize:'14px',padding:'6px 12px'}}>Simple steps to find the perfect nurse for your newborn</span>
+            </div>
           </div>
 
-          <div className="nh-grid nh-grid-3">
+          <div className="nh-grid nh-grid-3" style={{marginTop:'6px'}}>
             <div className="nh-card nh-card--lift text-center">
               <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#e0f2fe',color:'#0F73EE',fontWeight:700}}>1</div>
               <h3 className="text-xl font-semibold mb-2">Browse & Search</h3>
@@ -130,14 +132,14 @@ export default function HomePage() {
       </section>
 
       {/* Benefits for Mothers */}
-      <section className="section-padding bg-white">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-6">
+      <section className="nh-section" style={{background:'#fff'}}>
+        <div className="nh-container">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
+            <div className="flex flex-col justify-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900" style={{marginBottom:'14px'}}>
                 For Mothers
               </h2>
-              <div className="space-y-6">
+              <div className="space-y-5">
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <CheckCircle className="w-4 h-4 text-primary-600" />
@@ -167,8 +169,8 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="nh-card">
-              <div className="text-center">
+            <div className="nh-card flex items-center justify-center">
+              <div className="text-center" style={{maxWidth:'520px'}}>
                 <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#fce7f3'}}>
                   <Heart className="w-8 h-8" color="#DB2777" />
                 </div>
