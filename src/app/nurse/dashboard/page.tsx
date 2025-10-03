@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Calendar, MessageCircle, Star, User, Settings, LogOut, Eye, Edit, Clock } from 'lucide-react'
+import DashboardHeader from '@/components/DashboardHeader'
 
 export default function NurseDashboard() {
   const [user, setUser] = useState<any>(null)
@@ -43,33 +44,7 @@ export default function NurseDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Link href="/" className="text-2xl font-bold text-primary-600">
-                NurseHire
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">Welcome, {user?.profile?.name || 'Nurse'}!</span>
-              <button className="text-gray-500 hover:text-gray-700">
-                <Settings className="w-5 h-5" />
-              </button>
-              <button 
-                onClick={() => {
-                  document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-                  window.location.href = '/auth/login'
-                }}
-                className="text-red-500 hover:text-red-700"
-              >
-                <LogOut className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <DashboardHeader userName={user?.profile?.name} userRole={user?.role} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Approval Status */}

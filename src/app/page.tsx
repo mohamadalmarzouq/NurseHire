@@ -1,7 +1,51 @@
+'use client'
+
 import Link from 'next/link'
 import { Heart, Shield, Star, Users, Clock, CheckCircle, ArrowRight } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function HomePage() {
+  const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          if (data?.authenticated && data.user) {
+            // Redirect logged-in users to their dashboard
+            if (data.user.role === 'MOTHER') {
+              router.push('/mother/dashboard')
+            } else if (data.user.role === 'NURSE') {
+              router.push('/nurse/dashboard')
+            } else if (data.user.role === 'ADMIN') {
+              router.push('/admin/dashboard')
+            }
+            return
+          }
+        }
+      } catch (error) {
+        console.error('Error checking auth:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    checkAuth()
+  }, [router])
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-neutral-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
