@@ -9,8 +9,20 @@ export default function NurseReviewsPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    setReviews([])
-    setIsLoading(false)
+    const loadReviews = async () => {
+      try {
+        const res = await fetch('/api/reviews?type=received', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setReviews(data.reviews || [])
+        }
+      } catch (e) {
+        console.error('Error loading reviews:', e)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadReviews()
   }, [])
 
   const renderStars = (rating: number) => {
@@ -79,16 +91,81 @@ export default function NurseReviewsPage() {
               <p className="text-gray-600">After mothers hire you, they can leave reviews here</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {reviews.map((review) => (
-                <div key={review.id} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-gray-900">{review.motherName}</h3>
-                    <div className="flex items-center">
-                      {renderStars(review.rating)}
+                <div key={review.id} className="bg-white border border-gray-200 rounded-lg p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                        <span className="text-green-600 font-medium text-sm">
+                          {review.giver.name.charAt(0)}
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{review.giver.name}</h3>
+                        <p className="text-sm text-gray-500">Mother</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="flex items-center space-x-1 mb-1">
+                        {renderStars(review.averageRating)}
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">
+                        {review.averageRating.toFixed(1)}/5
+                      </span>
                     </div>
                   </div>
-                  <p className="text-gray-600">{review.comment}</p>
+
+                  {/* Detailed Ratings */}
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+                    <div className="text-center">
+                      <div className="text-sm text-gray-600 mb-1">Appearance</div>
+                      <div className="flex justify-center">
+                        {renderStars(review.appearance)}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">{review.appearance}/5</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm text-gray-600 mb-1">Attitude</div>
+                      <div className="flex justify-center">
+                        {renderStars(review.attitude)}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">{review.attitude}/5</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm text-gray-600 mb-1">Knowledge</div>
+                      <div className="flex justify-center">
+                        {renderStars(review.knowledge)}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">{review.knowledge}/5</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm text-gray-600 mb-1">Hygiene</div>
+                      <div className="flex justify-center">
+                        {renderStars(review.hygiene)}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">{review.hygiene}/5</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm text-gray-600 mb-1">Salary Value</div>
+                      <div className="flex justify-center">
+                        {renderStars(review.salary)}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">{review.salary}/5</div>
+                    </div>
+                  </div>
+
+                  {/* Comment */}
+                  {review.comment && (
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <p className="text-gray-700 text-sm leading-relaxed">"{review.comment}"</p>
+                    </div>
+                  )}
+
+                  {/* Review Date */}
+                  <div className="text-xs text-gray-500 mt-4">
+                    Review submitted on {new Date(review.createdAt).toLocaleDateString()}
+                  </div>
                 </div>
               ))}
             </div>
