@@ -50,9 +50,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-sm p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Sign In</h1>
+    <div className="min-h-screen" style={{background:'linear-gradient(180deg,#F9FAFB, #FFFFFF)'}}>
+      <div className="nh-container" style={{display:'grid',placeItems:'center',minHeight:'60vh',padding:'32px 0'}}>
+        <div className="nh-card" style={{maxWidth:480,width:'100%'}}>
+          <div className="text-center mb-4">
+            <h1 className="nh-h2">Sign In</h1>
+            <p className="nh-sub">Welcome back — access your dashboard</p>
+          </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
@@ -70,7 +74,7 @@ export default function LoginPage() {
               required
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="nh-input"
             />
           </div>
 
@@ -83,29 +87,27 @@ export default function LoginPage() {
               required
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="nh-input"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="w-full nh-btn nh-btn--primary disabled:opacity-50"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
-          <Link href="/auth/register" className="text-blue-600 hover:underline">
-            Sign up
-          </Link>
+        <p className="mt-4 text-center text-sm nh-muted">
+          Don't have an account?{' '}<Link href="/auth/register" className="text-primary-600">Sign up</Link>
         </p>
 
-        <Link href="/" className="block mt-4 text-center text-sm text-gray-600 hover:text-gray-900">
+        <Link href="/" className="block mt-2 text-center text-sm nh-muted">
           ← Back to home
         </Link>
+        </div>
       </div>
     </div>
   )
