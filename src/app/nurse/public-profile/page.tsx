@@ -20,8 +20,26 @@ interface Nurse {
   availability: string[]
 }
 
+interface Review {
+  id: string
+  appearance: number
+  attitude: number
+  knowledge: number
+  hygiene: number
+  salary: number
+  comment: string
+  createdAt: string
+  giver: {
+    id: string
+    name: string
+    role: string
+  }
+  averageRating: number
+}
+
 export default function NursePublicProfilePage() {
   const [nurse, setNurse] = useState<Nurse | null>(null)
+  const [reviews, setReviews] = useState<Review[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -53,6 +71,25 @@ export default function NursePublicProfilePage() {
             languages: profile.languages || [],
             availability: profile.availability || [],
           })
+          
+          // Load reviews for this nurse
+          const reviewsRes = await fetch('/api/reviews?type=received', { cache: 'no-store' })
+          if (reviewsRes.ok) {
+            const reviewsData = await reviewsRes.json()
+            setReviews(reviewsData.reviews || [])
+            
+            // Update nurse with actual review data
+            const reviewCount = reviewsData.reviews?.length || 0
+            const averageRating = reviewCount > 0 
+              ? reviewsData.reviews.reduce((sum: number, review: Review) => sum + review.averageRating, 0) / reviewCount
+              : 0
+            
+            setNurse(prev => prev ? {
+              ...prev,
+              reviewCount,
+              averageRating
+            } : null)
+          }
         } else {
           console.log('No profile found or not authenticated')
           console.log('Authenticated:', data?.authenticated)
@@ -224,10 +261,87 @@ export default function NursePublicProfilePage() {
             {/* Reviews Section */}
             <div className="card">
               <h2 className="text-xl font-semibold text-neutral-900 mb-6">Reviews ({nurse.reviewCount})</h2>
-              {nurse.reviewCount === 0 ? (
+              {reviews.length === 0 ? (
                 <p className="text-neutral-500 text-center py-8">No reviews yet</p>
               ) : (
-                <p className="text-neutral-500 text-center py-8">Reviews will appear here once mothers rate your services</p>
+                <div className="space-y-6">
+                  {reviews.map((review) => (
+                    <div key={review.id} className="border border-gray-200 rounded-lg p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <span className="text-green-600 font-medium text-sm">
+                              {review.giver.name.charAt(0)}
+                            </span>
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-900">{review.giver.name}</h3>
+                            <p className="text-sm text-gray-500">Mother</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="flex items-center space-x-1 mb-1">
+                            {renderStars(review.averageRating)}
+                          </div>
+                          <span className="text-sm font-medium text-gray-900">
+                            {review.averageRating.toFixed(1)}/5
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Detailed Ratings */}
+                      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+                        <div className="text-center">
+                          <div className="text-sm text-gray-600 mb-1">Appearance</div>
+                          <div className="flex justify-center">
+                            {renderStars(review.appearance)}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">{review.appearance}/5</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-sm text-gray-600 mb-1">Attitude</div>
+                          <div className="flex justify-center">
+                            {renderStars(review.attitude)}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">{review.attitude}/5</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-sm text-gray-600 mb-1">Knowledge</div>
+                          <div className="flex justify-center">
+                            {renderStars(review.knowledge)}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">{review.knowledge}/5</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-sm text-gray-600 mb-1">Hygiene</div>
+                          <div className="flex justify-center">
+                            {renderStars(review.hygiene)}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">{review.hygiene}/5</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-sm text-gray-600 mb-1">Salary Value</div>
+                          <div className="flex justify-center">
+                            {renderStars(review.salary)}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">{review.salary}/5</div>
+                        </div>
+                      </div>
+
+                      {/* Comment */}
+                      {review.comment && (
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <p className="text-gray-700 text-sm leading-relaxed">"{review.comment}"</p>
+                        </div>
+                      )}
+
+                      {/* Review Date */}
+                      <div className="text-xs text-gray-500 mt-4">
+                        Review submitted on {new Date(review.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           </div>
