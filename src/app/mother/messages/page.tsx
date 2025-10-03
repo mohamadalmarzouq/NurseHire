@@ -227,26 +227,58 @@ export default function MotherMessagesPage() {
 
                   {/* Messages */}
                   <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {selectedConversation.messages && selectedConversation.messages.length > 0 ? (
-                        selectedConversation.messages.map((message: any) => (
-                          <div key={message.id} className={`flex ${message.senderId === user?.id ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`px-4 py-2 rounded-lg max-w-xs ${
-                              message.senderId === user?.id 
-                                ? 'bg-primary-600 text-white' 
-                                : 'bg-white text-gray-900 shadow-sm'
-                            }`}>
-                              <p className="text-sm">{message.content}</p>
-                              <p className={`text-xs mt-1 ${
-                                message.senderId === user?.id ? 'text-primary-200' : 'text-gray-500'
-                              }`}>
-                                {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                              </p>
+                        selectedConversation.messages.map((message: any, index: number) => {
+                          const isMe = message.senderId === user?.id
+                          const showSender = index === 0 || selectedConversation.messages[index - 1].senderId !== message.senderId
+                          
+                          return (
+                            <div key={message.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+                              <div className={`max-w-md ${isMe ? 'ml-12' : 'mr-12'}`}>
+                                {showSender && !isMe && (
+                                  <div className="flex items-center space-x-2 mb-1">
+                                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                                      <span className="text-xs font-medium text-blue-600">
+                                        {selectedConversation.partnerName.charAt(0)}
+                                      </span>
+                                    </div>
+                                    <span className="text-xs font-medium text-gray-600">
+                                      {selectedConversation.partnerName}
+                                    </span>
+                                  </div>
+                                )}
+                                {showSender && isMe && (
+                                  <div className="flex items-center justify-end space-x-2 mb-1">
+                                    <span className="text-xs font-medium text-gray-600">You</span>
+                                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                                      <span className="text-xs font-medium text-green-600">Y</span>
+                                    </div>
+                                  </div>
+                                )}
+                                <div className={`px-4 py-3 rounded-2xl ${
+                                  isMe 
+                                    ? 'bg-blue-500 text-white rounded-br-md' 
+                                    : 'bg-white text-gray-900 shadow-sm rounded-bl-md border'
+                                }`}>
+                                  <p className="text-sm leading-relaxed">{message.content}</p>
+                                  <p className={`text-xs mt-2 ${
+                                    isMe ? 'text-blue-100' : 'text-gray-500'
+                                  }`}>
+                                    {new Date(message.createdAt).toLocaleTimeString([], { 
+                                      hour: '2-digit', 
+                                      minute: '2-digit',
+                                      hour12: true 
+                                    })}
+                                  </p>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        ))
+                          )
+                        })
                       ) : (
                         <div className="text-center text-gray-500 py-8">
+                          <MessageCircle className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                           <p>No messages yet. Start the conversation!</p>
                         </div>
                       )}

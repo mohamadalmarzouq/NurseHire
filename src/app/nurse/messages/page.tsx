@@ -163,21 +163,33 @@ export default function NurseMessagesPage() {
                     <div
                       key={conversation.partnerId}
                       onClick={() => loadConversation(conversation)}
-                      className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
-                        selectedConversation?.partnerId === conversation.partnerId ? 'bg-blue-50' : ''
+                      className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
+                        selectedConversation?.partnerId === conversation.partnerId ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
                       }`}
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <span className="text-blue-600 font-medium">
-                            {conversation.partnerName?.charAt(0) || 'M'}
-                          </span>
+                        <div className="relative">
+                          <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <span className="text-green-600 font-medium text-sm">
+                              {conversation.partnerName?.charAt(0) || 'M'}
+                            </span>
+                          </div>
+                          {conversation.unreadCount > 0 && (
+                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white flex items-center justify-center">
+                              <span className="text-xs text-white font-bold">{conversation.unreadCount}</span>
+                            </div>
+                          )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">
-                            {conversation.partnerName || 'Mother'}
-                          </p>
-                          <p className="text-xs text-gray-500 truncate">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {conversation.partnerName || 'Mother'}
+                            </p>
+                            <span className="text-xs text-gray-500">
+                              {conversation.lastMessageTime ? new Date(conversation.lastMessageTime).toLocaleDateString() : ''}
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500 truncate mt-1">
                             {conversation.lastMessage || 'No messages yet'}
                           </p>
                         </div>
@@ -196,26 +208,59 @@ export default function NurseMessagesPage() {
                         {selectedConversation.otherUser?.name || selectedConversation.partnerName || 'Mother'}
                       </h3>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                      {selectedConversation.messages?.map((message: any, index: number) => (
-                        <div
-                          key={index}
-                          className={`flex ${message.senderId === user?.id ? 'justify-end' : 'justify-start'}`}
-                        >
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                      {selectedConversation.messages?.map((message: any, index: number) => {
+                        const isMe = message.senderId === user?.id
+                        const showSender = index === 0 || selectedConversation.messages[index - 1].senderId !== message.senderId
+                        
+                        return (
                           <div
-                            className={`max-w-xs px-4 py-2 rounded-lg ${
-                              message.senderId === user?.id
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-200 text-gray-900'
-                            }`}
+                            key={index}
+                            className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
                           >
-                            <p className="text-sm">{message.content}</p>
-                            <p className="text-xs opacity-75 mt-1">
-                              {new Date(message.createdAt).toLocaleTimeString()}
-                            </p>
+                            <div className={`max-w-md ${isMe ? 'ml-12' : 'mr-12'}`}>
+                              {showSender && !isMe && (
+                                <div className="flex items-center space-x-2 mb-1">
+                                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                                    <span className="text-xs font-medium text-green-600">
+                                      {selectedConversation.otherUser?.name?.charAt(0) || 'M'}
+                                    </span>
+                                  </div>
+                                  <span className="text-xs font-medium text-gray-600">
+                                    {selectedConversation.otherUser?.name || 'Mother'}
+                                  </span>
+                                </div>
+                              )}
+                              {showSender && isMe && (
+                                <div className="flex items-center justify-end space-x-2 mb-1">
+                                  <span className="text-xs font-medium text-gray-600">You</span>
+                                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span className="text-xs font-medium text-blue-600">N</span>
+                                  </div>
+                                </div>
+                              )}
+                              <div
+                                className={`px-4 py-3 rounded-2xl ${
+                                  isMe
+                                    ? 'bg-blue-500 text-white rounded-br-md'
+                                    : 'bg-white text-gray-900 shadow-sm rounded-bl-md border'
+                                }`}
+                              >
+                                <p className="text-sm leading-relaxed">{message.content}</p>
+                                <p className={`text-xs mt-2 ${
+                                  isMe ? 'text-blue-100' : 'text-gray-500'
+                                }`}>
+                                  {new Date(message.createdAt).toLocaleTimeString([], { 
+                                    hour: '2-digit', 
+                                    minute: '2-digit',
+                                    hour12: true 
+                                  })}
+                                </p>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                     <div className="p-4 border-t border-gray-200">
                       <div className="flex space-x-2">
