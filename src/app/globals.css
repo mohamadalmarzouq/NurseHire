@@ -850,3 +850,49 @@ nav a:hover {
 .step-line.inactive {
   background: #e5e5e5;
 }
+
+/* =============== NurseHire UI tokens (non-breaking) =============== */
+:root{
+  --nh-primary:#0F73EE; --nh-primary-600:#1D4ED8; --nh-secondary:#10B981; --nh-accent:#F59E0B;
+  --nh-text:#111827; --nh-muted:#6B7280; --nh-line:#E5E7EB; --nh-bg:#F9FAFB; --nh-surface:#FFFFFF;
+  --nh-radius:12px; --nh-radius-lg:20px; --nh-shadow:0 6px 20px rgba(2,6,23,.06);
+  --nh-shadow-sm:0 1px 2px rgba(2,6,23,.06); --nh-focus:0 0 0 3px rgba(15,115,238,.15);
+}
+
+.nh-section{padding:48px 0;background:var(--nh-bg)}
+.nh-container{max-width:1140px;margin:0 auto;padding:0 16px}
+.nh-grid{display:grid;gap:16px}
+@media (min-width:768px){.nh-grid-2{grid-template-columns:repeat(2,1fr)}.nh-grid-3{grid-template-columns:repeat(3,1fr)}}
+
+.nh-card{background:var(--nh-surface);border:1px solid var(--nh-line);border-radius:var(--nh-radius);box-shadow:var(--nh-shadow-sm);padding:20px}
+.nh-card--lift:hover{transform:translateY(-4px);box-shadow:var(--nh-shadow);transition:transform .18s ease,box-shadow .18s ease}
+
+.nh-h1{font-weight:800;font-size:clamp(28px,4.5vw,44px);line-height:1.15;color:var(--nh-text)}
+.nh-h2{font-weight:700;font-size:clamp(22px,3.2vw,30px);line-height:1.2;color:var(--nh-text)}
+.nh-sub{color:var(--nh-muted);font-size:17px}
+
+.nh-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:12px;font-weight:600;border:1px solid transparent;transition:all .18s ease;cursor:pointer;text-decoration:none}
+.nh-btn--primary{background:var(--nh-primary);color:#fff}
+.nh-btn--primary:hover{background:var(--nh-primary-600);transform:translateY(-1px)}
+.nh-btn--ghost{background:#fff;color:var(--nh-primary);border-color:#C7DAFE}
+.nh-btn--ghost:hover{background:#F5F8FF}
+
+.nh-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--nh-line);color:var(--nh-muted);background:#fff}
+.nh-badge--ok{color:#065F46;border-color:#A7F3D0;background:#ECFDF5}
+.nh-badge--warn{color:#92400E;border-color:#FDE68A;background:#FFFBEB}
+.nh-badge--info{color:#1E3A8A;border-color:#BFDBFE;background:#EFF6FF}
+
+.nh-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border:1px solid var(--nh-line);border-radius:12px;background:#fff}
+.nh-row:hover{box-shadow:var(--nh-shadow-sm)}
+
+.nh-input{width:100%;padding:10px 12px;border:1px solid var(--nh-line);border-radius:12px;background:#fff}
+.nh-input:focus{outline:none;box-shadow:var(--nh-focus);border-color:#93C5FD}
+
+.nh-avatar{width:40px;height:40px;border-radius:999px;background:#E5F0FF;color:#1D4ED8;display:grid;place-items:center;font-weight:700}
+
+.nh-empty{display:grid;place-items:center;text-align:center;padding:36px;border:1px dashed var(--nh-line);border-radius:12px;background:#fff;color:var(--nh-muted)}
+.nh-empty .nh-icon{width:48px;height:48px;border-radius:999px;background:#F3F4F6;display:grid;place-items:center;margin-bottom:10px}
+
+.nh-divider{height:1px;background:var(--nh-line);margin:16px 0}
+.nh-muted{color:var(--nh-muted)}
+.nh-right{margin-left:auto}

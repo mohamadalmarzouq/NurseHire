@@ -114,7 +114,7 @@ export default function NursesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
-            <div className="card sticky top-24">
+            <div className="nh-card sticky top-24">
               <h3 className="text-lg font-semibold mb-6 flex items-center">
                 <Filter className="w-5 h-5 mr-2" />
                 Filters
@@ -130,7 +130,7 @@ export default function NursesPage() {
                     placeholder="Search by name or description..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="input-field pl-10"
+                    className="nh-input pl-10"
                   />
                 </div>
               </div>
@@ -141,7 +141,7 @@ export default function NursesPage() {
                 <select
                   value={filters.minExperience}
                   onChange={(e) => setFilters({ ...filters, minExperience: e.target.value })}
-                  className="input-field"
+                  className="nh-input"
                 >
                   <option value="">Any</option>
                   <option value="1">1+ years</option>
@@ -157,7 +157,7 @@ export default function NursesPage() {
                 <select
                   value={filters.maxSalary}
                   onChange={(e) => setFilters({ ...filters, maxSalary: e.target.value })}
-                  className="input-field"
+                  className="nh-input"
                 >
                   <option value="">Any</option>
                   <option value="20">Up to 20 KD</option>
@@ -173,7 +173,7 @@ export default function NursesPage() {
                   setSearchTerm('')
                   setFilters({ minExperience: '', maxSalary: '', availability: '' })
                 }}
-                className="w-full btn-secondary"
+                className="w-full nh-btn nh-btn--ghost"
               >
                 Clear Filters
               </button>
@@ -208,7 +208,7 @@ export default function NursesPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredNurses.map((nurse) => (
-                  <div key={nurse.id} className="card-hover">
+                  <div key={nurse.id} className="nh-card nh-card--lift">
                     <div className="flex items-start space-x-4 mb-4">
                       <div className="w-16 h-16 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
                         {nurse.profileImageUrl ? (

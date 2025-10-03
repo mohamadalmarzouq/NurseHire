@@ -49,23 +49,22 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-50 to-secondary-50 section-padding">
-        <div className="container-custom">
+      <section className="nh-section" style={{background:"linear-gradient(135deg,#f0f9ff,#f0fdf4)"}}>
+        <div className="nh-container">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-neutral-900 mb-6 text-balance">
+            <h1 className="nh-h1 mb-4 text-balance">
               Trusted Newborn Care Nurses in{' '}
               <span className="text-gradient">Kuwait</span>
             </h1>
-            <p className="text-xl text-neutral-600 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Connect with qualified, vetted nurses for your newborn&apos;s care. 
-              Safe, professional, and caring service you can trust.
+            <p className="nh-sub mb-8 max-w-2xl mx-auto">
+              Connect with qualified, vetted nurses for your newborn&apos;s care. Safe, professional, and caring service you can trust.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/nurses" className="btn-primary text-lg px-8 py-4">
+              <Link href="/nurses" className="nh-btn nh-btn--primary">
                 Find a Nurse
-                <ArrowRight className="w-5 h-5 ml-2 inline" />
+                <ArrowRight className="w-5 h-5" />
               </Link>
-              <Link href="/nurse/register" className="btn-secondary text-lg px-8 py-4">
+              <Link href="/nurse/register" className="nh-btn nh-btn--ghost">
                 Become a Nurse
               </Link>
             </div>
@@ -74,29 +73,29 @@ export default function HomePage() {
       </section>
 
       {/* Trust Indicators */}
-      <section className="bg-white py-12">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="flex flex-col items-center space-y-3">
-              <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                <Shield className="w-6 h-6 text-primary-600" />
+      <section className="nh-section" style={{background:'#fff'}}>
+        <div className="nh-container">
+          <div className="nh-grid nh-grid-3 text-center">
+            <div className="nh-card nh-card--lift">
+              <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#e0f2fe'}}>
+                <Shield className="w-6 h-6" color="#0284c7" />
               </div>
-              <h3 className="font-semibold text-lg">MOH License Verified</h3>
-              <p className="text-neutral-600 text-sm">All nurses are licensed and verified by Kuwait&apos;s Ministry of Health</p>
+              <h3 className="text-xl font-semibold mt-3">MOH License Verified</h3>
+              <p className="nh-muted text-sm mt-1">All nurses are licensed and verified by Kuwait&apos;s Ministry of Health</p>
             </div>
-            <div className="flex flex-col items-center space-y-3">
-              <div className="w-12 h-12 bg-secondary-100 rounded-full flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-secondary-600" />
+            <div className="nh-card nh-card--lift">
+              <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#dcfce7'}}>
+                <CheckCircle className="w-6 h-6" color="#10B981" />
               </div>
-              <h3 className="font-semibold text-lg">Background Checked</h3>
-              <p className="text-neutral-600 text-sm">Comprehensive background checks and reference verification</p>
+              <h3 className="text-xl font-semibold mt-3">Background Checked</h3>
+              <p className="nh-muted text-sm mt-1">Comprehensive background checks and reference verification</p>
             </div>
-            <div className="flex flex-col items-center space-y-3">
-              <div className="w-12 h-12 bg-accent-100 rounded-full flex items-center justify-center">
-                <Star className="w-6 h-6 text-accent-600" />
+            <div className="nh-card nh-card--lift">
+              <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#FEF3C7'}}>
+                <Star className="w-6 h-6" color="#F59E0B" />
               </div>
-              <h3 className="font-semibold text-lg">Rated & Reviewed</h3>
-              <p className="text-neutral-600 text-sm">Real reviews from mothers who have hired our nurses</p>
+              <h3 className="text-xl font-semibold mt-3">Rated & Reviewed</h3>
+              <p className="nh-muted text-sm mt-1">Real reviews from mothers who have hired our nurses</p>
             </div>
           </div>
         </div>
