@@ -3,11 +3,13 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Menu, X, User, Heart, Shield, LogOut } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userRole, setUserRole] = useState<string | null>(null)
+  const pathname = usePathname()
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -26,6 +28,18 @@ export default function Header() {
     }
     checkAuth()
   }, [])
+
+  // Hide header for dashboard pages
+  const isDashboardPage = pathname?.startsWith('/mother/dashboard') || 
+                         pathname?.startsWith('/nurse/dashboard') || 
+                         pathname?.startsWith('/admin/dashboard') ||
+                         pathname?.startsWith('/mother/') ||
+                         pathname?.startsWith('/nurse/') ||
+                         pathname?.startsWith('/admin/')
+
+  if (isDashboardPage) {
+    return null
+  }
 
   return (
     <header className="bg-white shadow-soft sticky top-0 z-50">

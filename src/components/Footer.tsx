@@ -1,7 +1,23 @@
+'use client'
+
 import Link from 'next/link'
 import { Heart, Mail, Phone, MapPin } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 export default function Footer() {
+  const pathname = usePathname()
+
+  // Hide footer for dashboard pages
+  const isDashboardPage = pathname?.startsWith('/mother/dashboard') || 
+                         pathname?.startsWith('/nurse/dashboard') || 
+                         pathname?.startsWith('/admin/dashboard') ||
+                         pathname?.startsWith('/mother/') ||
+                         pathname?.startsWith('/nurse/') ||
+                         pathname?.startsWith('/admin/')
+
+  if (isDashboardPage) {
+    return null
+  }
   return (
     <footer className="bg-neutral-900 text-white">
       <div className="container-custom section-padding">
