@@ -102,44 +102,28 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="section-padding bg-neutral-50">
-        <div className="container-custom">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-              How It Works
-            </h2>
-            <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Simple steps to find the perfect nurse for your newborn
-            </p>
+      <section className="nh-section">
+        <div className="nh-container">
+          <div className="text-center mb-10">
+            <h2 className="nh-h2 mb-2">How It Works</h2>
+            <p className="nh-sub">Simple steps to find the perfect nurse for your newborn</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
-                1
-              </div>
-              <h3 className="text-xl font-semibold mb-4">Browse & Search</h3>
-              <p className="text-neutral-600">
-                Search through verified nurse profiles with detailed information about experience, availability, and rates.
-              </p>
+          <div className="nh-grid nh-grid-3">
+            <div className="nh-card nh-card--lift text-center">
+              <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#e0f2fe',color:'#0F73EE',fontWeight:700}}>1</div>
+              <h3 className="text-xl font-semibold mb-2">Browse & Search</h3>
+              <p className="nh-muted">Search verified nurse profiles with details about experience, availability, and rates.</p>
             </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
-                2
-              </div>
-              <h3 className="text-xl font-semibold mb-4">Connect & Chat</h3>
-              <p className="text-neutral-600">
-                Message nurses directly to discuss your needs, ask questions, and get to know them better.
-              </p>
+            <div className="nh-card nh-card--lift text-center">
+              <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#dcfce7',color:'#10B981',fontWeight:700}}>2</div>
+              <h3 className="text-xl font-semibold mb-2">Connect & Chat</h3>
+              <p className="nh-muted">Message nurses directly to discuss your needs and get to know them.</p>
             </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
-                3
-              </div>
-              <h3 className="text-xl font-semibold mb-4">Book & Hire</h3>
-              <p className="text-neutral-600">
-                Send a booking request and once accepted, get contact details to arrange your newborn's care.
-              </p>
+            <div className="nh-card nh-card--lift text-center">
+              <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#FEF3C7',color:'#F59E0B',fontWeight:700}}>3</div>
+              <h3 className="text-xl font-semibold mb-2">Book & Hire</h3>
+              <p className="nh-muted">Send a booking request and, once accepted, coordinate care with confidence.</p>
             </div>
           </div>
         </div>
@@ -183,15 +167,13 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-3xl p-8">
+            <div className="nh-card">
               <div className="text-center">
-                <Heart className="w-16 h-16 text-primary-600 mx-auto mb-6" />
-                <h3 className="text-2xl font-bold text-neutral-900 mb-4">
-                  Your Baby&apos;s Safety is Our Priority
-                </h3>
-                <p className="text-neutral-600 text-lg">
-                  Every nurse on our platform is carefully vetted to ensure your newborn receives the best possible care.
-                </p>
+                <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#fce7f3'}}>
+                  <Heart className="w-8 h-8" color="#DB2777" />
+                </div>
+                <h3 className="text-2xl font-bold text-neutral-900 mb-3">Your Baby&apos;s Safety is Our Priority</h3>
+                <p className="nh-sub text-lg">Every nurse on our platform is carefully vetted to ensure your newborn receives the best possible care.</p>
               </div>
             </div>
           </div>
@@ -252,21 +234,15 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="section-padding bg-gradient-to-r from-primary-600 to-secondary-600">
-        <div className="container-custom text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Get Started?
-          </h2>
-          <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+      <section className="nh-section" style={{background:"linear-gradient(135deg,#0F73EE,#0e5ed3)"}}>
+        <div className="nh-container text-center">
+          <h2 className="nh-h2 mb-3" style={{color:'#fff'}}>Ready to Get Started?</h2>
+          <p className="text-xl mb-8" style={{color:'rgba(255,255,255,.85)'}}>
             Join hundreds of families and nurses who trust NurseHire for newborn care in Kuwait.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/nurses" className="bg-white text-primary-600 hover:bg-neutral-50 font-medium py-3 px-8 rounded-xl transition-colors duration-200">
-              Find a Nurse
-            </Link>
-            <Link href="/nurse/register" className="border-2 border-white text-white hover:bg-white hover:text-primary-600 font-medium py-3 px-8 rounded-xl transition-colors duration-200">
-              Join as Nurse
-            </Link>
+            <Link href="/nurses" className="nh-btn nh-btn--ghost" style={{background:'#fff'}}>Find a Nurse</Link>
+            <Link href="/nurse/register" className="nh-btn nh-btn--primary" style={{background:'#10B981'}}>Join as Nurse</Link>
           </div>
         </div>
       </section>
