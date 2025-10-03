@@ -6,12 +6,96 @@ import { ArrowLeft, MessageCircle, Send } from 'lucide-react'
 
 export default function NurseMessagesPage() {
   const [conversations, setConversations] = useState<any[]>([])
+  const [selectedConversation, setSelectedConversation] = useState<any>(null)
+  const [newMessage, setNewMessage] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
-    setConversations([])
-    setIsLoading(false)
+    const loadUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (!res.ok) {
+          window.location.href = '/auth/login'
+          return
+        }
+        const data = await res.json()
+        if (data?.authenticated) setUser(data.user)
+      } catch (e) {
+        console.error(e)
+        window.location.href = '/auth/login'
+      }
+    }
+    loadUser()
   }, [])
+
+  useEffect(() => {
+    const loadConversations = async () => {
+      try {
+        const res = await fetch('/api/messages', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setConversations(data.conversations || [])
+        }
+      } catch (e) {
+        console.error('Error loading conversations:', e)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadConversations()
+  }, [])
+
+  const handleSendMessage = async () => {
+    if (newMessage.trim() && selectedConversation) {
+      try {
+        const res = await fetch('/api/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            receiverId: selectedConversation.partnerId,
+            content: newMessage,
+          }),
+        })
+
+        if (res.ok) {
+          // Reload conversations to get updated messages
+          const conversationsRes = await fetch('/api/messages', { cache: 'no-store' })
+          if (conversationsRes.ok) {
+            const data = await conversationsRes.json()
+            setConversations(data.conversations || [])
+            
+            // Update selected conversation
+            const updatedConv = data.conversations.find((c: any) => c.partnerId === selectedConversation.partnerId)
+            if (updatedConv) {
+              setSelectedConversation(updatedConv)
+            }
+          }
+          setNewMessage('')
+        }
+      } catch (e) {
+        console.error('Error sending message:', e)
+      }
+    }
+  }
+
+  const loadConversation = async (conversation: any) => {
+    try {
+      const res = await fetch(`/api/messages/${conversation.partnerId}`, { cache: 'no-store' })
+      if (res.ok) {
+        const data = await res.json()
+        setSelectedConversation({
+          ...conversation,
+          messages: data.messages || [],
+          otherUser: data.otherUser,
+        })
+      }
+    } catch (e) {
+      console.error('Error loading conversation:', e)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -60,7 +144,7 @@ export default function NurseMessagesPage() {
           <p className="text-gray-600 mt-2">Chat with mothers</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           {conversations.length === 0 ? (
             <div className="text-center py-12">
               <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -68,7 +152,101 @@ export default function NurseMessagesPage() {
               <p className="text-gray-600">When mothers contact you, messages will appear here</p>
             </div>
           ) : (
-            <div>Messages list here</div>
+            <div className="flex h-96">
+              {/* Conversations List */}
+              <div className="w-1/3 border-r border-gray-200">
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="font-medium text-gray-900">Conversations</h3>
+                </div>
+                <div className="overflow-y-auto">
+                  {conversations.map((conversation) => (
+                    <div
+                      key={conversation.partnerId}
+                      onClick={() => loadConversation(conversation)}
+                      className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
+                        selectedConversation?.partnerId === conversation.partnerId ? 'bg-blue-50' : ''
+                      }`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                          <span className="text-blue-600 font-medium">
+                            {conversation.partnerName?.charAt(0) || 'M'}
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {conversation.partnerName || 'Mother'}
+                          </p>
+                          <p className="text-xs text-gray-500 truncate">
+                            {conversation.lastMessage || 'No messages yet'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Chat Area */}
+              <div className="flex-1 flex flex-col">
+                {selectedConversation ? (
+                  <>
+                    <div className="p-4 border-b border-gray-200 bg-gray-50">
+                      <h3 className="font-medium text-gray-900">
+                        {selectedConversation.otherUser?.name || selectedConversation.partnerName || 'Mother'}
+                      </h3>
+                    </div>
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                      {selectedConversation.messages?.map((message: any, index: number) => (
+                        <div
+                          key={index}
+                          className={`flex ${message.senderId === user?.id ? 'justify-end' : 'justify-start'}`}
+                        >
+                          <div
+                            className={`max-w-xs px-4 py-2 rounded-lg ${
+                              message.senderId === user?.id
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-200 text-gray-900'
+                            }`}
+                          >
+                            <p className="text-sm">{message.content}</p>
+                            <p className="text-xs opacity-75 mt-1">
+                              {new Date(message.createdAt).toLocaleTimeString()}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="p-4 border-t border-gray-200">
+                      <div className="flex space-x-2">
+                        <input
+                          type="text"
+                          value={newMessage}
+                          onChange={(e) => setNewMessage(e.target.value)}
+                          placeholder="Type a message..."
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                        />
+                        <button
+                          onClick={handleSendMessage}
+                          disabled={!newMessage.trim()}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <Send className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex-1 flex items-center justify-center">
+                    <div className="text-center">
+                      <MessageCircle className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                      <p className="text-gray-500">Select a conversation to start chatting</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           )}
         </div>
       </div>
