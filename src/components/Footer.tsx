@@ -7,13 +7,14 @@ import { usePathname } from 'next/navigation'
 export default function Footer() {
   const pathname = usePathname()
 
-  // Hide footer for dashboard pages
+  // Hide footer for dashboard pages and nurses listing
   const isDashboardPage = pathname?.startsWith('/mother/dashboard') || 
                          pathname?.startsWith('/nurse/dashboard') || 
                          pathname?.startsWith('/admin/dashboard') ||
                          pathname?.startsWith('/mother/') ||
                          pathname?.startsWith('/nurse/') ||
-                         pathname?.startsWith('/admin/')
+                         pathname?.startsWith('/admin/') ||
+                         pathname === '/nurses'
 
   if (isDashboardPage) {
     return null

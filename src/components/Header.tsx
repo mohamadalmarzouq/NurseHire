@@ -29,13 +29,14 @@ export default function Header() {
     checkAuth()
   }, [])
 
-  // Hide header for dashboard pages
+  // Hide header for dashboard pages and nurses listing
   const isDashboardPage = pathname?.startsWith('/mother/dashboard') || 
                          pathname?.startsWith('/nurse/dashboard') || 
                          pathname?.startsWith('/admin/dashboard') ||
                          pathname?.startsWith('/mother/') ||
                          pathname?.startsWith('/nurse/') ||
-                         pathname?.startsWith('/admin/')
+                         pathname?.startsWith('/admin/') ||
+                         pathname === '/nurses'
 
   if (isDashboardPage) {
     return null
