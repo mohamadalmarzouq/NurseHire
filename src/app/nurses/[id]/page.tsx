@@ -69,7 +69,9 @@ export default function NurseProfilePage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        console.log('Checking authentication...')
         const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        console.log('Auth response status:', res.status)
         if (res.ok) {
           const data = await res.json()
           console.log('Auth data:', data) // Debug log
@@ -77,10 +79,18 @@ export default function NurseProfilePage() {
             setUser(data.user)
             setIsAuthenticated(true)
             console.log('User authenticated:', data.user) // Debug log
+            console.log('User role:', data.user?.role)
+          } else {
+            console.log('User not authenticated')
+            setIsAuthenticated(false)
           }
+        } else {
+          console.log('Auth request failed with status:', res.status)
+          setIsAuthenticated(false)
         }
       } catch (error) {
         console.error('Error checking authentication:', error)
+        setIsAuthenticated(false)
       }
     }
     checkAuth()
@@ -488,6 +498,7 @@ export default function NurseProfilePage() {
               <div className="text-center py-8">
                 <p className="text-red-600 mb-4">You must be logged in as a mother to book a nurse.</p>
                 <p className="text-sm text-gray-500 mb-4">Debug: isAuthenticated={isAuthenticated.toString()}, role={user?.role || 'none'}</p>
+                <p className="text-xs text-gray-400 mb-4">User object: {JSON.stringify(user, null, 2)}</p>
                 <Link 
                   href="/auth/login"
                   className="btn-primary"
