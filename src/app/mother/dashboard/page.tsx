@@ -97,51 +97,91 @@ export default function MotherDashboard() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Link href="/nurses" className="nh-card nh-card--lift">
+          <Link href="/nurses" className="group nh-card nh-card--lift" style={{
+            background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)',
+            border: '1px solid #BAE6FD',
+            transition: 'all 0.3s ease'
+          }}>
             <div className="flex items-center">
-              <div className="bg-primary-100 p-3 rounded-lg">
-                <Search className="w-6 h-6 text-primary-600" />
+              <div className="p-3 rounded-xl" style={{
+                background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
+                boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+              }}>
+                <Search className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <h3 className="text-lg font-semibold text-gray-900">Find Nurses</h3>
-                <p className="text-gray-600 text-sm">Browse available nurses</p>
+                <h3 className="text-lg font-bold" style={{color: '#1E40AF'}}>Find Nurses</h3>
+                <p className="text-sm" style={{color: '#1E40AF', opacity: 0.8}}>Browse available nurses</p>
               </div>
+            </div>
+            <div className="mt-3 text-xs font-medium" style={{color: '#1E40AF', opacity: 0.7}}>
+              Discover trusted care →
             </div>
           </Link>
 
-          <Link href="/mother/bookings" className="nh-card nh-card--lift">
+          <Link href="/mother/bookings" className="group nh-card nh-card--lift" style={{
+            background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
+            border: '1px solid #BBF7D0',
+            transition: 'all 0.3s ease'
+          }}>
             <div className="flex items-center">
-              <div className="bg-green-100 p-3 rounded-lg">
-                <Calendar className="w-6 h-6 text-green-600" />
+              <div className="p-3 rounded-xl" style={{
+                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+              }}>
+                <Calendar className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <h3 className="text-lg font-semibold text-gray-900">My Bookings</h3>
-                <p className="text-gray-600 text-sm">View booking requests</p>
+                <h3 className="text-lg font-bold" style={{color: '#047857'}}>My Bookings</h3>
+                <p className="text-sm" style={{color: '#047857', opacity: 0.8}}>View booking requests</p>
               </div>
+            </div>
+            <div className="mt-3 text-xs font-medium" style={{color: '#047857', opacity: 0.7}}>
+              Manage your schedule →
             </div>
           </Link>
 
-          <Link href="/mother/messages" className="nh-card nh-card--lift">
+          <Link href="/mother/messages" className="group nh-card nh-card--lift" style={{
+            background: 'linear-gradient(135deg, #FDF4FF 0%, #FAE8FF 100%)',
+            border: '1px solid #E9D5FF',
+            transition: 'all 0.3s ease'
+          }}>
             <div className="flex items-center">
-              <div className="bg-blue-100 p-3 rounded-lg">
-                <MessageCircle className="w-6 h-6 text-blue-600" />
+              <div className="p-3 rounded-xl" style={{
+                background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)'
+              }}>
+                <MessageCircle className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <h3 className="text-lg font-semibold text-gray-900">Messages</h3>
-                <p className="text-gray-600 text-sm">Chat with nurses</p>
+                <h3 className="text-lg font-bold" style={{color: '#6B21A8'}}>Messages</h3>
+                <p className="text-sm" style={{color: '#6B21A8', opacity: 0.8}}>Chat with nurses</p>
               </div>
+            </div>
+            <div className="mt-3 text-xs font-medium" style={{color: '#6B21A8', opacity: 0.7}}>
+              Connect & communicate →
             </div>
           </Link>
 
-          <Link href="/mother/reviews" className="nh-card nh-card--lift">
+          <Link href="/mother/reviews" className="group nh-card nh-card--lift" style={{
+            background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
+            border: '1px solid #FDE68A',
+            transition: 'all 0.3s ease'
+          }}>
             <div className="flex items-center">
-              <div className="bg-yellow-100 p-3 rounded-lg">
-                <Star className="w-6 h-6 text-yellow-600" />
+              <div className="p-3 rounded-xl" style={{
+                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)'
+              }}>
+                <Star className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <h3 className="text-lg font-semibold text-gray-900">Reviews</h3>
-                <p className="text-gray-600 text-sm">Rate your nurses</p>
+                <h3 className="text-lg font-bold" style={{color: '#92400E'}}>Reviews</h3>
+                <p className="text-sm" style={{color: '#92400E', opacity: 0.8}}>Rate your nurses</p>
               </div>
+            </div>
+            <div className="mt-3 text-xs font-medium" style={{color: '#92400E', opacity: 0.7}}>
+              Share your experience →
             </div>
           </Link>
         </div>
