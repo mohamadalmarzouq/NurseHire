@@ -129,8 +129,8 @@ export default function NurseDashboard() {
         {/* Profile Overview */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Profile Summary */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Profile Summary</h2>
+          <div className="nh-card">
+            <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Profile Summary</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Total Experience</span>
@@ -177,9 +177,9 @@ export default function NurseDashboard() {
           </div>
 
           {/* Recent Activity */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h2>
-            <div className="space-y-4">
+          <div className="nh-card">
+            <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Recent Activity</h2>
+            <div className="space-y-3">
               <div className="border-l-4 border-blue-400 pl-4 py-2">
                 <p className="text-sm text-gray-600">Profile created</p>
                 <p className="text-xs text-gray-500">Waiting for admin approval</p>
@@ -201,8 +201,8 @@ export default function NurseDashboard() {
         </div>
 
         {/* Profile Information */}
-        <div className="mt-8 bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Profile Information</h2>
+        <div className="mt-8 nh-card">
+          <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Profile Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Name</label>

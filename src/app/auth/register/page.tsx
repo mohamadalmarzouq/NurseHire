@@ -49,10 +49,10 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{background:'linear-gradient(180deg,#F9FAFB, #FFFFFF)'}}>
-      <div className="nh-container" style={{padding:'40px 0'}}>
-        <div className="nh-grid nh-grid-2" style={{alignItems:'stretch'}}>
-          <div className="nh-card" style={{maxWidth:560,width:'100%',justifySelf:'center'}}>
+    <div className="min-h-screen" style={{background:'linear-gradient(180deg,#F6FAFF, #FFFFFF)'}}>
+      <div className="nh-container" style={{minHeight:'calc(100vh - 140px)',display:'grid',alignItems:'center',padding:'40px 0'}}>
+        <div className="nh-grid nh-grid-2" style={{alignItems:'stretch',gap:'24px',maxWidth:1120,margin:'0 auto'}}>
+          <div className="nh-card" style={{minHeight:'520px',width:'100%',justifySelf:'stretch'}}>
           <div className="text-center mb-4">
             <h1 className="nh-h2">Create Account</h1>
             <p className="nh-sub">Join NurseHire and get started in minutes</p>
@@ -175,7 +175,7 @@ export default function RegisterPage() {
           </div>
 
           {/* Benefits panel */}
-          <div className="nh-card" style={{background:'#F8FAFF',borderColor:'#E6EEFF'}}>
+          <div className="nh-card" style={{background:'linear-gradient(180deg,#F8FAFF,#FFFFFF)',borderColor:'#E6EEFF',minHeight:'520px'}}>
             <div style={{maxWidth:500,margin:'0 auto'}}>
               <div className="w-14 h-14 rounded-full" style={{background:'#E0EAFF',display:'grid',placeItems:'center',margin:'0 auto 12px'}}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -183,7 +183,7 @@ export default function RegisterPage() {
                 </svg>
               </div>
               <h2 className="text-center nh-h2" style={{fontSize:'22px',marginBottom:'8px'}}>Benefits</h2>
-              <ul className="nh-muted" style={{listStyle:'none',padding:0,margin:0,display:'grid',gap:'10px'}}>
+              <ul className="nh-muted" style={{listStyle:'none',padding:0,margin:0,display:'grid',gap:'12px'}}>
                 <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--ok">Trust</span><span className="nh-right nh-muted">MOH License verified</span></li>
                 <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--info">Messaging</span><span className="nh-right nh-muted">Private 1:1 chat</span></li>
                 <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--warn">Booking</span><span className="nh-right nh-muted">Quick request & response</span></li>
