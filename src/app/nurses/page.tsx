@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Filter, Star, MapPin, Clock, Heart, User } from 'lucide-react'
+import { Search, Filter, Star, MapPin, Clock, Heart, User, ArrowLeft } from 'lucide-react'
 
 interface Nurse {
   id: string
@@ -99,6 +99,17 @@ export default function NursesPage() {
       {/* Header */}
       <div className="bg-white shadow-soft">
         <div className="container-custom py-8">
+          {/* Back Button */}
+          <div className="mb-6">
+            <Link 
+              href="/mother/dashboard" 
+              className="inline-flex items-center text-primary-600 hover:text-primary-700 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Mother Dashboard
+            </Link>
+          </div>
+          
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
               Find Your Perfect Nurse
@@ -216,60 +227,78 @@ export default function NursesPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredNurses.map((nurse) => (
-                  <div key={nurse.id} className="nh-card nh-card--lift">
-                    <div className="flex items-start space-x-4 mb-4">
-                      <div className="w-16 h-16 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  <div key={nurse.id} className="nh-card nh-card--lift p-6">
+                    {/* Header Section */}
+                    <div className="flex items-center space-x-4 mb-6">
+                      <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
                         {nurse.profileImageUrl ? (
                           <img
                             src={nurse.profileImageUrl}
                             alt={nurse.name}
-                            className="w-16 h-16 rounded-full object-cover"
+                            className="w-20 h-20 rounded-2xl object-cover"
                           />
                         ) : (
-                          <User className="w-8 h-8 text-primary-600" />
+                          <User className="w-10 h-10 text-blue-600" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-semibold text-neutral-900 mb-1">
+                        <h3 className="text-xl font-bold text-gray-900 mb-1">
                           {nurse.name}
                         </h3>
-                        <p className="text-sm text-neutral-600 mb-2">
+                        <p className="text-sm text-gray-600 mb-3">
                           {nurse.age} years old • {nurse.totalExperience} years experience
                         </p>
-                        <div className="flex items-center space-x-1 mb-2">
-                          {renderStars(nurse.averageRating)}
-                          <span className="nh-badge nh-badge--info ml-2 text-xs">
+                        <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-1">
+                            {renderStars(nurse.averageRating)}
+                          </div>
+                          <span className="nh-badge nh-badge--info text-xs">
                             {nurse.averageRating}/5 • {nurse.reviewCount} reviews
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <p className="text-neutral-600 text-sm mb-4 line-clamp-2">
-                      {nurse.aboutMe}
-                    </p>
-
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <p className="text-xs text-neutral-500 mb-1">Part-time Rate</p>
-                        <p className="font-semibold text-primary-600">
-                          {nurse.partTimeSalary} KD/hour
+                    {/* About Section */}
+                    {nurse.aboutMe && (
+                      <div className="mb-6">
+                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                          {nurse.aboutMe}
                         </p>
                       </div>
-                      <div>
-                        <p className="text-xs text-neutral-500 mb-1">Night Shift Rate</p>
-                        <p className="font-semibold text-primary-600">
-                          {nurse.nightShiftSalary} KD/hour
+                    )}
+
+                    {/* Rates Section */}
+                    <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-xl">
+                      <div className="text-center">
+                        <p className="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Part-time Rate</p>
+                        <p className="text-2xl font-bold text-blue-600">
+                          {nurse.partTimeSalary}
                         </p>
+                        <p className="text-sm text-gray-600">KD/hour</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Night Shift Rate</p>
+                        <p className="text-2xl font-bold text-blue-600">
+                          {nurse.nightShiftSalary}
+                        </p>
+                        <p className="text-sm text-gray-600">KD/hour</p>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-sm text-neutral-600">
-                        <MapPin className="w-4 h-4 mr-1" />
-                        Kuwait Experience: {nurse.kuwaitExperience} years
+                    {/* Footer Section */}
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <MapPin className="w-4 h-4 mr-2 text-gray-400" />
+                        <span className="font-medium">Kuwait Experience:</span>
+                        <span className="ml-1 font-semibold text-gray-900">{nurse.kuwaitExperience} years</span>
                       </div>
-                      <Link href={`/nurses/${nurse.id}`} className="nh-btn nh-btn--primary text-sm">View Profile</Link>
+                      <Link 
+                        href={`/nurses/${nurse.id}`} 
+                        className="nh-btn nh-btn--primary px-6 py-2 text-sm font-medium"
+                      >
+                        View Profile
+                      </Link>
                     </div>
                   </div>
                 ))}
