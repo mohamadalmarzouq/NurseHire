@@ -226,7 +226,7 @@ export default function MotherReviewsPage() {
 
                   {/* Review Form */}
                   {showReviewForm === booking.nurse.id && (
-                    <div className="mt-6 pt-6 border-t border-gray-200">
+                    <div className="mt-6 pt-6 border-t border-gray-200 pb-4">
                       <h4 className="text-lg font-medium text-gray-900 mb-4">Rate {booking.nurse.name}</h4>
                       
                       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
@@ -272,16 +272,16 @@ export default function MotherReviewsPage() {
                         />
                       </div>
 
-                      <div className="flex justify-end space-x-3">
+                      <div className="flex justify-end space-x-3 mt-4">
                         <button
                           onClick={() => setShowReviewForm(null)}
-                          className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                          className="px-6 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 font-medium"
                         >
                           Cancel
                         </button>
                         <button
                           onClick={() => handleSubmitReview(booking.nurse.id)}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
                         >
                           Submit Review
                         </button>
