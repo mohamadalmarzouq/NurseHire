@@ -79,11 +79,11 @@ export default function NurseReviewsPage() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">My Reviews</h1>
-          <p className="text-gray-600 mt-2">See what mothers are saying about you</p>
+          <h1 className="nh-h2">My Reviews</h1>
+          <p className="nh-sub mt-1">See what mothers are saying about you</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="nh-card">
           {reviews.length === 0 ? (
             <div className="text-center py-12">
               <Star className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -93,7 +93,7 @@ export default function NurseReviewsPage() {
           ) : (
             <div className="space-y-6">
               {reviews.map((review) => (
-                <div key={review.id} className="bg-white border border-gray-200 rounded-lg p-6">
+                <div key={review.id} className="nh-card">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
@@ -110,7 +110,7 @@ export default function NurseReviewsPage() {
                       <div className="flex items-center space-x-1 mb-1">
                         {renderStars(review.averageRating)}
                       </div>
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="nh-badge nh-badge--info">
                         {review.averageRating.toFixed(1)}/5
                       </span>
                     </div>
