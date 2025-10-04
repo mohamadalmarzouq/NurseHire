@@ -261,8 +261,8 @@ export default function NursesPage() {
 
                     {/* About Section */}
                     {nurse.aboutMe && (
-                      <div className="mb-6">
-                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                      <div className="mb-4 flex-1">
+                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
                           {nurse.aboutMe}
                         </p>
                       </div>
@@ -287,17 +287,17 @@ export default function NursesPage() {
                     </div>
 
                     {/* Footer Section */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
                       <div className="flex items-center text-sm text-gray-600">
-                        <MapPin className="w-4 h-4 mr-2 text-gray-400" />
-                        <div>
-                          <div className="font-medium">Kuwait Experience</div>
+                        <MapPin className="w-4 h-4 mr-2 text-gray-400 flex-shrink-0" />
+                        <div className="min-w-0">
+                          <div className="font-medium text-gray-700">Kuwait Experience</div>
                           <div className="font-semibold text-gray-900">{nurse.kuwaitExperience} years</div>
                         </div>
                       </div>
                       <Link 
                         href={`/nurses/${nurse.id}`} 
-                        className="nh-btn nh-btn--primary px-6 py-2 text-sm font-medium"
+                        className="nh-btn nh-btn--primary px-6 py-2 text-sm font-medium flex-shrink-0"
                       >
                         View Profile
                       </Link>
