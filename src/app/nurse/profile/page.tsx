@@ -201,7 +201,7 @@ export default function NurseProfilePage() {
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="nh-card">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Profile Image */}
             <div className="flex flex-col items-center">
@@ -219,7 +219,7 @@ export default function NurseProfilePage() {
 
             {/* Personal Information */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Personal Information</h2>
+              <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Personal Information</h2>
               <div className="space-y-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Name</label>
@@ -229,7 +229,7 @@ export default function NurseProfilePage() {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="mt-1 block w-full input-field"
+                      className="mt-1 block w-full nh-input"
                     />
                   ) : (
                     <p className="mt-1 text-gray-900">{user?.nurseProfile?.name || 'Not set'}</p>
@@ -248,7 +248,7 @@ export default function NurseProfilePage() {
                       name="age"
                       value={formData.age}
                       onChange={handleChange}
-                      className="mt-1 block w-full input-field"
+                      className="mt-1 block w-full nh-input"
                     />
                   ) : (
                     <p className="mt-1 text-gray-900">{user?.nurseProfile?.age || 'Not set'}</p>
@@ -262,7 +262,7 @@ export default function NurseProfilePage() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="mt-1 block w-full input-field"
+                      className="mt-1 block w-full nh-input"
                     />
                   ) : (
                     <p className="mt-1 text-gray-900">{user?.nurseProfile?.phone || 'Not set'}</p>
@@ -276,7 +276,7 @@ export default function NurseProfilePage() {
                       name="location"
                       value={formData.location}
                       onChange={handleChange}
-                      className="mt-1 block w-full input-field"
+                      className="mt-1 block w-full nh-input"
                     />
                   ) : (
                     <p className="mt-1 text-gray-900">{user?.nurseProfile?.location || 'Not set'}</p>
@@ -288,14 +288,14 @@ export default function NurseProfilePage() {
 
           {/* About Me */}
           <div className="mt-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">About Me</h2>
+            <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>About Me</h2>
             {isEditing ? (
               <textarea
                 name="aboutMe"
                 value={formData.aboutMe}
                 onChange={handleChange}
                 rows={4}
-                className="mt-1 block w-full input-field"
+                className="mt-1 block w-full nh-input"
                 placeholder="Tell mothers about yourself, your experience, and what makes you special..."
               ></textarea>
             ) : (
@@ -306,7 +306,7 @@ export default function NurseProfilePage() {
           {/* Experience & Rates */}
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Experience</h2>
+              <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Experience</h2>
               <div className="space-y-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Total Experience (years)</label>
@@ -316,7 +316,7 @@ export default function NurseProfilePage() {
                       name="totalExperience"
                       value={formData.totalExperience}
                       onChange={handleChange}
-                      className="mt-1 block w-full input-field"
+                      className="mt-1 block w-full nh-input"
                     />
                   ) : (
                     <p className="mt-1 text-gray-900">{user?.nurseProfile?.totalExperience || 'Not set'}</p>
@@ -330,7 +330,7 @@ export default function NurseProfilePage() {
                       name="kuwaitExperience"
                       value={formData.kuwaitExperience}
                       onChange={handleChange}
-                      className="mt-1 block w-full input-field"
+                      className="mt-1 block w-full nh-input"
                     />
                   ) : (
                     <p className="mt-1 text-gray-900">{user?.nurseProfile?.kuwaitExperience || 'Not set'}</p>
@@ -339,7 +339,7 @@ export default function NurseProfilePage() {
               </div>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Rates (KD/hour)</h2>
+              <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Rates (KD/hour)</h2>
               <div className="space-y-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Part-time Rate</label>
@@ -349,7 +349,7 @@ export default function NurseProfilePage() {
                       name="partTimeSalary"
                       value={formData.partTimeSalary}
                       onChange={handleChange}
-                      className="mt-1 block w-full input-field"
+                      className="mt-1 block w-full nh-input"
                     />
                   ) : (
                     <p className="mt-1 text-gray-900">KD {user?.nurseProfile?.partTimeSalary || 'Not set'}</p>
@@ -363,7 +363,7 @@ export default function NurseProfilePage() {
                       name="nightShiftSalary"
                       value={formData.nightShiftSalary}
                       onChange={handleChange}
-                      className="mt-1 block w-full input-field"
+                      className="mt-1 block w-full nh-input"
                     />
                   ) : (
                     <p className="mt-1 text-gray-900">KD {user?.nurseProfile?.nightShiftSalary || 'Not set'}</p>
