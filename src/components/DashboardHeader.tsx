@@ -68,10 +68,9 @@ export default function DashboardHeader({ userName, userRole }: DashboardHeaderP
                 
                 <button
                   onClick={handleSignOut}
-                  className="transition-colors flex items-center space-x-1 px-3 py-2 rounded-lg border border-red-200 text-red-600 hover:bg-red-50"
+                  className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200"
                 >
-                  <LogOut className="w-4 h-4" />
-                  <span className="hidden sm:inline">Sign Out</span>
+                  Sign Out
                 </button>
               </>
             )}
