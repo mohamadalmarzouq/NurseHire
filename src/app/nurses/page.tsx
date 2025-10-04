@@ -227,25 +227,25 @@ export default function NursesPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredNurses.map((nurse) => (
-                  <div key={nurse.id} className="nh-card nh-card--lift p-6">
+                  <div key={nurse.id} className="nh-card nh-card--lift p-6 h-full flex flex-col">
                     {/* Header Section */}
-                    <div className="flex items-center space-x-4 mb-6">
-                      <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
+                    <div className="flex items-start space-x-4 mb-6">
+                      <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
                         {nurse.profileImageUrl ? (
                           <img
                             src={nurse.profileImageUrl}
                             alt={nurse.name}
-                            className="w-20 h-20 rounded-2xl object-cover"
+                            className="w-16 h-16 rounded-xl object-cover"
                           />
                         ) : (
-                          <User className="w-10 h-10 text-blue-600" />
+                          <User className="w-8 h-8 text-blue-600" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-xl font-bold text-gray-900 mb-1">
+                        <h3 className="text-lg font-bold text-gray-900 mb-1">
                           {nurse.name}
                         </h3>
-                        <p className="text-sm text-gray-600 mb-3">
+                        <p className="text-sm text-gray-600 mb-2">
                           {nurse.age} years old • {nurse.totalExperience} years experience
                         </p>
                         <div className="flex items-center space-x-2">
@@ -269,20 +269,20 @@ export default function NursesPage() {
                     )}
 
                     {/* Rates Section */}
-                    <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-xl">
+                    <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
                       <div className="text-center">
-                        <p className="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Part-time Rate</p>
-                        <p className="text-2xl font-bold text-blue-600">
-                          {nurse.partTimeSalary}
+                        <p className="text-xs font-medium text-gray-500 mb-1">Part-time</p>
+                        <p className="text-xl font-bold text-blue-600">
+                          {nurse.partTimeSalary} KD
                         </p>
-                        <p className="text-sm text-gray-600">KD/hour</p>
+                        <p className="text-xs text-gray-500">per hour</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Night Shift Rate</p>
-                        <p className="text-2xl font-bold text-blue-600">
-                          {nurse.nightShiftSalary}
+                        <p className="text-xs font-medium text-gray-500 mb-1">Night Shift</p>
+                        <p className="text-xl font-bold text-blue-600">
+                          {nurse.nightShiftSalary} KD
                         </p>
-                        <p className="text-sm text-gray-600">KD/hour</p>
+                        <p className="text-xs text-gray-500">per hour</p>
                       </div>
                     </div>
 
@@ -290,8 +290,10 @@ export default function NursesPage() {
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                       <div className="flex items-center text-sm text-gray-600">
                         <MapPin className="w-4 h-4 mr-2 text-gray-400" />
-                        <span className="font-medium">Kuwait Experience:</span>
-                        <span className="ml-1 font-semibold text-gray-900">{nurse.kuwaitExperience} years</span>
+                        <div>
+                          <div className="font-medium">Kuwait Experience</div>
+                          <div className="font-semibold text-gray-900">{nurse.kuwaitExperience} years</div>
+                        </div>
                       </div>
                       <Link 
                         href={`/nurses/${nurse.id}`} 
