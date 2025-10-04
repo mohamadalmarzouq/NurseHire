@@ -140,11 +140,11 @@ export default function NurseMessagesPage() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Messages</h1>
-          <p className="text-gray-600 mt-2">Chat with mothers</p>
+          <h1 className="nh-h2">Messages</h1>
+          <p className="nh-sub mt-1">Chat with mothers</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div className="nh-card overflow-hidden">
           {conversations.length === 0 ? (
             <div className="text-center py-12">
               <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -269,13 +269,13 @@ export default function NurseMessagesPage() {
                           value={newMessage}
                           onChange={(e) => setNewMessage(e.target.value)}
                           placeholder="Type a message..."
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="flex-1 nh-input"
                           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                         />
                         <button
                           onClick={handleSendMessage}
                           disabled={!newMessage.trim()}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="nh-btn nh-btn--primary disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <Send className="w-4 h-4" />
                         </button>

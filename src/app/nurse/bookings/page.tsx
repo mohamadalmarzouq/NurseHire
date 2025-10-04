@@ -95,20 +95,20 @@ export default function NurseBookingsPage() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Booking Requests</h1>
-          <p className="text-gray-600 mt-2">Manage booking requests from mothers</p>
+          <h1 className="nh-h2">Booking Requests</h1>
+          <p className="nh-sub mt-1">Manage booking requests from mothers</p>
         </div>
 
         <div className="space-y-6">
           {bookings.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+            <div className="text-center py-12 nh-card">
               <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No booking requests yet</h3>
               <p className="text-gray-600">When mothers book you, their requests will appear here</p>
             </div>
           ) : (
             bookings.map((booking) => (
-              <div key={booking.id} className="bg-white rounded-lg shadow-sm p-6">
+              <div key={booking.id} className="nh-card">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
@@ -127,7 +127,7 @@ export default function NurseBookingsPage() {
                     )}
                     <div className="flex items-center space-x-4 text-sm text-gray-500">
                       <span>Requested: {new Date(booking.createdAt).toLocaleDateString()}</span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      <span className={`nh-badge text-xs font-medium ${
                         booking.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
                         booking.status === 'ACCEPTED' ? 'bg-green-100 text-green-800' :
                         'bg-red-100 text-red-800'
@@ -140,14 +140,14 @@ export default function NurseBookingsPage() {
                     <div className="flex space-x-2 ml-4">
                       <button 
                         onClick={() => handleBookingAction(booking.id, 'ACCEPTED')}
-                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center"
+                        className="nh-btn nh-btn--primary flex items-center"
                       >
                         <CheckCircle className="w-4 h-4 mr-1" />
                         Accept
                       </button>
                       <button 
                         onClick={() => handleBookingAction(booking.id, 'DECLINED')}
-                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center"
+                        className="nh-btn flex items-center" style={{background:'#fee2e2',color:'#b91c1c',borderColor:'#fecaca'}}
                       >
                         <XCircle className="w-4 h-4 mr-1" />
                         Decline
