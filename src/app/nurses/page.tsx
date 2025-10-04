@@ -227,9 +227,9 @@ export default function NursesPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredNurses.map((nurse) => (
-                  <div key={nurse.id} className="nh-card nh-card--lift p-6 h-full flex flex-col">
+                  <div key={nurse.id} className="nh-card nh-card--lift p-6">
                     {/* Header Section */}
-                    <div className="flex items-start space-x-4 mb-6">
+                    <div className="flex items-start space-x-4 mb-4">
                       <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
                         {nurse.profileImageUrl ? (
                           <img
@@ -261,7 +261,7 @@ export default function NursesPage() {
 
                     {/* About Section */}
                     {nurse.aboutMe && (
-                      <div className="mb-4 flex-1">
+                      <div className="mb-4">
                         <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
                           {nurse.aboutMe}
                         </p>
@@ -269,7 +269,7 @@ export default function NursesPage() {
                     )}
 
                     {/* Rates Section */}
-                    <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+                    <div className="grid grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
                       <div className="text-center">
                         <p className="text-xs font-medium text-gray-500 mb-1">Part-time</p>
                         <p className="text-xl font-bold text-blue-600">
@@ -287,7 +287,7 @@ export default function NursesPage() {
                     </div>
 
                     {/* Footer Section */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                       <div className="flex items-center text-sm text-gray-600">
                         <MapPin className="w-4 h-4 mr-2 text-gray-400 flex-shrink-0" />
                         <div className="min-w-0">
