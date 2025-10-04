@@ -54,15 +54,13 @@ export default function DashboardHeader({ userName, userRole }: DashboardHeaderP
               <>
                 <div className="hidden md:flex items-center space-x-3">
                   <div className="text-right">
-                    <p className="text-sm font-medium text-neutral-900">
-                      Welcome, {currentUser.name || 'User'}!
-                    </p>
-                    <p className="text-xs text-neutral-500 capitalize">
-                      {currentUser.role?.toLowerCase()}
-                    </p>
+                    <p className="text-sm font-semibold text-neutral-900">Welcome, {currentUser.name || 'User'}</p>
+                    <div className="flex items-center justify-end mt-0.5">
+                      <span className="nh-badge nh-badge--info capitalize" style={{fontSize:'11px'}}> {currentUser.role?.toLowerCase()} </span>
+                    </div>
                   </div>
-                  <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-                    <span className="text-sm font-medium text-primary-600">
+                  <div className="w-9 h-9 bg-primary-100 rounded-full flex items-center justify-center shadow-sm">
+                    <span className="text-sm font-semibold text-primary-600">
                       {(currentUser.name || 'U').charAt(0).toUpperCase()}
                     </span>
                   </div>
@@ -70,7 +68,7 @@ export default function DashboardHeader({ userName, userRole }: DashboardHeaderP
                 
                 <button
                   onClick={handleSignOut}
-                  className="text-red-500 hover:text-red-700 transition-colors flex items-center space-x-1 px-3 py-2 rounded-lg hover:bg-red-50"
+                  className="transition-colors flex items-center space-x-1 px-3 py-2 rounded-lg border border-red-200 text-red-600 hover:bg-red-50"
                 >
                   <LogOut className="w-4 h-4" />
                   <span className="hidden sm:inline">Sign Out</span>

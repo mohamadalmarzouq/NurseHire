@@ -76,7 +76,7 @@ export default function NursesPage() {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`w-4 h-4 ${
+        className={`w-5 h-5 ${
           i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-neutral-300'
         }`}
       />
@@ -111,6 +111,14 @@ export default function NursesPage() {
       </div>
 
       <div className="container-custom py-8">
+        {/* Trust strip */}
+        <div className="nh-card mb-6" style={{background:'linear-gradient(90deg,#F0F9FF,#ECFDF5)'}}>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="nh-badge nh-badge--ok">MOH Verified</span>
+            <span className="nh-badge nh-badge--info">Private & Secure</span>
+            <span className="nh-badge nh-badge--warn">No Payments (Phase 1)</span>
+          </div>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
@@ -230,8 +238,8 @@ export default function NursesPage() {
                         </p>
                         <div className="flex items-center space-x-1 mb-2">
                           {renderStars(nurse.averageRating)}
-                          <span className="text-sm text-neutral-600 ml-2">
-                            {nurse.averageRating} ({nurse.reviewCount} reviews)
+                          <span className="nh-badge nh-badge--info ml-2 text-xs">
+                            {nurse.averageRating}/5 • {nurse.reviewCount} reviews
                           </span>
                         </div>
                       </div>
@@ -261,12 +269,7 @@ export default function NursesPage() {
                         <MapPin className="w-4 h-4 mr-1" />
                         Kuwait Experience: {nurse.kuwaitExperience} years
                       </div>
-                      <Link
-                        href={`/nurses/${nurse.id}`}
-                        className="btn-primary text-sm px-4 py-2"
-                      >
-                        View Profile
-                      </Link>
+                      <Link href={`/nurses/${nurse.id}`} className="nh-btn nh-btn--primary text-sm">View Profile</Link>
                     </div>
                   </div>
                 ))}

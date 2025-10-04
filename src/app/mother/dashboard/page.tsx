@@ -73,14 +73,26 @@ export default function MotherDashboard() {
       <DashboardHeader userName={user?.profile?.name} userRole={user?.role} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Trust strip */}
+        <div className="nh-card mb-6" style={{background:'linear-gradient(90deg,#F0F9FF,#ECFDF5)'}}>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="nh-badge nh-badge--ok">MOH Verified</span>
+            <span className="nh-badge nh-badge--info">Private & Secure</span>
+            <span className="nh-badge nh-badge--warn">No Payments (Phase 1)</span>
+          </div>
+        </div>
         {/* Welcome Section */}
         <div className="nh-card mb-8">
-          <h1 className="nh-h2 mb-2">
-            Welcome to your dashboard, {user?.profile?.name || 'Mother'}!
-          </h1>
-          <p className="nh-sub">
-            Find trusted nurses for your newborn care needs in Kuwait.
-          </p>
+          <div className="flex items-center space-x-3 mb-2">
+            <div className="w-9 h-9 bg-primary-100 rounded-full flex items-center justify-center shadow-sm">
+              <span className="text-sm font-semibold text-primary-600">{(user?.profile?.name || 'M').charAt(0).toUpperCase()}</span>
+            </div>
+            <div>
+              <h1 className="nh-h2" style={{marginBottom:'2px'}}>Welcome, {user?.profile?.name || 'Mother'}</h1>
+              <span className="nh-badge nh-badge--info capitalize" style={{fontSize:'11px'}}>mother</span>
+            </div>
+          </div>
+          <p className="nh-sub">Find trusted nurses for your newborn care needs in Kuwait.</p>
         </div>
 
         {/* Quick Actions */}
@@ -121,7 +133,7 @@ export default function MotherDashboard() {
             </div>
           </Link>
 
-          <Link href="/mother/reviews" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/mother/reviews" className="nh-card nh-card--lift">
             <div className="flex items-center">
               <div className="bg-yellow-100 p-3 rounded-lg">
                 <Star className="w-6 h-6 text-yellow-600" />
@@ -137,8 +149,8 @@ export default function MotherDashboard() {
         {/* Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Recent Nurses */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Nurses</h2>
+          <div className="nh-card">
+            <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Recent Nurses</h2>
             <div className="space-y-4">
               {recentNurses.length === 0 ? (
                 <div className="border-l-4 border-yellow-400 pl-4 py-2">
@@ -168,8 +180,8 @@ export default function MotherDashboard() {
           </div>
 
           {/* Favorites */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Favorite Nurses</h2>
+          <div className="nh-card">
+            <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Favorite Nurses</h2>
             <div className="space-y-4">
               <div className="border-l-4 border-red-400 pl-4 py-2">
                 <p className="text-sm text-gray-600">No favorite nurses yet</p>
@@ -183,8 +195,8 @@ export default function MotherDashboard() {
         </div>
 
         {/* Profile Section */}
-        <div className="mt-8 bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Profile Information</h2>
+        <div className="mt-8 nh-card">
+          <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Profile Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Name</label>
@@ -203,12 +215,7 @@ export default function MotherDashboard() {
               <p className="mt-1 text-sm text-gray-900">{user?.profile?.location || 'Not set'}</p>
             </div>
           </div>
-          <Link 
-            href="/mother/profile"
-            className="mt-4 inline-block bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
-          >
-            Edit Profile
-          </Link>
+          <Link href="/mother/profile" className="mt-4 inline-block nh-btn nh-btn--primary">Edit Profile</Link>
         </div>
       </div>
     </div>

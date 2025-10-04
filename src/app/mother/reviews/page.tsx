@@ -186,17 +186,26 @@ export default function MotherReviewsPage() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">My Reviews</h1>
-          <p className="text-gray-600 mt-2">Rate and review the nurses you've hired</p>
+          <h1 className="nh-h2">My Reviews</h1>
+          <p className="nh-sub mt-1">Rate and review the nurses you've hired</p>
+        </div>
+
+        {/* Trust strip */}
+        <div className="nh-card mb-6" style={{background:'linear-gradient(90deg,#F0F9FF,#ECFDF5)'}}>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="nh-badge nh-badge--ok">MOH Verified</span>
+            <span className="nh-badge nh-badge--info">Private & Secure</span>
+            <span className="nh-badge nh-badge--warn">No Payments (Phase 1)</span>
+          </div>
         </div>
 
         {/* Bookings to Review */}
         {getBookingsToReview().length > 0 && (
           <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Complete Your Reviews</h2>
+            <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Complete Your Reviews</h2>
             <div className="space-y-4">
               {getBookingsToReview().map((booking) => (
-                <div key={booking.id} className="bg-white rounded-lg shadow-sm border p-6">
+                <div key={booking.id} className="nh-card">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -209,7 +218,7 @@ export default function MotherReviewsPage() {
                     </div>
                     <button
                       onClick={() => setShowReviewForm(showReviewForm === booking.nurse.id ? null : booking.nurse.id)}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                      className="nh-btn nh-btn--primary"
                     >
                       {showReviewForm === booking.nurse.id ? 'Cancel' : 'Write Review'}
                     </button>
