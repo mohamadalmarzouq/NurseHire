@@ -174,7 +174,7 @@ export default function NursePublicProfilePage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Profile Header */}
-            <div className="card">
+            <div className="nh-card">
               <div className="flex items-start space-x-6">
                 <div className="w-24 h-24 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
                   {nurse.profileImageUrl ? (
@@ -188,18 +188,13 @@ export default function NursePublicProfilePage() {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h1 className="text-3xl font-bold text-neutral-900 mb-2">{nurse.name}</h1>
+                  <h1 className="nh-h2 mb-2">{nurse.name}</h1>
                   <p className="text-lg text-neutral-600 mb-4">
                     {nurse.age} years old • {nurse.totalExperience} years experience
                   </p>
                   <div className="flex items-center space-x-1 mb-4">
                     {renderStars(nurse.averageRating)}
-                    <span className="text-lg font-semibold text-neutral-900 ml-2">
-                      {nurse.averageRating}
-                    </span>
-                    <span className="text-neutral-600 ml-2">
-                      ({nurse.reviewCount} reviews)
-                    </span>
+                    <span className="nh-badge nh-badge--info ml-2">{nurse.averageRating}/5 • {nurse.reviewCount} reviews</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {nurse.availability.map((avail) => (
@@ -216,13 +211,13 @@ export default function NursePublicProfilePage() {
             </div>
 
             {/* About Section */}
-            <div className="card">
+            <div className="nh-card">
               <h2 className="text-xl font-semibold text-neutral-900 mb-4">About {nurse.name}</h2>
               <p className="text-neutral-600 leading-relaxed">{nurse.aboutMe}</p>
             </div>
 
             {/* Experience & Skills */}
-            <div className="card">
+            <div className="nh-card">
               <h2 className="text-xl font-semibold text-neutral-900 mb-6">Experience & Skills</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -259,14 +254,14 @@ export default function NursePublicProfilePage() {
             </div>
 
             {/* Reviews Section */}
-            <div className="card">
+            <div className="nh-card">
               <h2 className="text-xl font-semibold text-neutral-900 mb-6">Reviews ({nurse.reviewCount})</h2>
               {reviews.length === 0 ? (
                 <p className="text-neutral-500 text-center py-8">No reviews yet</p>
               ) : (
                 <div className="space-y-6">
                   {reviews.map((review) => (
-                    <div key={review.id} className="border border-gray-200 rounded-lg p-6">
+                    <div key={review.id} className="nh-card">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
@@ -283,9 +278,7 @@ export default function NursePublicProfilePage() {
                           <div className="flex items-center space-x-1 mb-1">
                             {renderStars(review.averageRating)}
                           </div>
-                          <span className="text-sm font-medium text-gray-900">
-                            {review.averageRating.toFixed(1)}/5
-                          </span>
+                          <span className="nh-badge nh-badge--info">{review.averageRating.toFixed(1)}/5</span>
                         </div>
                       </div>
 
