@@ -227,81 +227,63 @@ export default function NursesPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredNurses.map((nurse) => (
-                  <div key={nurse.id} className="nh-card nh-card--lift p-6">
-                    {/* Header Section */}
-                    <div className="flex items-start space-x-4 mb-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
+                  <div key={nurse.id} className="nh-card nh-card--lift p-5">
+                    {/* Top Section - Name and Basic Info */}
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                         {nurse.profileImageUrl ? (
                           <img
                             src={nurse.profileImageUrl}
                             alt={nurse.name}
-                            className="w-16 h-16 rounded-xl object-cover"
+                            className="w-12 h-12 rounded-full object-cover"
                           />
                         ) : (
-                          <User className="w-8 h-8 text-blue-600" />
+                          <User className="w-6 h-6 text-blue-600" />
                         )}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-gray-900 mb-1">
-                          {nurse.name}
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-2">
-                          {nurse.age} years old • {nurse.totalExperience} years experience
-                        </p>
-                        <div className="flex items-center space-x-2">
-                          <div className="flex items-center space-x-1">
-                            {renderStars(nurse.averageRating)}
-                          </div>
-                          <span className="nh-badge nh-badge--info text-xs">
-                            {nurse.averageRating}/5 • {nurse.reviewCount} reviews
-                          </span>
-                        </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-gray-900">{nurse.name}</h3>
+                        <p className="text-sm text-gray-600">{nurse.age} years old • {nurse.totalExperience} years exp</p>
                       </div>
                     </div>
 
-                    {/* About Section */}
-                    {nurse.aboutMe && (
-                      <div className="mb-4">
-                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
-                          {nurse.aboutMe}
-                        </p>
+                    {/* Rating */}
+                    <div className="flex items-center space-x-2 mb-4">
+                      <div className="flex items-center space-x-1">
+                        {renderStars(nurse.averageRating)}
                       </div>
-                    )}
+                      <span className="text-xs text-gray-500">
+                        {nurse.averageRating}/5 • {nurse.reviewCount} reviews
+                      </span>
+                    </div>
 
-                    {/* Rates Section */}
-                    <div className="grid grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
-                      <div className="text-center">
-                        <p className="text-xs font-medium text-gray-500 mb-1">Part-time</p>
-                        <p className="text-xl font-bold text-blue-600">
-                          {nurse.partTimeSalary} KD
-                        </p>
-                        <p className="text-xs text-gray-500">per hour</p>
+                    {/* Rates */}
+                    <div className="flex justify-between mb-4 p-3 bg-gray-50 rounded-lg">
+                      <div className="text-center flex-1">
+                        <p className="text-xs text-gray-500">Part-time</p>
+                        <p className="font-bold text-blue-600">{nurse.partTimeSalary} KD/hr</p>
                       </div>
-                      <div className="text-center">
-                        <p className="text-xs font-medium text-gray-500 mb-1">Night Shift</p>
-                        <p className="text-xl font-bold text-blue-600">
-                          {nurse.nightShiftSalary} KD
-                        </p>
-                        <p className="text-xs text-gray-500">per hour</p>
+                      <div className="text-center flex-1">
+                        <p className="text-xs text-gray-500">Night Shift</p>
+                        <p className="font-bold text-blue-600">{nurse.nightShiftSalary} KD/hr</p>
                       </div>
                     </div>
 
-                    {/* Footer Section */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    {/* Kuwait Experience */}
+                    <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center text-sm text-gray-600">
-                        <MapPin className="w-4 h-4 mr-2 text-gray-400 flex-shrink-0" />
-                        <div className="min-w-0">
-                          <div className="font-medium text-gray-700">Kuwait Experience</div>
-                          <div className="font-semibold text-gray-900">{nurse.kuwaitExperience} years</div>
-                        </div>
+                        <MapPin className="w-4 h-4 mr-1" />
+                        <span>Kuwait: {nurse.kuwaitExperience} years</span>
                       </div>
-                      <Link 
-                        href={`/nurses/${nurse.id}`} 
-                        className="nh-btn nh-btn--primary px-6 py-2 text-sm font-medium flex-shrink-0"
-                      >
-                        View Profile
-                      </Link>
                     </div>
+
+                    {/* View Profile Button */}
+                    <Link 
+                      href={`/nurses/${nurse.id}`} 
+                      className="w-full nh-btn nh-btn--primary text-center block"
+                    >
+                      View Profile
+                    </Link>
                   </div>
                 ))}
               </div>
