@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Star, User, Calendar, MessageCircle } from 'lucide-react'
+import DashboardHeader from '@/components/DashboardHeader'
 
 export default function MotherReviewsPage() {
   const [reviews, setReviews] = useState<any[]>([])
@@ -152,37 +153,12 @@ export default function MotherReviewsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Link href="/" className="text-2xl font-bold text-primary-600">
-                NurseHire
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/mother/dashboard" className="text-gray-600 hover:text-gray-900">
-                Dashboard
-              </Link>
-              <button 
-                onClick={() => {
-                  document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-                  window.location.href = '/auth/login'
-                }}
-                className="text-red-500 hover:text-red-700 text-sm"
-              >
-                Sign Out
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <DashboardHeader userName={user?.profile?.name} userRole={user?.role} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <Link href="/mother/dashboard" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
+          <Link href="/user/dashboard" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
