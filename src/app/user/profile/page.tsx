@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, User, Save, Edit, LogOut } from 'lucide-react'
+import DashboardHeader from '@/components/DashboardHeader'
 
 export default function UserProfilePage() {
   const [user, setUser] = useState<any>(null)
@@ -108,37 +109,12 @@ export default function UserProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <Link href="/" className="text-2xl font-bold text-primary-600">
-                NurseHire
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/mother/dashboard" className="text-gray-600 hover:text-gray-900">
-                Dashboard
-              </Link>
-              <button 
-                onClick={() => {
-                  document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-                  window.location.href = '/auth/login'
-                }}
-                className="text-red-500 hover:text-red-700"
-              >
-                <LogOut className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <DashboardHeader userName={user?.profile?.name} userRole={user?.role} />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <Link href="/mother/dashboard" className="flex items-center text-gray-600 hover:text-gray-900 mb-2">
+            <Link href="/user/dashboard" className="flex items-center text-gray-600 hover:text-gray-900 mb-2">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Link>
