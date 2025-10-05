@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Search, Filter, Star, MapPin, Clock, Heart, User, ArrowLeft } from 'lucide-react'
+import DashboardHeader from '@/components/DashboardHeader'
 
 interface Nurse {
   id: string
@@ -28,6 +29,31 @@ export default function NursesPage() {
     availability: '',
   })
   const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          if (data?.authenticated) {
+            setUser(data.user)
+            setIsAuthenticated(true)
+          } else {
+            window.location.href = '/auth/login'
+          }
+        } else {
+          window.location.href = '/auth/login'
+        }
+      } catch (e) {
+        console.error('Error loading user:', e)
+        window.location.href = '/auth/login'
+      }
+    }
+    loadUser()
+  }, [])
 
   useEffect(() => {
     const loadNurses = async () => {
@@ -44,8 +70,10 @@ export default function NursesPage() {
         setIsLoading(false)
       }
     }
-    loadNurses()
-  }, [])
+    if (isAuthenticated) {
+      loadNurses()
+    }
+  }, [isAuthenticated])
 
   // Filter nurses based on search and filters
   useEffect(() => {
@@ -96,17 +124,19 @@ export default function NursesPage() {
 
   return (
     <div className="min-h-screen bg-neutral-50">
+      <DashboardHeader userName={user?.profile?.name} userRole={user?.role} />
+      
       {/* Header */}
       <div className="bg-white shadow-soft">
         <div className="container-custom py-8">
           {/* Back Button */}
           <div className="mb-6">
             <Link 
-              href="/mother/dashboard" 
+              href="/user/dashboard" 
               className="inline-flex items-center text-primary-600 hover:text-primary-700 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Mother Dashboard
+              Back to User Dashboard
             </Link>
           </div>
           
