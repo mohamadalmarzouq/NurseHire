@@ -52,17 +52,9 @@ export default function DashboardHeader({ userName, userRole }: DashboardHeaderP
           <div className="flex items-center space-x-6">
             {isLoggedIn && currentUser && (
               <>
-                <div className="hidden md:flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-md">
-                    <span className="text-sm font-bold text-white">
-                      {(currentUser.name || 'U').charAt(0).toUpperCase()}
-                    </span>
-                  </div>
+                <div className="hidden md:flex items-center">
                   <div className="text-left">
                     <p className="text-sm font-semibold text-gray-900">Welcome, {currentUser.name || 'User'}</p>
-                    <span className="inline-block px-2 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-full capitalize">
-                      {currentUser.role?.toLowerCase()}
-                    </span>
                   </div>
                 </div>
                 
