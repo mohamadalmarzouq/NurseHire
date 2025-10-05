@@ -8,10 +8,10 @@ export default function Footer() {
   const pathname = usePathname()
 
   // Hide footer for dashboard pages and nurses listing
-  const isDashboardPage = pathname?.startsWith('/mother/dashboard') || 
+  const isDashboardPage = pathname?.startsWith('/user/dashboard') || 
                          pathname?.startsWith('/nurse/dashboard') || 
                          pathname?.startsWith('/admin/dashboard') ||
-                         pathname?.startsWith('/mother/') ||
+                         pathname?.startsWith('/user/') ||
                          pathname?.startsWith('/nurse/') ||
                          pathname?.startsWith('/admin/') ||
                          pathname === '/nurses'

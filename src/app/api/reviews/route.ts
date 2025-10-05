@@ -33,13 +33,13 @@ export async function GET(request: NextRequest) {
       include: {
         giver: {
           include: {
-            motherProfile: true,
+            userProfile: true,
             nurseProfile: true,
           },
         },
         receiver: {
           include: {
-            motherProfile: true,
+            userProfile: true,
             nurseProfile: true,
           },
         },
@@ -61,12 +61,12 @@ export async function GET(request: NextRequest) {
         createdAt: review.createdAt,
         giver: {
           id: review.giver.id,
-          name: review.giver.motherProfile?.name || review.giver.nurseProfile?.name || 'Unknown',
+          name: review.giver.userProfile?.name || review.giver.nurseProfile?.name || 'Unknown',
           role: review.giver.role,
         },
         receiver: {
           id: review.receiver.id,
-          name: review.receiver.motherProfile?.name || review.receiver.nurseProfile?.name || 'Unknown',
+          name: review.receiver.userProfile?.name || review.receiver.nurseProfile?.name || 'Unknown',
           role: review.receiver.role,
         },
         averageRating: (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5,
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     }
 
     const payload = await verifyToken(token)
-    if (!payload || payload.role !== 'MOTHER') {
+    if (!payload || payload.role !== 'USER') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
       include: {
         giver: {
           include: {
-            motherProfile: true,
+            userProfile: true,
           },
         },
         receiver: {
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
         createdAt: review.createdAt,
         giver: {
           id: review.giver.id,
-          name: review.giver.motherProfile?.name || 'Unknown',
+          name: review.giver.userProfile?.name || 'Unknown',
         },
         receiver: {
           id: review.receiver.id,

@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const user = await prisma.user.findUnique({
       where: { email },
       include: {
-        motherProfile: true,
+        userProfile: true,
         nurseProfile: true,
         adminProfile: true,
       },
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
         id: user.id,
         email: user.email,
         role: user.role,
-        profile: user.motherProfile || user.nurseProfile || user.adminProfile,
+        profile: user.userProfile || user.nurseProfile || user.adminProfile,
       },
     })
 

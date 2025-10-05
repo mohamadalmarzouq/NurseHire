@@ -42,7 +42,7 @@ export async function PUT(
     if (payload.role === 'NURSE' && booking.nurseId !== payload.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
-    if (payload.role === 'MOTHER' && booking.requesterId !== payload.id) {
+    if (payload.role === 'USER' && booking.requesterId !== payload.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -53,7 +53,7 @@ export async function PUT(
       include: {
         requester: {
           include: {
-            motherProfile: true,
+            userProfile: true,
           },
         },
         nurse: {
@@ -75,7 +75,7 @@ export async function PUT(
         createdAt: updatedBooking.createdAt,
         requester: {
           id: updatedBooking.requester.id,
-          name: updatedBooking.requester.motherProfile?.name || 'Unknown',
+          name: updatedBooking.requester.userProfile?.name || 'Unknown',
         },
         nurse: {
           id: updatedBooking.nurse.id,

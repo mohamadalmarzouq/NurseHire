@@ -76,7 +76,7 @@ export default function RegisterPage() {
               className="nh-input"
             >
               <option value="">Select role</option>
-              <option value="MOTHER">Mother</option>
+              <option value="USER">User</option>
               <option value="NURSE">Nurse</option>
               <option value="ADMIN">Admin</option>
             </select>

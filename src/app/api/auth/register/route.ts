@@ -47,8 +47,8 @@ export async function POST(request: NextRequest) {
     })
 
     let profile
-    if (role === 'MOTHER') {
-      profile = await prisma.motherProfile.create({
+    if (role === 'USER') {
+      profile = await prisma.userProfile.create({
         data: {
           userId: user.id,
           name,

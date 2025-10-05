@@ -118,7 +118,7 @@ export default function NurseProfilePage() {
     console.log('Nurse ID:', nurse.id)
     
     // Check authentication before proceeding
-    if (!isAuthenticated || user?.role !== 'MOTHER') {
+    if (!isAuthenticated || user?.role !== 'USER') {
       alert('You must be logged in as a mother to book a nurse. Please sign in.')
       setShowBookingModal(false)
       return
@@ -167,7 +167,7 @@ export default function NurseProfilePage() {
     if (!nurse) return
     
     // Check authentication before proceeding
-    if (!isAuthenticated || user?.role !== 'MOTHER') {
+    if (!isAuthenticated || user?.role !== 'USER') {
       alert('You must be logged in as a mother to message a nurse. Please sign in.')
       return
     }
@@ -452,7 +452,7 @@ export default function NurseProfilePage() {
                     Sign In to Message
                   </Link>
                 </div>
-              ) : user?.role !== 'MOTHER' ? (
+              ) : user?.role !== 'USER' ? (
                 <div className="space-y-3">
                   <button 
                     disabled
@@ -501,7 +501,7 @@ export default function NurseProfilePage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full">
             <h3 className="text-xl font-semibold text-neutral-900 mb-4">Book {nurse.name}</h3>
-            {!isAuthenticated || user?.role !== 'MOTHER' ? (
+            {!isAuthenticated || user?.role !== 'USER' ? (
               <div className="text-center py-8">
                 <p className="text-red-600 mb-4">You must be logged in as a mother to book a nurse.</p>
                 <p className="text-sm text-gray-500 mb-4">Debug: isAuthenticated={isAuthenticated.toString()}, role={user?.role || 'none'}</p>

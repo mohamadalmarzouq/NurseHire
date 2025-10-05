@@ -11,7 +11,7 @@ datasource db {
 }
 
 enum UserRole {
-  MOTHER
+  USER
   NURSE
   ADMIN
 }
@@ -39,7 +39,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  motherProfile MotherProfile?
+  userProfile   UserProfile?
   nurseProfile  NurseProfile?
   adminProfile  AdminProfile?
 
@@ -58,7 +58,7 @@ model User {
   @@map("users")
 }
 
-model MotherProfile {
+model UserProfile {
   id        String   @id @default(cuid())
   userId    String   @unique
   name      String
@@ -69,7 +69,7 @@ model MotherProfile {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("mother_profiles")
+  @@map("user_profiles")
 }
 
 model NurseProfile {

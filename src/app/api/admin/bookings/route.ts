@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       include: {
         requester: {
           include: {
-            motherProfile: true,
+            userProfile: true,
           },
         },
         nurse: {
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
         createdAt: booking.createdAt,
         requester: {
           id: booking.requester.id,
-          name: booking.requester.motherProfile?.name || 'Unknown',
+          name: booking.requester.userProfile?.name || 'Unknown',
           email: booking.requester.email,
         },
         nurse: {

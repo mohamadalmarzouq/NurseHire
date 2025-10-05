@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       totalNurses,
       pendingNurses,
       approvedNurses,
-      totalMothers,
+      totalUsers,
       totalBookings,
       totalReviews,
       recentBookings
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
           nurseProfile: { status: 'APPROVED' }
         } 
       }),
-      prisma.user.count({ where: { role: 'MOTHER' } }),
+      prisma.user.count({ where: { role: 'USER' } }),
       prisma.booking.count(),
       prisma.review.count(),
       prisma.booking.findMany({
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
         orderBy: { createdAt: 'desc' },
         include: {
           requester: {
-            include: { motherProfile: true }
+            include: { userProfile: true }
           },
           nurse: {
             include: { nurseProfile: true }
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
         totalNurses,
         pendingApprovals: pendingNurses,
         approvedNurses,
-        totalMothers,
+        totalUsers,
         totalBookings,
         totalReviews,
       },
@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
         status: booking.status,
         createdAt: booking.createdAt,
         requester: {
-          name: booking.requester.motherProfile?.name || 'Unknown',
+          name: booking.requester.userProfile?.name || 'Unknown',
           email: booking.requester.email,
         },
         nurse: {

@@ -14,10 +14,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const mothers = await prisma.user.findMany({
-      where: { role: 'MOTHER' },
+    const users = await prisma.user.findMany({
+      where: { role: 'USER' },
       include: {
-        motherProfile: true
+        userProfile: true
       },
       orderBy: {
         createdAt: 'desc'
@@ -25,13 +25,13 @@ export async function GET(request: NextRequest) {
     })
 
     return NextResponse.json({
-      mothers: mothers.map(mother => ({
-        id: mother.id,
-        name: mother.motherProfile?.name || 'Unknown',
-        email: mother.email,
-        phone: mother.motherProfile?.phone || '',
-        location: mother.motherProfile?.location || '',
-        joinedAt: mother.createdAt,
+      users: users.map(user => ({
+        id: user.id,
+        name: user.userProfile?.name || 'Unknown',
+        email: user.email,
+        phone: user.userProfile?.phone || '',
+        location: user.userProfile?.location || '',
+        joinedAt: user.createdAt,
       }))
     })
   } catch (error) {

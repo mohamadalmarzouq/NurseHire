@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     let whereClause: any = {}
 
-    if (payload.role === 'MOTHER') {
+    if (payload.role === 'USER') {
       if (type === 'sent') {
         whereClause = { requesterId: payload.id }
       } else {
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       include: {
         requester: {
           include: {
-            motherProfile: true,
+            userProfile: true,
           },
         },
         nurse: {
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
         createdAt: booking.createdAt,
         requester: {
           id: booking.requester.id,
-          name: booking.requester.motherProfile?.name || 'Unknown',
+          name: booking.requester.userProfile?.name || 'Unknown',
           email: booking.requester.email,
         },
         nurse: {
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     }
 
     const payload = await verifyToken(token)
-    if (!payload || payload.role !== 'MOTHER') {
+    if (!payload || payload.role !== 'USER') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
       include: {
         requester: {
           include: {
-            motherProfile: true,
+            userProfile: true,
           },
         },
         nurse: {
@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
         createdAt: booking.createdAt,
         requester: {
           id: booking.requester.id,
-          name: booking.requester.motherProfile?.name || 'Unknown',
+          name: booking.requester.userProfile?.name || 'Unknown',
         },
         nurse: {
           id: booking.nurse.id,

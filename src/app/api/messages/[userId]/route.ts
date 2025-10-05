@@ -36,13 +36,13 @@ export async function GET(
       include: {
         sender: {
           include: {
-            motherProfile: true,
+            userProfile: true,
             nurseProfile: true,
           },
         },
         receiver: {
           include: {
-            motherProfile: true,
+            userProfile: true,
             nurseProfile: true,
           },
         },
@@ -68,7 +68,7 @@ export async function GET(
     const otherUser = await prisma.user.findUnique({
       where: { id: otherUserId },
       include: {
-        motherProfile: true,
+        userProfile: true,
         nurseProfile: true,
       },
     })
@@ -88,18 +88,18 @@ export async function GET(
         fileUrl: message.fileUrl,
         sender: {
           id: message.sender.id,
-          name: message.sender.motherProfile?.name || message.sender.nurseProfile?.name || 'Unknown',
+          name: message.sender.userProfile?.name || message.sender.nurseProfile?.name || 'Unknown',
           role: message.sender.role,
         },
         receiver: {
           id: message.receiver.id,
-          name: message.receiver.motherProfile?.name || message.receiver.nurseProfile?.name || 'Unknown',
+          name: message.receiver.userProfile?.name || message.receiver.nurseProfile?.name || 'Unknown',
           role: message.receiver.role,
         },
       })),
       otherUser: {
         id: otherUser.id,
-        name: otherUser.motherProfile?.name || otherUser.nurseProfile?.name || 'Unknown',
+        name: otherUser.userProfile?.name || otherUser.nurseProfile?.name || 'Unknown',
         role: otherUser.role,
         email: otherUser.email,
       },

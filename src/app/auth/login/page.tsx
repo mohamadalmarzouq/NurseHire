@@ -31,7 +31,7 @@ export default function LoginPage() {
         // Redirect based on role - use replace for a clean redirect
         const path = data.user.role === 'ADMIN' ? '/admin/dashboard' 
           : data.user.role === 'NURSE' ? '/nurse/dashboard' 
-          : '/mother/dashboard'
+          : '/user/dashboard'
         
         console.log('Redirecting to:', path)
         window.location.replace(path)

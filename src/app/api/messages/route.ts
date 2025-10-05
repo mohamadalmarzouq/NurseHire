@@ -25,13 +25,13 @@ export async function GET(request: NextRequest) {
       include: {
         sender: {
           include: {
-            motherProfile: true,
+            userProfile: true,
             nurseProfile: true,
           },
         },
         receiver: {
           include: {
-            motherProfile: true,
+            userProfile: true,
             nurseProfile: true,
           },
         },
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
       if (!conversationMap.has(partnerId)) {
         conversationMap.set(partnerId, {
           partnerId,
-          partnerName: partner.motherProfile?.name || partner.nurseProfile?.name || 'Unknown',
+          partnerName: partner.userProfile?.name || partner.nurseProfile?.name || 'Unknown',
           partnerRole: partner.role,
           lastMessage: message.content,
           lastMessageTime: message.createdAt,
@@ -133,13 +133,13 @@ export async function POST(request: NextRequest) {
       include: {
         sender: {
           include: {
-            motherProfile: true,
+            userProfile: true,
             nurseProfile: true,
           },
         },
         receiver: {
           include: {
-            motherProfile: true,
+            userProfile: true,
             nurseProfile: true,
           },
         },
@@ -158,12 +158,12 @@ export async function POST(request: NextRequest) {
         fileUrl: message.fileUrl,
         sender: {
           id: message.sender.id,
-          name: message.sender.motherProfile?.name || message.sender.nurseProfile?.name || 'Unknown',
+          name: message.sender.userProfile?.name || message.sender.nurseProfile?.name || 'Unknown',
           role: message.sender.role,
         },
         receiver: {
           id: message.receiver.id,
-          name: message.receiver.motherProfile?.name || message.receiver.nurseProfile?.name || 'Unknown',
+          name: message.receiver.userProfile?.name || message.receiver.nurseProfile?.name || 'Unknown',
           role: message.receiver.role,
         },
       },

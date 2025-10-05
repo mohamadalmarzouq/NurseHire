@@ -17,8 +17,8 @@ export default function HomePage() {
           const data = await res.json()
           if (data?.authenticated && data.user) {
             // Redirect logged-in users to their dashboard
-            if (data.user.role === 'MOTHER') {
-              router.push('/mother/dashboard')
+            if (data.user.role === 'USER') {
+              router.push('/user/dashboard')
             } else if (data.user.role === 'NURSE') {
               router.push('/nurse/dashboard')
             } else if (data.user.role === 'ADMIN') {
