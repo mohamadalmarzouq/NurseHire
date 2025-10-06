@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import FileUpload from '@/components/FileUpload'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -13,19 +14,36 @@ export default function RegisterPage() {
     phone: '',
     location: '',
   })
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null)
+  const [profileImageName, setProfileImageName] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const handleFileUpload = (fileUrl: string, fileName: string) => {
+    setProfileImageUrl(fileUrl)
+    setProfileImageName(fileName)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
 
+    // Validation for nurses
+    if (formData.role === 'NURSE' && !profileImageUrl) {
+      setError('Profile picture is required for nurse registration')
+      setLoading(false)
+      return
+    }
+
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          profileImageUrl: formData.role === 'NURSE' ? profileImageUrl : null,
+        }),
       })
 
       const data = await res.json()
@@ -81,6 +99,25 @@ export default function RegisterPage() {
               <option value="ADMIN">Admin</option>
             </select>
           </div>
+
+          {/* Profile Picture Upload - Only for Nurses */}
+          {formData.role === 'NURSE' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Profile Picture <span className="text-red-500">*</span>
+              </label>
+              <FileUpload
+                onFileSelect={handleFileUpload}
+                accept="image/*"
+                maxSize={5 * 1024 * 1024} // 5MB
+              />
+              {profileImageName && (
+                <p className="mt-2 text-sm text-green-600">
+                  ✓ Profile picture uploaded: {profileImageName}
+                </p>
+              )}
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
