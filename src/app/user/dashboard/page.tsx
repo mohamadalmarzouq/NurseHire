@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Search, Heart, MessageCircle, Star, Calendar, User, Settings, LogOut } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
+import BannerAd from '@/components/BannerAd'
 
 export default function UserDashboard() {
   const [user, setUser] = useState<any>(null)
@@ -81,6 +82,12 @@ export default function UserDashboard() {
             <span className="nh-badge nh-badge--warn">No Payments (Phase 1)</span>
           </div>
         </div>
+
+        {/* Banner Ad - Dashboard Header */}
+        <div className="mb-8">
+          <BannerAd position="DASHBOARD_HEADER" />
+        </div>
+
         {/* Welcome Section */}
         <div className="nh-card mb-8">
           <div className="flex items-center space-x-3 mb-2">

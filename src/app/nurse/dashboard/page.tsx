@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Calendar, MessageCircle, Star, User, Settings, LogOut, Eye, Edit, Clock } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
+import BannerAd from '@/components/BannerAd'
 
 export default function NurseDashboard() {
   const [user, setUser] = useState<any>(null)
@@ -61,6 +62,11 @@ export default function NurseDashboard() {
             </div>
           </div>
         )}
+
+        {/* Banner Ad - Dashboard Header */}
+        <div className="mb-8">
+          <BannerAd position="DASHBOARD_HEADER" />
+        </div>
 
         {/* Welcome Section */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">

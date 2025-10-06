@@ -30,6 +30,11 @@ enum BookingStatus {
   CANCELLED
 }
 
+enum BannerPosition {
+  HOMEPAGE_HERO
+  DASHBOARD_HEADER
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -157,4 +162,19 @@ model Review {
 
   @@unique([giverId, receiverId])
   @@map("reviews")
+}
+
+model BannerAd {
+  id             String        @id @default(cuid())
+  title          String
+  imageUrl       String
+  linkUrl        String?
+  position       BannerPosition
+  isActive       Boolean       @default(true)
+  clickCount     Int           @default(0)
+  impressionCount Int          @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@map("banner_ads")
 }

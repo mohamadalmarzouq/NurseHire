@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Heart, Shield, Star, Users, Clock, CheckCircle, ArrowRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import BannerAd from '@/components/BannerAd'
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
@@ -69,6 +70,13 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Banner Ad - Homepage Hero */}
+      <section className="nh-section" style={{background:'#fff'}}>
+        <div className="nh-container">
+          <BannerAd position="HOMEPAGE_HERO" />
         </div>
       </section>
 
