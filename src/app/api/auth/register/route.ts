@@ -15,6 +15,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Additional validation for nurses
+    if (role === 'NURSE' && !otherData.profileImageUrl) {
+      return NextResponse.json(
+        { error: 'Profile picture is required for nurse registration' },
+        { status: 400 }
+      )
+    }
+
     if (password !== confirmPassword) {
       return NextResponse.json(
         { error: 'Passwords do not match' },
@@ -68,7 +76,7 @@ export async function POST(request: NextRequest) {
           nightShiftSalary: parseInt(otherData.nightShiftSalary) || 0,
           aboutMe: otherData.aboutMe || null,
           cvUrl: otherData.cvUrl || null,
-          profileImageUrl: otherData.profileImageUrl || null,
+          profileImageUrl: otherData.profileImageUrl, // Required for nurses
           languages: otherData.languages || [],
           availability: otherData.availability || [],
         },
