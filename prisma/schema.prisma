@@ -81,6 +81,8 @@ model NurseProfile {
   userId                String      @unique
   name                  String
   age                   Int
+  phone                 String?
+  location              String?
   totalExperience       Int
   kuwaitExperience      Int
   partTimeSalary        Int
