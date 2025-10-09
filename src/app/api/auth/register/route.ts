@@ -15,6 +15,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Prevent admin registration through public endpoint
+    if (role === 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Admin registration is not allowed through this endpoint' },
+        { status: 403 }
+      )
+    }
+
     // Additional validation for nurses
     if (role === 'NURSE' && !otherData.profileImageUrl) {
       return NextResponse.json(
@@ -79,13 +87,6 @@ export async function POST(request: NextRequest) {
           profileImageUrl: otherData.profileImageUrl, // Required for nurses
           languages: otherData.languages || [],
           availability: otherData.availability || [],
-        },
-      })
-    } else if (role === 'ADMIN') {
-      profile = await prisma.adminProfile.create({
-        data: {
-          userId: user.id,
-          name,
         },
       })
     }

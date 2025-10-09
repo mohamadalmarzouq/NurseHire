@@ -49,9 +49,7 @@ export default function RegisterPage() {
       const data = await res.json()
 
       if (data.success) {
-        const path = data.user.role === 'ADMIN' ? '/admin/dashboard' 
-          : data.user.role === 'NURSE' ? '/nurse/dashboard' 
-          : '/mother/dashboard'
+        const path = data.user.role === 'NURSE' ? '/nurse/dashboard' : '/user/dashboard'
         
         window.location.href = path
       } else {
@@ -96,7 +94,6 @@ export default function RegisterPage() {
               <option value="">Select role</option>
               <option value="USER">User</option>
               <option value="NURSE">Nurse</option>
-              <option value="ADMIN">Admin</option>
             </select>
           </div>
 
