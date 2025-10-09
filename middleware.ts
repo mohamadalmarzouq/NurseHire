@@ -10,6 +10,12 @@ const protectedRoutes: Record<string, Array<'USER' | 'NURSE' | 'ADMIN'>> = {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Skip middleware for public routes
+  const publicRoutes = ['/auth/login', '/auth/register', '/nurse/register']
+  if (publicRoutes.includes(pathname)) {
+    return NextResponse.next()
+  }
+
   // Only guard protected route prefixes
   const needsGuard = Object.keys(protectedRoutes).some((base) => pathname.startsWith(base))
   if (!needsGuard) return NextResponse.next()
