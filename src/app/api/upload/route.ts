@@ -57,8 +57,12 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(bytes)
     await writeFile(filePath, buffer)
 
-    // Return the public URL
-    const fileUrl = `/uploads/${fileName}`
+    // Return the public URL with full domain for production
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? process.env.RENDER_EXTERNAL_URL || 'https://nursehire.onrender.com'
+      : 'http://localhost:3000'
+    
+    const fileUrl = `${baseUrl}/uploads/${fileName}`
 
     return NextResponse.json({
       success: true,
