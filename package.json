@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "prisma generate && next build --turbopack",
+    "postbuild": "prisma db push",
     "start": "next start",
     "lint": "eslint",
     "db:generate": "prisma generate",
