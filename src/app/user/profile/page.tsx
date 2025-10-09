@@ -119,21 +119,14 @@ export default function UserProfilePage() {
               Back to Dashboard
             </Link>
             <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-            <p className="text-gray-600 mt-1">Manage your mother profile information</p>
+            <p className="text-gray-600 mt-1">Manage your user profile information</p>
           </div>
-          {!isEditing ? (
+          {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
               className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center"
             >
               <Edit className="w-4 h-4 mr-2" /> Edit Profile
-            </button>
-          ) : (
-            <button
-              onClick={handleSave}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center"
-            >
-              <Save className="w-4 h-4 mr-2" /> Save Changes
             </button>
           )}
         </div>
