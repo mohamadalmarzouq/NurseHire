@@ -66,7 +66,7 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4">For Nurses</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/nurse/register" className="text-neutral-300 hover:text-white transition-colors">
+                <Link href="/auth/register" className="text-neutral-300 hover:text-white transition-colors">
                   Join as Nurse
                 </Link>
               </li>

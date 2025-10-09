@@ -65,7 +65,7 @@ export default function HomePage() {
                 Find a Nurse
                 <ArrowRight className="w-5 h-5" />
               </Link>
-              <Link href="/nurse/register" className="nh-btn nh-btn--ghost">
+              <Link href="/auth/register" className="nh-btn nh-btn--ghost">
                 Become a Nurse
               </Link>
             </div>
@@ -255,7 +255,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/nurses" className="nh-btn nh-btn--ghost" style={{background:'#fff'}}>Find a Nurse</Link>
-            <Link href="/nurse/register" className="nh-btn nh-btn--primary" style={{background:'#10B981'}}>Join as Nurse</Link>
+            <Link href="/auth/register" className="nh-btn nh-btn--primary" style={{background:'#10B981'}}>Join as Nurse</Link>
           </div>
         </div>
       </section>

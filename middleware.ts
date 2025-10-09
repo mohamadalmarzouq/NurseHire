@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Skip middleware for public routes
-  const publicRoutes = ['/auth/login', '/auth/register', '/nurse/register']
+  const publicRoutes = ['/auth/login', '/auth/register']
   if (publicRoutes.includes(pathname)) {
     return NextResponse.next()
   }
