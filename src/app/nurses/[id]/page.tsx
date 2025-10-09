@@ -260,11 +260,11 @@ export default function NurseProfilePage() {
                 Message
               </button>
               <button 
-                onClick={() => setShowBookingModal(true)}
+                onClick={() => setShowRequestModal(true)}
                 className="btn-primary"
               >
-                <Calendar className="w-4 h-4 mr-2" />
-                Book Now
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Request Information
               </button>
             </div>
           </div>

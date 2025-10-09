@@ -95,14 +95,14 @@ export default function NurseDashboard() {
             </div>
           </Link>
 
-          <Link href="/nurse/bookings" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/nurse/messages" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
               <div className="bg-green-100 p-3 rounded-lg">
-                <Calendar className="w-6 h-6 text-green-600" />
+                <MessageCircle className="w-6 h-6 text-green-600" />
               </div>
               <div className="ml-4">
-                <h3 className="text-lg font-semibold text-gray-900">Bookings</h3>
-                <p className="text-gray-600 text-sm">Manage requests</p>
+                <h3 className="text-lg font-semibold text-gray-900">Messages</h3>
+                <p className="text-gray-600 text-sm">Chat with users</p>
               </div>
             </div>
           </Link>

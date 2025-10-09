@@ -119,7 +119,7 @@ export default function MotherDashboard() {
             </div>
           </Link>
 
-          <Link href="/mother/bookings" className="group nh-card nh-card--lift p-6" style={{
+          <Link href="/mother/requests" className="group nh-card nh-card--lift p-6" style={{
             background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
             border: '1px solid #BBF7D0',
             transition: 'all 0.3s ease'
@@ -129,13 +129,13 @@ export default function MotherDashboard() {
                 background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
                 boxShadow: '0 6px 16px rgba(16, 185, 129, 0.3)'
               }}>
-                <Calendar className="w-8 h-8 text-white" />
+                <MessageCircle className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#047857'}}>My Bookings</h3>
-                <p className="text-sm mb-3" style={{color: '#047857', opacity: 0.8}}>View booking requests</p>
+                <h3 className="text-xl font-bold mb-2" style={{color: '#047857'}}>My Requests</h3>
+                <p className="text-sm mb-3" style={{color: '#047857', opacity: 0.8}}>View information requests</p>
                 <div className="text-xs font-medium" style={{color: '#047857', opacity: 0.7}}>
-                  Manage your schedule →
+                  Track your requests →
                 </div>
               </div>
             </div>

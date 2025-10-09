@@ -6,7 +6,7 @@ import { ArrowLeft, Star, User, Calendar, MessageCircle } from 'lucide-react'
 
 export default function MotherReviewsPage() {
   const [reviews, setReviews] = useState<any[]>([])
-  const [bookings, setBookings] = useState<any[]>([])
+  const [requests, setRequests] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [showReviewForm, setShowReviewForm] = useState<string | null>(null)
@@ -49,11 +49,11 @@ export default function MotherReviewsPage() {
           setReviews(reviewsData.reviews || [])
         }
 
-        // Load bookings
-        const bookingsRes = await fetch('/api/bookings', { cache: 'no-store' })
-        if (bookingsRes.ok) {
-          const bookingsData = await bookingsRes.json()
-          setBookings(bookingsData.bookings || [])
+        // Load requests
+        const requestsRes = await fetch('/api/requests', { cache: 'no-store' })
+        if (requestsRes.ok) {
+          const requestsData = await requestsRes.json()
+          setRequests(requestsData.requests || [])
         }
       } catch (e) {
         console.error('Error loading data:', e)
@@ -132,10 +132,10 @@ export default function MotherReviewsPage() {
     }
   }
 
-  const getBookingsToReview = () => {
-    return bookings.filter(booking => 
-      booking.status === 'ACCEPTED' && 
-      !reviews.some(review => review.receiverId === booking.nurse.id)
+  const getRequestsToReview = () => {
+    return requests.filter(request => 
+      request.status === 'COMPLETED' && 
+      !reviews.some(review => review.receiverId === request.nurse.id)
     )
   }
 
@@ -199,35 +199,35 @@ export default function MotherReviewsPage() {
           </div>
         </div>
 
-        {/* Bookings to Review */}
-        {getBookingsToReview().length > 0 && (
+        {/* Requests to Review */}
+        {getRequestsToReview().length > 0 && (
           <div className="mb-8">
             <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Complete Your Reviews</h2>
             <div className="space-y-4">
-              {getBookingsToReview().map((booking) => (
-                <div key={booking.id} className="nh-card">
+              {getRequestsToReview().map((request) => (
+                <div key={request.id} className="nh-card">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                         <User className="w-6 h-6 text-blue-600" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{booking.nurse.name}</h3>
-                        <p className="text-gray-600">Booking completed - Please rate your experience</p>
+                        <h3 className="text-lg font-semibold text-gray-900">{request.nurse?.nurseProfile?.name || 'Nurse'}</h3>
+                        <p className="text-gray-600">Request completed - Please rate your experience</p>
                       </div>
                     </div>
                     <button
-                      onClick={() => setShowReviewForm(showReviewForm === booking.nurse.id ? null : booking.nurse.id)}
+                      onClick={() => setShowReviewForm(showReviewForm === request.nurse.id ? null : request.nurse.id)}
                       className="nh-btn nh-btn--primary"
                     >
-                      {showReviewForm === booking.nurse.id ? 'Cancel' : 'Write Review'}
+                      {showReviewForm === request.nurse.id ? 'Cancel' : 'Write Review'}
                     </button>
                   </div>
 
                   {/* Review Form */}
-                  {showReviewForm === booking.nurse.id && (
+                  {showReviewForm === request.nurse.id && (
                     <div className="mt-6 pt-6 border-t border-gray-200 pb-4">
-                      <h4 className="text-lg font-medium text-gray-900 mb-4">Rate {booking.nurse.name}</h4>
+                      <h4 className="text-lg font-medium text-gray-900 mb-4">Rate {request.nurse?.nurseProfile?.name || 'Nurse'}</h4>
                       
                       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
                         {[
@@ -280,7 +280,7 @@ export default function MotherReviewsPage() {
                           Cancel
                         </button>
                         <button
-                          onClick={() => handleSubmitReview(booking.nurse.id)}
+                          onClick={() => handleSubmitReview(request.nurse.id)}
                           className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
                         >
                           Submit Review
@@ -296,11 +296,11 @@ export default function MotherReviewsPage() {
 
         {/* Reviews List */}
         <div className="space-y-6">
-          {reviews.length === 0 && getBookingsToReview().length === 0 ? (
+          {reviews.length === 0 && getRequestsToReview().length === 0 ? (
             <div className="text-center py-12">
               <Star className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No reviews yet</h3>
-              <p className="text-gray-600 mb-6">Start by booking and hiring a nurse</p>
+              <p className="text-gray-600 mb-6">Start by request and hiring a nurse</p>
               <Link href="/nurses" className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors">
                 Find Nurses
               </Link>
