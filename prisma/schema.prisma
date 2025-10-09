@@ -68,6 +68,7 @@ model UserProfile {
   name      String
   phone     String?
   location  String?
+  aboutMe   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -143,7 +143,7 @@ export default function MotherProfilePage() {
               Back to Dashboard
             </Link>
             <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-            <p className="text-gray-600 mt-1">Manage your mother profile information</p>
+            <p className="text-gray-600 mt-1">Manage your user profile information</p>
           </div>
           {!isEditing && (
             <button
