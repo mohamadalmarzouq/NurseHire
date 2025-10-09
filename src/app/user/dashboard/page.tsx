@@ -90,14 +90,8 @@ export default function UserDashboard() {
 
         {/* Welcome Section */}
         <div className="nh-card mb-8">
-          <div className="flex items-center space-x-3 mb-2">
-            <div className="w-9 h-9 bg-primary-100 rounded-full flex items-center justify-center shadow-sm">
-              <span className="text-sm font-semibold text-primary-600">{(user?.profile?.name || 'M').charAt(0).toUpperCase()}</span>
-            </div>
-            <div>
-              <h1 className="nh-h2" style={{marginBottom:'2px'}}>Welcome, {user?.profile?.name || 'Mother'}</h1>
-              <span className="nh-badge nh-badge--info capitalize" style={{fontSize:'11px'}}>mother</span>
-            </div>
+          <div className="mb-2">
+            <h1 className="nh-h2">Welcome, {user?.profile?.name || 'User'}</h1>
           </div>
           <p className="nh-sub">Find trusted nurses for your newborn care needs in Kuwait.</p>
         </div>
