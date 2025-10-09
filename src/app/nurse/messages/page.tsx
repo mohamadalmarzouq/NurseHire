@@ -141,7 +141,7 @@ export default function NurseMessagesPage() {
             Back to Dashboard
           </Link>
           <h1 className="nh-h2">Messages</h1>
-          <p className="nh-sub mt-1">Chat with mothers</p>
+          <p className="nh-sub mt-1">Chat with users</p>
         </div>
 
         <div className="nh-card overflow-hidden">
@@ -149,7 +149,7 @@ export default function NurseMessagesPage() {
             <div className="text-center py-12">
               <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No messages yet</h3>
-              <p className="text-gray-600">When mothers contact you, messages will appear here</p>
+              <p className="text-gray-600">When users contact you, messages will appear here</p>
             </div>
           ) : (
             <div className="flex h-96">
@@ -183,7 +183,7 @@ export default function NurseMessagesPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-gray-900 truncate">
-                              {conversation.partnerName || 'Mother'}
+                              {conversation.partnerName || 'User'}
                             </p>
                             <span className="text-xs text-gray-500">
                               {conversation.lastMessageTime ? new Date(conversation.lastMessageTime).toLocaleDateString() : ''}
@@ -205,7 +205,7 @@ export default function NurseMessagesPage() {
                   <>
                     <div className="p-4 border-b border-gray-200 bg-gray-50">
                       <h3 className="font-medium text-gray-900">
-                        {selectedConversation.otherUser?.name || selectedConversation.partnerName || 'Mother'}
+                        {selectedConversation.otherUser?.name || selectedConversation.partnerName || 'User'}
                       </h3>
                     </div>
                     <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -227,7 +227,7 @@ export default function NurseMessagesPage() {
                                     </span>
                                   </div>
                                   <span className="text-xs font-medium text-gray-600">
-                                    {selectedConversation.otherUser?.name || 'Mother'}
+                                    {selectedConversation.otherUser?.name || 'User'}
                                   </span>
                                 </div>
                               )}

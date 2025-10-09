@@ -75,7 +75,7 @@ export default function NurseDashboard() {
           </h1>
           <p className="text-gray-600">
             {isApproved 
-              ? 'Manage your profile and respond to booking requests from mothers.'
+              ? 'Manage your profile and respond to information requests from users.'
               : 'Complete your profile setup and wait for admin approval.'
             }
           </p>
@@ -103,18 +103,6 @@ export default function NurseDashboard() {
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-900">Messages</h3>
                 <p className="text-gray-600 text-sm">Chat with users</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/nurse/messages" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-            <div className="flex items-center">
-              <div className="bg-blue-100 p-3 rounded-lg">
-                <MessageCircle className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="ml-4">
-                <h3 className="text-lg font-semibold text-gray-900">Messages</h3>
-                <p className="text-gray-600 text-sm">Chat with mothers</p>
               </div>
             </div>
           </Link>
@@ -194,11 +182,11 @@ export default function NurseDashboard() {
                 <>
                   <div className="border-l-4 border-green-400 pl-4 py-2">
                     <p className="text-sm text-gray-600">Profile approved</p>
-                    <p className="text-xs text-gray-500">Now visible to mothers</p>
+                    <p className="text-xs text-gray-500">Now visible to users</p>
                   </div>
                   <div className="border-l-4 border-yellow-400 pl-4 py-2">
                     <p className="text-sm text-gray-600">No booking requests yet</p>
-                    <p className="text-xs text-gray-500">Mothers can now book you</p>
+                    <p className="text-xs text-gray-500">Users can now request information</p>
                   </div>
                 </>
               )}

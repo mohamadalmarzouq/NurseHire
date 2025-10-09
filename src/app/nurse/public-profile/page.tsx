@@ -271,7 +271,7 @@ export default function NursePublicProfilePage() {
                           </div>
                           <div>
                             <h3 className="font-semibold text-gray-900">{review.giver.name}</h3>
-                            <p className="text-sm text-gray-500">Mother</p>
+                            <p className="text-sm text-gray-500">User</p>
                           </div>
                         </div>
                         <div className="text-right">
@@ -374,7 +374,7 @@ export default function NursePublicProfilePage() {
               </div>
 
               <div className="text-center text-sm text-neutral-500 bg-neutral-50 p-4 rounded-lg">
-                This is how your profile appears to mothers
+                This is how your profile appears to users
               </div>
             </div>
           </div>

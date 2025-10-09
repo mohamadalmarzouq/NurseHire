@@ -296,7 +296,7 @@ export default function NurseProfilePage() {
                 onChange={handleChange}
                 rows={4}
                 className="mt-1 block w-full nh-input"
-                placeholder="Tell mothers about yourself, your experience, and what makes you special..."
+                placeholder="Tell users about yourself, your experience, and what makes you special..."
               ></textarea>
             ) : (
               <p className="mt-1 text-gray-900">{user?.nurseProfile?.aboutMe || 'Not set'}</p>

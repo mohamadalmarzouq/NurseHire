@@ -80,7 +80,7 @@ export default function NurseReviewsPage() {
             Back to Dashboard
           </Link>
           <h1 className="nh-h2">My Reviews</h1>
-          <p className="nh-sub mt-1">See what mothers are saying about you</p>
+          <p className="nh-sub mt-1">See what users are saying about you</p>
         </div>
 
         <div className="nh-card">
@@ -88,7 +88,7 @@ export default function NurseReviewsPage() {
             <div className="text-center py-12">
               <Star className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No reviews yet</h3>
-              <p className="text-gray-600">After mothers hire you, they can leave reviews here</p>
+              <p className="text-gray-600">After users work with you, they can leave reviews here</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -103,7 +103,7 @@ export default function NurseReviewsPage() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900">{review.giver.name}</h3>
-                        <p className="text-sm text-gray-500">Mother</p>
+                        <p className="text-sm text-gray-500">User</p>
                       </div>
                     </div>
                     <div className="text-right">
