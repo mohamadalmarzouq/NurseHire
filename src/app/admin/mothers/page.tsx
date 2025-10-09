@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, UserCheck, Search, Eye, Calendar } from 'lucide-react'
+import { ArrowLeft, UserCheck, Search, Eye, Calendar, Trash2 } from 'lucide-react'
 
-export default function AdminMothersPage() {
-  const [mothers, setMothers] = useState<any[]>([])
+export default function AdminUsersPage() {
+  const [users, setUsers] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -29,33 +29,56 @@ export default function AdminMothersPage() {
   }, [])
 
   useEffect(() => {
-    const loadMothers = async () => {
+    const loadUsers = async () => {
       try {
-        const res = await fetch('/api/admin/mothers', { cache: 'no-store' })
+        const res = await fetch('/api/admin/users', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
-          setMothers(data.mothers || [])
+          setUsers(data.users || [])
         }
       } catch (e) {
-        console.error('Error loading mothers:', e)
+        console.error('Error loading users:', e)
       } finally {
         setIsLoading(false)
       }
     }
-    loadMothers()
+    loadUsers()
   }, [])
 
-  const filteredMothers = mothers.filter(mother => 
-    mother.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    mother.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = users.filter(user => 
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/admin/users/${userId}`, {
+        method: 'DELETE',
+      })
+      
+      if (res.ok) {
+        // Remove user from local state
+        setUsers(users.filter(user => user.id !== userId))
+        alert('User deleted successfully')
+      } else {
+        alert('Failed to delete user')
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error)
+      alert('Failed to delete user')
+    }
+  }
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading mothers...</p>
+          <p className="mt-4 text-gray-600">Loading users...</p>
         </div>
       </div>
     )
@@ -97,8 +120,8 @@ export default function AdminMothersPage() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Manage Mothers</h1>
-          <p className="text-gray-600 mt-2">View and manage all mother profiles</p>
+          <h1 className="text-3xl font-bold text-gray-900">Manage Users</h1>
+          <p className="text-gray-600 mt-2">View and manage all user profiles</p>
         </div>
 
         {/* Search */}
@@ -107,7 +130,7 @@ export default function AdminMothersPage() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
-              placeholder="Search mothers by name or email..."
+              placeholder="Search users by name or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -115,12 +138,12 @@ export default function AdminMothersPage() {
           </div>
         </div>
 
-        {/* Mothers List */}
+        {/* Users List */}
         <div className="bg-white rounded-lg shadow-sm">
-          {filteredMothers.length === 0 ? (
+          {filteredUsers.length === 0 ? (
             <div className="text-center py-12">
               <UserCheck className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No mothers found</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No users found</h3>
               <p className="text-gray-600">Try adjusting your search criteria</p>
             </div>
           ) : (
@@ -146,35 +169,44 @@ export default function AdminMothersPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredMothers.map((mother) => (
-                    <tr key={mother.id} className="hover:bg-gray-50">
+                  {filteredUsers.map((user) => (
+                    <tr key={user.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
                             <span className="text-sm font-medium text-gray-600">
-                              {mother.name.split(' ').map((n: string) => n[0]).join('')}
+                              {user.name.split(' ').map((n: string) => n[0]).join('')}
                             </span>
                           </div>
                           <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{mother.name}</div>
-                            <div className="text-sm text-gray-500">{mother.email}</div>
+                            <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                            <div className="text-sm text-gray-500">{user.email}</div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {mother.phone || 'Not provided'}
+                        {user.phone || 'Not provided'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {mother.location || 'Not provided'}
+                        {user.location || 'Not provided'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(mother.joinedAt).toLocaleDateString()}
+                        {new Date(user.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button className="text-primary-600 hover:text-primary-900">
-                          <Eye className="w-4 h-4 inline mr-1" />
-                          View
-                        </button>
+                        <div className="flex space-x-2">
+                          <button className="text-primary-600 hover:text-primary-900">
+                            <Eye className="w-4 h-4 inline mr-1" />
+                            View
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteUser(user.id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            <Trash2 className="w-4 h-4 inline mr-1" />
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
