@@ -22,10 +22,9 @@ enum NurseStatus {
   REJECTED
 }
 
-enum BookingStatus {
+enum RequestStatus {
   PENDING
-  ACCEPTED
-  DECLINED
+  IN_PROGRESS
   COMPLETED
   CANCELLED
 }
@@ -52,9 +51,9 @@ model User {
   sentMessages     Message[] @relation("MessageSender")
   receivedMessages Message[] @relation("MessageReceiver")
 
-  // Booking relations
-  sentBookings     Booking[] @relation("BookingRequester")
-  receivedBookings Booking[] @relation("BookingNurse")
+  // Information request relations
+  sentRequests     InformationRequest[] @relation("InformationRequester")
+  receivedRequests InformationRequest[] @relation("InformationNurse")
 
   // Review relations
   reviewsGiven   Review[] @relation("ReviewGiver")
@@ -127,21 +126,23 @@ model Message {
   @@map("messages")
 }
 
-model Booking {
+model InformationRequest {
   id          String        @id @default(cuid())
   requesterId String
   nurseId     String
-  status      BookingStatus @default(PENDING)
-  message     String?
-  startDate   DateTime?
-  endDate     DateTime?
+  status      RequestStatus @default(PENDING)
+  message     String
+  phone       String?
+  preferredContactTime String?
+  urgency     String?       // LOW, MEDIUM, HIGH
+  adminNotes  String?       // Admin can add notes
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
-  requester User @relation("BookingRequester", fields: [requesterId], references: [id], onDelete: Cascade)
-  nurse     User @relation("BookingNurse", fields: [nurseId], references: [id], onDelete: Cascade)
+  requester User @relation("InformationRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  nurse     User @relation("InformationNurse", fields: [nurseId], references: [id], onDelete: Cascade)
 
-  @@map("bookings")
+  @@map("information_requests")
 }
 
 model Review {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Users, CheckCircle, XCircle, Clock, Settings, LogOut, Eye, UserCheck, AlertTriangle } from 'lucide-react'
+import { Users, CheckCircle, XCircle, Clock, Settings, LogOut, Eye, UserCheck, AlertTriangle, MessageCircle } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 
 export default function AdminDashboard() {
@@ -13,7 +13,7 @@ export default function AdminDashboard() {
     pendingApprovals: 0,
     approvedNurses: 0,
     totalMothers: 0,
-    totalBookings: 0
+    totalRequests: 0
   })
   const [pendingNurses, setPendingNurses] = useState<any[]>([])
 
@@ -206,8 +206,8 @@ export default function AdminDashboard() {
                 <Users className="w-6 h-6 text-indigo-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Bookings</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.totalBookings}</p>
+                <p className="text-sm font-medium text-gray-600">Total Requests</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.totalRequests || 0}</p>
               </div>
             </div>
           </div>
@@ -302,14 +302,14 @@ export default function AdminDashboard() {
             </div>
           </Link>
 
-          <Link href="/admin/bookings" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/admin/requests" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
               <div className="bg-green-100 p-3 rounded-lg">
-                <Users className="w-6 h-6 text-green-600" />
+                <MessageCircle className="w-6 h-6 text-green-600" />
               </div>
               <div className="ml-4">
-                <h3 className="text-lg font-semibold text-gray-900">View Bookings</h3>
-                <p className="text-gray-600 text-sm">Monitor all bookings</p>
+                <h3 className="text-lg font-semibold text-gray-900">Manage Requests</h3>
+                <p className="text-gray-600 text-sm">View and respond to information requests</p>
               </div>
             </div>
           </Link>

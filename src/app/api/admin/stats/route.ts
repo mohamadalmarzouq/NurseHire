@@ -20,9 +20,9 @@ export async function GET(request: NextRequest) {
       pendingNurses,
       approvedNurses,
       totalUsers,
-      totalBookings,
+      totalRequests,
       totalReviews,
-      recentBookings
+      recentRequests
     ] = await Promise.all([
       prisma.user.count({ where: { role: 'NURSE' } }),
       prisma.user.count({ 
@@ -38,9 +38,9 @@ export async function GET(request: NextRequest) {
         } 
       }),
       prisma.user.count({ where: { role: 'USER' } }),
-      prisma.booking.count(),
+      prisma.informationRequest.count(),
       prisma.review.count(),
-      prisma.booking.findMany({
+      prisma.informationRequest.findMany({
         take: 5,
         orderBy: { createdAt: 'desc' },
         include: {
@@ -60,20 +60,21 @@ export async function GET(request: NextRequest) {
         pendingApprovals: pendingNurses,
         approvedNurses,
         totalUsers,
-        totalBookings,
+        totalRequests,
         totalReviews,
       },
-      recentBookings: recentBookings.map(booking => ({
-        id: booking.id,
-        status: booking.status,
-        createdAt: booking.createdAt,
+      recentRequests: recentRequests.map(request => ({
+        id: request.id,
+        status: request.status,
+        urgency: request.urgency,
+        createdAt: request.createdAt,
         requester: {
-          name: booking.requester.userProfile?.name || 'Unknown',
-          email: booking.requester.email,
+          name: request.requester.userProfile?.name || 'Unknown',
+          email: request.requester.email,
         },
         nurse: {
-          name: booking.nurse.nurseProfile?.name || 'Unknown',
-          email: booking.nurse.email,
+          name: request.nurse.nurseProfile?.name || 'Unknown',
+          email: request.nurse.email,
         },
       }))
     })

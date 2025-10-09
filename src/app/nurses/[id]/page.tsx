@@ -38,9 +38,12 @@ export default function NurseProfilePage() {
   const [nurse, setNurse] = useState<Nurse | null>(null)
   const [reviews, setReviews] = useState<Review[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [showBookingModal, setShowBookingModal] = useState(false)
-  const [bookingMessage, setBookingMessage] = useState('')
-  const [isBooking, setIsBooking] = useState(false)
+  const [showRequestModal, setShowRequestModal] = useState(false)
+  const [requestMessage, setRequestMessage] = useState('')
+  const [requestPhone, setRequestPhone] = useState('')
+  const [preferredContactTime, setPreferredContactTime] = useState('')
+  const [urgency, setUrgency] = useState('MEDIUM')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
@@ -111,55 +114,66 @@ export default function NurseProfilePage() {
     return (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5
   }
 
-  const handleBookingRequest = async () => {
+  const handleInformationRequest = async () => {
     if (!nurse) return
     
-    console.log('Booking request - isAuthenticated:', isAuthenticated, 'user role:', user?.role)
+    console.log('Information request - isAuthenticated:', isAuthenticated, 'user role:', user?.role)
     console.log('Nurse ID:', nurse.id)
     
     // Check authentication before proceeding
     if (!isAuthenticated || user?.role !== 'USER') {
-      alert('You must be logged in as a mother to book a nurse. Please sign in.')
-      setShowBookingModal(false)
+      alert('You must be logged in as a user to request information. Please sign in.')
+      setShowRequestModal(false)
       return
     }
     
-    setIsBooking(true)
+    if (!requestMessage.trim()) {
+      alert('Please provide a message explaining what information you need.')
+      return
+    }
+    
+    setIsSubmitting(true)
     try {
-      console.log('Sending booking request...')
-      const res = await fetch('/api/bookings', {
+      console.log('Sending information request...')
+      const res = await fetch('/api/requests', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           nurseId: nurse.id,
-          message: bookingMessage,
+          message: requestMessage,
+          phone: requestPhone || null,
+          preferredContactTime: preferredContactTime || null,
+          urgency: urgency,
         }),
       })
 
-      console.log('Booking response status:', res.status)
+      console.log('Request response status:', res.status)
       const responseData = await res.json()
-      console.log('Booking response data:', responseData)
+      console.log('Request response data:', responseData)
 
       if (res.ok) {
-        alert('Booking request sent successfully! You can view your bookings in your dashboard.')
-        setShowBookingModal(false)
-        setBookingMessage('')
+        alert('Information request sent successfully! Our admin will contact you soon with the details you need.')
+        setShowRequestModal(false)
+        setRequestMessage('')
+        setRequestPhone('')
+        setPreferredContactTime('')
+        setUrgency('MEDIUM')
       } else {
         if (res.status === 401) {
-          alert('Please sign in to book a nurse.')
+          alert('Please sign in to request information.')
         } else if (res.status === 403) {
-          alert('Only mothers can book nurses. Please sign in with a mother account.')
+          alert('Only users can request information. Please sign in with a user account.')
         } else {
-          alert(responseData.error || 'Failed to send booking request. Please try again.')
+          alert(responseData.error || 'Failed to send information request. Please try again.')
         }
       }
     } catch (error) {
-      console.error('Error sending booking request:', error)
-      alert('Failed to send booking request. Please check your connection and try again.')
+      console.error('Error sending information request:', error)
+      alert('Failed to send information request. Please check your connection and try again.')
     } finally {
-      setIsBooking(false)
+      setIsSubmitting(false)
     }
   }
 
@@ -473,13 +487,13 @@ export default function NurseProfilePage() {
                 <div className="space-y-3">
                   <button 
                     onClick={() => {
-                      console.log('Booking button clicked, isAuthenticated:', isAuthenticated, 'user role:', user?.role)
-                      setShowBookingModal(true)
+                      console.log('Request button clicked, isAuthenticated:', isAuthenticated, 'user role:', user?.role)
+                      setShowRequestModal(true)
                     }}
                     className="w-full btn-primary mb-4"
                   >
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Book This Nurse
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Request Information
                   </button>
                   
                   <button 
@@ -496,55 +510,94 @@ export default function NurseProfilePage() {
         </div>
       </div>
 
-      {/* Booking Modal */}
-      {showBookingModal && (
+      {/* Information Request Modal */}
+      {showRequestModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full">
-            <h3 className="text-xl font-semibold text-neutral-900 mb-4">Book {nurse.name}</h3>
+          <div className="bg-white rounded-2xl p-6 max-w-lg w-full">
+            <h3 className="text-xl font-semibold text-neutral-900 mb-4">Request Information About {nurse.name}</h3>
             {!isAuthenticated || user?.role !== 'USER' ? (
               <div className="text-center py-8">
-                <p className="text-red-600 mb-4">You must be logged in as a mother to book a nurse.</p>
-                <p className="text-sm text-gray-500 mb-4">Debug: isAuthenticated={isAuthenticated.toString()}, role={user?.role || 'none'}</p>
-                <p className="text-xs text-gray-400 mb-4">User object: {JSON.stringify(user, null, 2)}</p>
+                <p className="text-red-600 mb-4">You must be logged in as a user to request information.</p>
                 <Link 
                   href="/auth/login"
                   className="btn-primary"
                 >
-                  Sign In as Mother
+                  Sign In
                 </Link>
               </div>
             ) : (
               <>
                 <p className="text-neutral-600 mb-6">
-                  Send a booking request to {nurse.name}. They will review your request and get back to you.
+                  Tell us what information you need about {nurse.name}. Our admin will contact you with the details.
                 </p>
-            <div className="space-y-4">
-              <div>
-                <label className="label">Message (Optional)</label>
-                <textarea
-                  className="input-field h-24 resize-none"
-                  placeholder="Tell the nurse about your needs..."
-                  value={bookingMessage}
-                  onChange={(e) => setBookingMessage(e.target.value)}
-                />
-              </div>
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => setShowBookingModal(false)}
-                  className="flex-1 btn-secondary"
-                  disabled={isBooking}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleBookingRequest}
-                  className="flex-1 btn-primary"
-                  disabled={isBooking}
-                >
-                  {isBooking ? 'Sending...' : 'Send Request'}
-                </button>
-              </div>
-            </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="label">What information do you need? *</label>
+                    <textarea
+                      className="input-field h-24 resize-none"
+                      placeholder="e.g., I need to know about her availability for night shifts, her experience with newborns, her rates..."
+                      value={requestMessage}
+                      onChange={(e) => setRequestMessage(e.target.value)}
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="label">Your Phone Number (Optional)</label>
+                    <input
+                      type="tel"
+                      className="input-field"
+                      placeholder="+965 XXXX XXXX"
+                      value={requestPhone}
+                      onChange={(e) => setRequestPhone(e.target.value)}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="label">Preferred Contact Time (Optional)</label>
+                    <select
+                      className="input-field"
+                      value={preferredContactTime}
+                      onChange={(e) => setPreferredContactTime(e.target.value)}
+                    >
+                      <option value="">Select time</option>
+                      <option value="Morning (8AM-12PM)">Morning (8AM-12PM)</option>
+                      <option value="Afternoon (12PM-5PM)">Afternoon (12PM-5PM)</option>
+                      <option value="Evening (5PM-9PM)">Evening (5PM-9PM)</option>
+                      <option value="Any time">Any time</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="label">Urgency Level</label>
+                    <select
+                      className="input-field"
+                      value={urgency}
+                      onChange={(e) => setUrgency(e.target.value)}
+                    >
+                      <option value="LOW">Low - No rush</option>
+                      <option value="MEDIUM">Medium - Within a few days</option>
+                      <option value="HIGH">High - Urgent, need soon</option>
+                    </select>
+                  </div>
+                  
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={() => setShowRequestModal(false)}
+                      className="flex-1 btn-secondary"
+                      disabled={isSubmitting}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleInformationRequest}
+                      className="flex-1 btn-primary"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Sending...' : 'Send Request'}
+                    </button>
+                  </div>
+                </div>
               </>
             )}
           </div>
