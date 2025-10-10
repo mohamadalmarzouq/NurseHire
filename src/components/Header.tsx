@@ -35,7 +35,10 @@ export default function Header() {
                          pathname?.startsWith('/admin/') ||
                          pathname === '/nurses'
 
+  console.log('Header component - pathname:', pathname, 'isDashboardPage:', isDashboardPage)
+
   if (isDashboardPage) {
+    console.log('Header component - returning null for dashboard page')
     return null
   }
 
