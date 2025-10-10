@@ -79,7 +79,6 @@ export default function UserDashboard() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="nh-badge nh-badge--ok">Verified</span>
             <span className="nh-badge nh-badge--info">Private & Secure</span>
-            <span className="nh-badge nh-badge--warn">No Payments (Phase 1)</span>
           </div>
         </div>
 

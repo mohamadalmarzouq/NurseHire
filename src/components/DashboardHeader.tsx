@@ -54,7 +54,7 @@ export default function DashboardHeader({ userName, userRole }: DashboardHeaderP
               <>
                 <div className="hidden md:flex items-center">
                   <div className="text-left">
-                    <p className="text-sm font-semibold text-gray-900">Welcome, {currentUser.name || 'User'}</p>
+                    <p className="text-sm font-semibold text-gray-900">Welcome, {currentUser?.profile?.name || currentUser?.name || 'User'}</p>
                   </div>
                 </div>
                 
