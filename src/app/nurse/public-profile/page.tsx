@@ -361,7 +361,7 @@ export default function NursePublicProfilePage() {
               <div className="space-y-4 mb-6">
                 <div className="flex items-center text-sm text-neutral-600">
                   <span className="w-4 h-4 mr-2 text-green-500">✓</span>
-                  MOH License Verified
+                  Verified
                 </div>
                 <div className="flex items-center text-sm text-neutral-600">
                   <span className="w-4 h-4 mr-2 text-blue-500">✓</span>

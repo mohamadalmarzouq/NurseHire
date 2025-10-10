@@ -218,7 +218,7 @@ export default function RegisterPage() {
               </div>
               <h2 className="text-center nh-h2" style={{fontSize:'22px',marginBottom:'8px'}}>Benefits</h2>
               <ul className="nh-muted" style={{listStyle:'none',padding:0,margin:0,display:'grid',gap:'12px'}}>
-                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--ok">Trust</span><span className="nh-right nh-muted">MOH License verified</span></li>
+                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--ok">Trust</span><span className="nh-right nh-muted">All nurses verified</span></li>
                 <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--info">Messaging</span><span className="nh-right nh-muted">Private 1:1 chat</span></li>
                 <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--warn">Booking</span><span className="nh-right nh-muted">Quick request & response</span></li>
               </ul>

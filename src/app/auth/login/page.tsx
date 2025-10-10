@@ -118,7 +118,7 @@ export default function LoginPage() {
               </div>
               <h2 className="text-center nh-h2" style={{fontSize:'22px',marginBottom:'8px'}}>Why NurseHire?</h2>
               <ul className="nh-muted" style={{listStyle:'none',padding:0,margin:0,display:'grid',gap:'12px'}}>
-                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--ok">MOH Verified</span><span className="nh-right nh-muted">All nurses verified and vetted</span></li>
+                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--ok">Verified</span><span className="nh-right nh-muted">All nurses verified and vetted</span></li>
                 <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--info">Private & Secure</span><span className="nh-right nh-muted">Your data stays safe</span></li>
                 <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--warn">Fast Onboarding</span><span className="nh-right nh-muted">Create an account in minutes</span></li>
               </ul>

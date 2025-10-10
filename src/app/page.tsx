@@ -88,8 +88,8 @@ export default function HomePage() {
               <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#e0f2fe'}}>
                 <Shield className="w-6 h-6" color="#0284c7" />
               </div>
-              <h3 className="text-xl font-semibold mt-3">MOH License Verified</h3>
-              <p className="nh-muted text-sm mt-1">All nurses are licensed and verified by Kuwait&apos;s Ministry of Health</p>
+              <h3 className="text-xl font-semibold mt-3">Verified</h3>
+              <p className="nh-muted text-sm mt-1">All nurses are verified by the platform</p>
             </div>
             <div className="nh-card nh-card--lift">
               <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#dcfce7'}}>

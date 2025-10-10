@@ -155,7 +155,7 @@ export default function NursesPage() {
         {/* Trust strip */}
         <div className="nh-card mb-6" style={{background:'linear-gradient(90deg,#F0F9FF,#ECFDF5)'}}>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="nh-badge nh-badge--ok">MOH Verified</span>
+            <span className="nh-badge nh-badge--ok">Verified</span>
             <span className="nh-badge nh-badge--info">Private & Secure</span>
             <span className="nh-badge nh-badge--warn">No Payments (Phase 1)</span>
           </div>

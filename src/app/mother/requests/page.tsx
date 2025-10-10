@@ -108,7 +108,7 @@ export default function MotherRequestsPage() {
         <div className="flex flex-wrap items-center justify-center gap-4 mb-8 p-4 bg-white rounded-lg shadow-sm border">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span className="font-medium">MOH Verified</span>
+            <span className="font-medium">Verified</span>
           </div>
           <div className="w-px h-4 bg-gray-300"></div>
           <div className="flex items-center gap-2 text-sm text-gray-600">
