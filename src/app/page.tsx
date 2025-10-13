@@ -194,8 +194,8 @@ export default function HomePage() {
               <div className="relative w-full px-6 py-16">
                 <div className="max-w-4xl mx-auto text-center">
                   {/* Icon */}
-                  <div className="w-20 h-20 mx-auto mb-8 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
-                    <Shield className="w-10 h-10 text-white" />
+                  <div className="w-32 h-32 mx-auto mb-8 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 shadow-xl">
+                    <Shield className="w-16 h-16 text-white" />
                   </div>
                   
                   {/* Title */}
