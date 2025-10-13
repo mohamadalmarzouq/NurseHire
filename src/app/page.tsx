@@ -145,7 +145,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
             <div className="flex flex-col justify-center">
               <h2 className="text-3xl md:text-4xl font-bold text-neutral-900" style={{marginBottom:'10px'}}>
-                For Mothers
+                For Users
               </h2>
               <div className="mb-4">
                 <span className="nh-badge nh-badge--info" style={{fontSize:'14px',padding:'6px 12px'}}>Verified • Flexible • Reviewed</span>
@@ -175,18 +175,47 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2">Real Reviews</h3>
-                    <p className="text-neutral-600">Read authentic reviews from other mothers who have hired our nurses.</p>
+                    <p className="text-neutral-600">Read authentic reviews from other users who have hired our nurses.</p>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="nh-card flex items-center justify-center">
-              <div className="text-center" style={{maxWidth:'520px'}}>
-                <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#fce7f3'}}>
-                  <Heart className="w-8 h-8" color="#DB2777" />
+            <div className="relative overflow-hidden rounded-xl" style={{background:'linear-gradient(135deg,#f0f9ff,#e0f2fe,#dbeafe)'}}>
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-0 left-0 w-32 h-32 bg-blue-200 rounded-full transform -translate-x-16 -translate-y-16"></div>
+                <div className="absolute top-1/2 right-0 w-24 h-24 bg-blue-300 rounded-full transform translate-x-12 -translate-y-12"></div>
+                <div className="absolute bottom-0 left-1/2 w-20 h-20 bg-blue-400 rounded-full transform -translate-x-10 translate-y-10"></div>
+                <div className="absolute top-1/4 right-1/4 w-16 h-16 bg-blue-200 rounded-full"></div>
+                <div className="absolute bottom-1/4 left-1/4 w-12 h-12 bg-blue-300 rounded-full"></div>
+              </div>
+              
+              {/* Content */}
+              <div className="relative p-8 text-center">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center" style={{background:'linear-gradient(135deg,#3b82f6,#1d4ed8)',boxShadow:'0 8px 32px rgba(59,130,246,0.3)'}}>
+                  <Shield className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-neutral-900 mb-3">Your Baby&apos;s Safety is Our Priority</h3>
-                <p className="nh-sub text-lg">Every nurse on our platform is carefully vetted to ensure your newborn receives the best possible care.</p>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Trusted & Secure Platform</h3>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Join thousands of satisfied users who trust NurseHire for their newborn care needs. 
+                  Our platform connects you with the most qualified nurses in Kuwait.
+                </p>
+                
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-6 mt-8">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">500+</div>
+                    <div className="text-sm text-gray-600">Happy Families</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">50+</div>
+                    <div className="text-sm text-gray-600">Verified Nurses</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">99%</div>
+                    <div className="text-sm text-gray-600">Satisfaction Rate</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
