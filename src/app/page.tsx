@@ -181,61 +181,22 @@ export default function HomePage() {
               </div>
             </div>
             <div className="relative overflow-hidden rounded-xl bg-white shadow-lg">
-              {/* Watercolor Nurse & Baby Illustration */}
+              {/* Simple Nurse & Baby Illustration */}
               <div className="relative w-full h-full min-h-[300px] flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-50"></div>
                 
-                {/* Watercolor Background Elements */}
-                <div className="absolute inset-0 opacity-20">
-                  <div className="absolute top-4 left-4 w-24 h-24 bg-blue-100 rounded-full blur-sm"></div>
-                  <div className="absolute top-1/3 right-8 w-16 h-16 bg-blue-200 rounded-full blur-sm"></div>
-                  <div className="absolute bottom-1/4 left-1/3 w-20 h-20 bg-blue-100 rounded-full blur-sm"></div>
-                  <div className="absolute bottom-8 right-1/4 w-12 h-12 bg-blue-200 rounded-full blur-sm"></div>
+                {/* Simple Background Pattern */}
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-4 left-4 w-20 h-20 bg-blue-200 rounded-full"></div>
+                  <div className="absolute top-1/3 right-8 w-16 h-16 bg-blue-300 rounded-full"></div>
+                  <div className="absolute bottom-1/4 left-1/3 w-12 h-12 bg-blue-200 rounded-full"></div>
                 </div>
                 
-                {/* Main Illustration Container */}
+                {/* Main Content */}
                 <div className="relative z-10 text-center">
-                  {/* Nurse & Baby Illustration */}
-                  <div className="mx-auto mb-6 w-48 h-48 relative">
-                    {/* Nurse Figure */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {/* Nurse Body (Blue Scrubs) */}
-                      <div className="w-32 h-40 relative">
-                        {/* Head */}
-                        <div className="w-16 h-16 bg-amber-200 rounded-full absolute -top-2 left-1/2 transform -translate-x-1/2">
-                          {/* Hair (Dark Brown Bun) */}
-                          <div className="w-12 h-8 bg-amber-800 rounded-full absolute -top-1 left-1/2 transform -translate-x-1/2"></div>
-                          {/* Eyes */}
-                          <div className="w-2 h-2 bg-gray-800 rounded-full absolute top-4 left-3"></div>
-                          <div className="w-2 h-2 bg-gray-800 rounded-full absolute top-4 right-3"></div>
-                          {/* Face Mask */}
-                          <div className="w-12 h-6 bg-white border-2 border-gray-300 rounded-full absolute bottom-0 left-1/2 transform -translate-x-1/2"></div>
-                        </div>
-                        
-                        {/* Scrubs */}
-                        <div className="w-28 h-32 bg-blue-400 rounded-lg absolute top-8 left-1/2 transform -translate-x-1/2">
-                          {/* Arms */}
-                          <div className="w-6 h-16 bg-amber-200 rounded-full absolute -left-2 top-4"></div>
-                          <div className="w-6 h-16 bg-amber-200 rounded-full absolute -right-2 top-4"></div>
-                        </div>
-                        
-                        {/* Baby */}
-                        <div className="w-20 h-16 bg-yellow-200 rounded-lg absolute top-16 left-1/2 transform -translate-x-1/2">
-                          {/* Baby Head */}
-                          <div className="w-12 h-12 bg-yellow-100 rounded-full absolute -top-4 left-1/2 transform -translate-x-1/2">
-                            {/* Baby Face */}
-                            <div className="w-1 h-1 bg-gray-600 rounded-full absolute top-3 left-2"></div>
-                            <div className="w-1 h-1 bg-gray-600 rounded-full absolute top-3 right-2"></div>
-                          </div>
-                          {/* Baby Body */}
-                          <div className="w-16 h-8 bg-yellow-300 rounded absolute top-2 left-1/2 transform -translate-x-1/2"></div>
-                          {/* Polka Dots */}
-                          <div className="w-1 h-1 bg-white rounded-full absolute top-4 left-2"></div>
-                          <div className="w-1 h-1 bg-white rounded-full absolute top-6 right-3"></div>
-                          <div className="w-1 h-1 bg-white rounded-full absolute bottom-2 left-4"></div>
-                        </div>
-                      </div>
-                    </div>
+                  {/* Simple Icon */}
+                  <div className="mx-auto mb-6 w-20 h-20 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg">
+                    <div className="text-white text-3xl">👩‍⚕️</div>
                   </div>
                   
                   {/* Text Content */}
