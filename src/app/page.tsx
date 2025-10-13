@@ -191,35 +191,35 @@ export default function HomePage() {
               </div>
               
               {/* Content */}
-              <div className="relative w-full px-6 py-16">
+              <div className="relative w-full px-6 py-8">
                 <div className="max-w-4xl mx-auto text-center">
                   {/* Icon */}
-                  <div className="w-32 h-32 mx-auto mb-8 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 shadow-xl">
-                    <Shield className="w-16 h-16 text-white" />
+                  <div className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 shadow-xl">
+                    <Shield className="w-12 h-12 text-white" />
                   </div>
                   
                   {/* Title */}
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Trusted & Secure Platform</h3>
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Trusted & Secure Platform</h3>
                   
                   {/* Description */}
-                  <p className="text-lg md:text-xl text-gray-700 leading-relaxed mb-12 max-w-2xl mx-auto px-4">
+                  <p className="text-base md:text-lg text-gray-700 leading-relaxed mb-8 max-w-2xl mx-auto px-4">
                     Join thousands of satisfied users who trust NurseHire for their newborn care needs. 
                     Our platform connects you with the most qualified nurses in Kuwait.
                   </p>
                   
                   {/* Stats */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 max-w-3xl mx-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-2xl mx-auto">
                     <div className="text-center px-4">
-                      <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">500+</div>
-                      <div className="text-sm md:text-base text-gray-600 font-medium">Happy Families</div>
+                      <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">500+</div>
+                      <div className="text-sm text-gray-600 font-medium">Happy Families</div>
                     </div>
                     <div className="text-center px-4">
-                      <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">50+</div>
-                      <div className="text-sm md:text-base text-gray-600 font-medium">Verified Nurses</div>
+                      <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">50+</div>
+                      <div className="text-sm text-gray-600 font-medium">Verified Nurses</div>
                     </div>
                     <div className="text-center px-4">
-                      <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">99%</div>
-                      <div className="text-sm md:text-base text-gray-600 font-medium">Satisfaction Rate</div>
+                      <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">99%</div>
+                      <div className="text-sm text-gray-600 font-medium">Satisfaction Rate</div>
                     </div>
                   </div>
                 </div>
