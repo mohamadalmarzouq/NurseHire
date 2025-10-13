@@ -194,30 +194,25 @@ export default function HomePage() {
                 
                 {/* Main Content */}
                 <div className="relative z-10 text-center">
-                  {/* Simple Icon */}
-                  <div className="mx-auto mb-6 w-20 h-20 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg">
-                    <div className="text-white text-3xl">👩‍⚕️</div>
-                  </div>
-                  
                   {/* Text Content */}
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3">Caring & Professional</h3>
-                  <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-6 max-w-sm mx-auto">
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Caring & Professional</h3>
+                  <p className="text-lg md:text-xl text-gray-700 leading-relaxed mb-8 max-w-2xl mx-auto">
                     Our nurses provide gentle, expert care for your newborn with the warmth and professionalism you can trust.
                   </p>
                   
                   {/* Stats */}
-                  <div className="grid grid-cols-3 gap-4 max-w-xs mx-auto">
+                  <div className="grid grid-cols-3 gap-6 max-w-lg mx-auto">
                     <div className="text-center">
-                      <div className="text-lg md:text-xl font-bold text-blue-600">500+</div>
-                      <div className="text-xs text-gray-600">Happy Families</div>
+                      <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">500+</div>
+                      <div className="text-sm md:text-base text-gray-600">Happy Families</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg md:text-xl font-bold text-blue-600">50+</div>
-                      <div className="text-xs text-gray-600">Expert Nurses</div>
+                      <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">50+</div>
+                      <div className="text-sm md:text-base text-gray-600">Expert Nurses</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg md:text-xl font-bold text-blue-600">99%</div>
-                      <div className="text-xs text-gray-600">Satisfaction</div>
+                      <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">99%</div>
+                      <div className="text-sm md:text-base text-gray-600">Satisfaction</div>
                     </div>
                   </div>
                 </div>
