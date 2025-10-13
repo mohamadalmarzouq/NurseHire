@@ -180,40 +180,46 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="relative overflow-hidden rounded-xl" style={{background:'linear-gradient(135deg,#f0f9ff,#e0f2fe,#dbeafe)'}}>
+            <div className="relative overflow-hidden rounded-xl min-h-[400px] flex items-center justify-center" style={{background:'linear-gradient(135deg,#f0f9ff,#e0f2fe,#dbeafe)'}}>
               {/* Background Pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-0 left-0 w-32 h-32 bg-blue-200 rounded-full transform -translate-x-16 -translate-y-16"></div>
-                <div className="absolute top-1/2 right-0 w-24 h-24 bg-blue-300 rounded-full transform translate-x-12 -translate-y-12"></div>
-                <div className="absolute bottom-0 left-1/2 w-20 h-20 bg-blue-400 rounded-full transform -translate-x-10 translate-y-10"></div>
-                <div className="absolute top-1/4 right-1/4 w-16 h-16 bg-blue-200 rounded-full"></div>
-                <div className="absolute bottom-1/4 left-1/4 w-12 h-12 bg-blue-300 rounded-full"></div>
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-0 left-0 w-40 h-40 bg-blue-200 rounded-full transform -translate-x-20 -translate-y-20"></div>
+                <div className="absolute top-1/2 right-0 w-32 h-32 bg-blue-300 rounded-full transform translate-x-16 -translate-y-16"></div>
+                <div className="absolute bottom-0 left-1/2 w-28 h-28 bg-blue-400 rounded-full transform -translate-x-14 translate-y-14"></div>
+                <div className="absolute top-1/4 right-1/4 w-20 h-20 bg-blue-200 rounded-full"></div>
+                <div className="absolute bottom-1/4 left-1/4 w-16 h-16 bg-blue-300 rounded-full"></div>
+                <div className="absolute top-3/4 left-1/3 w-12 h-12 bg-blue-500 rounded-full"></div>
               </div>
               
               {/* Content */}
-              <div className="relative p-8 text-center">
-                <div className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center" style={{background:'linear-gradient(135deg,#3b82f6,#1d4ed8)',boxShadow:'0 8px 32px rgba(59,130,246,0.3)'}}>
-                  <Shield className="w-10 h-10 text-white" />
+              <div className="relative max-w-2xl mx-auto px-8 py-12 text-center">
+                {/* Icon */}
+                <div className="w-24 h-24 mx-auto mb-8 rounded-full flex items-center justify-center" style={{background:'linear-gradient(135deg,#3b82f6,#1d4ed8)',boxShadow:'0 12px 40px rgba(59,130,246,0.4)'}}>
+                  <Shield className="w-12 h-12 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Trusted & Secure Platform</h3>
-                <p className="text-lg text-gray-700 leading-relaxed">
+                
+                {/* Title */}
+                <h3 className="text-3xl font-bold text-gray-900 mb-6">Trusted & Secure Platform</h3>
+                
+                {/* Description */}
+                <p className="text-xl text-gray-700 leading-relaxed mb-10 max-w-xl mx-auto">
                   Join thousands of satisfied users who trust NurseHire for their newborn care needs. 
                   Our platform connects you with the most qualified nurses in Kuwait.
                 </p>
                 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-6 mt-8">
+                <div className="grid grid-cols-3 gap-8">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">500+</div>
-                    <div className="text-sm text-gray-600">Happy Families</div>
+                    <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
+                    <div className="text-base text-gray-600 font-medium">Happy Families</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">50+</div>
-                    <div className="text-sm text-gray-600">Verified Nurses</div>
+                    <div className="text-4xl font-bold text-blue-600 mb-2">50+</div>
+                    <div className="text-base text-gray-600 font-medium">Verified Nurses</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">99%</div>
-                    <div className="text-sm text-gray-600">Satisfaction Rate</div>
+                    <div className="text-4xl font-bold text-blue-600 mb-2">99%</div>
+                    <div className="text-base text-gray-600 font-medium">Satisfaction Rate</div>
                   </div>
                 </div>
               </div>
