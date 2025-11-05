@@ -12,14 +12,11 @@ function ensureCloudinaryConfig() {
         throw new Error('CLOUDINARY_URL must start with cloudinary://')
       }
       
-      // The SDK automatically reads CLOUDINARY_URL from environment
-      // We don't need to call config() when using CLOUDINARY_URL
-      // Just ensure secure is enabled if needed
-      if (!cloudinary.config().secure) {
-        cloudinary.config({
-          secure: true,
-        })
-      }
+      // The SDK automatically reads CLOUDINARY_URL from environment when imported
+      // We just need to ensure secure is enabled
+      cloudinary.config({
+        secure: true,
+      })
       console.log('Using CLOUDINARY_URL for configuration')
       // Extract cloud name from URL for logging (format: cloudinary://key:secret@cloud_name)
       const match = cloudinaryUrl.match(/@([^\/]+)/)
