@@ -49,10 +49,30 @@ export default function FileUpload({
         body: formData,
       })
 
-      const result = await response.json()
+      let result
+      const contentType = response.headers.get('content-type')
+      if (contentType && contentType.includes('application/json')) {
+        try {
+          result = await response.json()
+        } catch (parseError) {
+          console.error('Failed to parse JSON response:', parseError)
+          throw new Error(`Server error: ${response.status} ${response.statusText}`)
+        }
+      } else {
+        const text = await response.text()
+        console.error('Non-JSON response:', text)
+        throw new Error(`Server error: ${response.status} ${response.statusText}`)
+      }
 
       if (!response.ok) {
-        throw new Error(result.error || 'Upload failed')
+        console.error('Upload failed:', result)
+        throw new Error(result.error || `Upload failed: ${response.status} ${response.statusText}`)
+      }
+
+      // Verify we have the required data
+      if (!result.fileUrl || !result.fileName) {
+        console.error('Invalid response from server:', result)
+        throw new Error('Invalid response from server')
       }
 
       // Call the callback with file info

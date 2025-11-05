@@ -5,12 +5,16 @@ import { existsSync } from 'fs'
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Upload request received')
     const data = await request.formData()
     const file: File | null = data.get('file') as unknown as File
 
     if (!file) {
+      console.error('No file in request')
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 })
     }
+
+    console.log('File received:', { name: file.name, size: file.size, type: file.type })
 
     // Validate file type
     const allowedTypes = [
@@ -41,8 +45,19 @@ export async function POST(request: NextRequest) {
 
     // Create uploads directory if it doesn't exist
     const uploadsDir = join(process.cwd(), 'public', 'uploads')
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true })
+    console.log('Uploads directory:', uploadsDir)
+    
+    try {
+      if (!existsSync(uploadsDir)) {
+        console.log('Creating uploads directory...')
+        await mkdir(uploadsDir, { recursive: true })
+        console.log('Uploads directory created')
+      } else {
+        console.log('Uploads directory already exists')
+      }
+    } catch (dirError) {
+      console.error('Error creating uploads directory:', dirError)
+      throw new Error('Failed to create uploads directory')
     }
 
     // Generate unique filename
@@ -51,14 +66,23 @@ export async function POST(request: NextRequest) {
     const fileExtension = file.name.split('.').pop()
     const fileName = `${timestamp}-${randomString}.${fileExtension}`
     const filePath = join(uploadsDir, fileName)
+    
+    console.log('Saving file to:', filePath)
 
     // Convert file to buffer and save
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-    await writeFile(filePath, buffer)
+    try {
+      const bytes = await file.arrayBuffer()
+      const buffer = Buffer.from(bytes)
+      await writeFile(filePath, buffer)
+      console.log('File saved successfully')
+    } catch (writeError) {
+      console.error('Error writing file:', writeError)
+      throw new Error(`Failed to save file: ${writeError instanceof Error ? writeError.message : 'Unknown error'}`)
+    }
 
     // Return the public URL
     const fileUrl = `/uploads/${fileName}`
+    console.log('File uploaded successfully, URL:', fileUrl)
 
     return NextResponse.json({
       success: true,
@@ -70,8 +94,10 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Upload error:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Failed to upload file'
+    console.error('Error details:', errorMessage)
     return NextResponse.json(
-      { error: 'Failed to upload file' },
+      { error: errorMessage, details: error instanceof Error ? error.stack : undefined },
       { status: 500 }
     )
   }
