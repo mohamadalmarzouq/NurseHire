@@ -249,6 +249,7 @@ export default function AdminBannersPage() {
                   onFileSelect={handleFileUpload}
                   accept="image/*"
                   maxSize={2 * 1024 * 1024} // 2MB
+                  folder="banners"
                 />
                 {formData.imageUrl && (
                   <p className="mt-2 text-sm text-green-600">

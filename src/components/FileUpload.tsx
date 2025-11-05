@@ -12,6 +12,7 @@ interface FileUploadProps {
   required?: boolean
   currentFile?: string
   onRemove?: () => void
+  folder?: string // Cloudinary folder (e.g., 'nurse-profiles', 'certifications', 'banners')
 }
 
 export default function FileUpload({
@@ -22,7 +23,8 @@ export default function FileUpload({
   description = 'Click to upload or drag and drop',
   required = false,
   currentFile,
-  onRemove
+  onRemove,
+  folder
 }: FileUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState('')
@@ -42,6 +44,9 @@ export default function FileUpload({
       // Create form data
       const formData = new FormData()
       formData.append('file', file)
+      if (folder) {
+        formData.append('folder', folder)
+      }
 
       // Upload file
       const response = await fetch('/api/upload', {

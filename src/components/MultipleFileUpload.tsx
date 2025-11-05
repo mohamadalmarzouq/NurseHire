@@ -16,6 +16,7 @@ interface MultipleFileUploadProps {
   maxFiles?: number
   required?: boolean
   uploadedFiles?: UploadedFile[]
+  folder?: string // Cloudinary folder (e.g., 'nurse-profiles', 'certifications', 'banners')
 }
 
 export default function MultipleFileUpload({
@@ -25,7 +26,8 @@ export default function MultipleFileUpload({
   label = 'Upload Files',
   maxFiles = 10,
   required = false,
-  uploadedFiles = []
+  uploadedFiles = [],
+  folder
 }: MultipleFileUploadProps) {
   const [files, setFiles] = useState<UploadedFile[]>(uploadedFiles)
   const [isUploading, setIsUploading] = useState(false)
@@ -53,6 +55,9 @@ export default function MultipleFileUpload({
       // Create form data
       const formData = new FormData()
       formData.append('file', file)
+      if (folder) {
+        formData.append('folder', folder)
+      }
 
       // Upload file
       const response = await fetch('/api/upload', {

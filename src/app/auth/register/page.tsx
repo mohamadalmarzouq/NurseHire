@@ -110,6 +110,7 @@ export default function RegisterPage() {
                 onFileSelect={handleFileUpload}
                 accept="image/*"
                 maxSize={5 * 1024 * 1024} // 5MB
+                folder="nurse-profiles"
               />
               {profileImageName && (
                 <p className="mt-2 text-sm text-green-600">
@@ -129,6 +130,7 @@ export default function RegisterPage() {
                 label="Certifications"
                 maxFiles={10}
                 required={false}
+                folder="certifications"
               />
               <p className="mt-1 text-xs text-gray-500">
                 Upload your professional certifications, licenses, and credentials (PDF, DOC, DOCX, or images)
