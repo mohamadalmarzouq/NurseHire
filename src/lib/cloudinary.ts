@@ -3,44 +3,48 @@ import { v2 as cloudinary } from 'cloudinary'
 // Configure Cloudinary - ensure it's configured on each call
 function ensureCloudinaryConfig() {
   try {
-    // Check if CLOUDINARY_URL is set (preferred method - single variable)
-    const cloudinaryUrl = process.env.CLOUDINARY_URL
-    
-    if (cloudinaryUrl) {
-      // Validate the URL format
-      if (!cloudinaryUrl.startsWith('cloudinary://')) {
-        throw new Error('CLOUDINARY_URL must start with cloudinary://')
-      }
-      
-      // The SDK automatically reads CLOUDINARY_URL from environment when imported
-      // We just need to ensure secure is enabled
-      cloudinary.config({
-        secure: true,
-      })
-      console.log('Using CLOUDINARY_URL for configuration')
-      // Extract cloud name from URL for logging (format: cloudinary://key:secret@cloud_name)
-      const match = cloudinaryUrl.match(/@([^\/]+)/)
-      return { cloudName: match ? match[1] : 'from-url', apiKey: 'from-url', apiSecret: '***' }
-    }
-
-    // Fallback to individual variables
+    // Prefer individual variables (more reliable in Next.js)
     const cloudName = process.env.CLOUDINARY_CLOUD_NAME
     const apiKey = process.env.CLOUDINARY_API_KEY
     const apiSecret = process.env.CLOUDINARY_API_SECRET
 
-    if (!cloudName || !apiKey || !apiSecret) {
-      throw new Error('Cloudinary credentials are missing. Please set either CLOUDINARY_URL or all of: CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET environment variables.')
+    if (cloudName && apiKey && apiSecret) {
+      // Use individual variables (preferred method for Next.js)
+      cloudinary.config({
+        cloud_name: cloudName.trim(),
+        api_key: apiKey.trim(),
+        api_secret: apiSecret.trim(),
+        secure: true,
+      })
+      console.log('Using individual Cloudinary variables for configuration')
+      return { cloudName, apiKey, apiSecret: '***' } // Don't log secret
     }
 
-    // Configure using individual variables
-    cloudinary.config({
-      cloud_name: cloudName,
-      api_key: apiKey,
-      api_secret: apiSecret,
-      secure: true,
-    })
+    // Fallback to CLOUDINARY_URL if individual variables not set
+    const cloudinaryUrl = process.env.CLOUDINARY_URL
+    
+    if (cloudinaryUrl) {
+      // Parse the URL format: cloudinary://api_key:api_secret@cloud_name
+      const urlMatch = cloudinaryUrl.match(/cloudinary:\/\/([^:]+):([^@]+)@(.+)/)
+      
+      if (!urlMatch) {
+        throw new Error('Invalid CLOUDINARY_URL format. Expected: cloudinary://api_key:api_secret@cloud_name')
+      }
 
-    return { cloudName, apiKey, apiSecret: '***' } // Don't log secret
+      const [, parsedApiKey, parsedApiSecret, parsedCloudName] = urlMatch
+      
+      cloudinary.config({
+        cloud_name: parsedCloudName.trim(),
+        api_key: parsedApiKey.trim(),
+        api_secret: parsedApiSecret.trim(),
+        secure: true,
+      })
+      console.log('Using CLOUDINARY_URL for configuration (parsed)')
+      return { cloudName: parsedCloudName, apiKey: parsedApiKey, apiSecret: '***' }
+    }
+
+    // No credentials found
+    throw new Error('Cloudinary credentials are missing. Please set either CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET, or CLOUDINARY_URL environment variables.')
   } catch (error) {
     console.error('Error configuring Cloudinary:', error)
     throw error
