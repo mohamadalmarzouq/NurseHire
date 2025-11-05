@@ -43,22 +43,55 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), 'public', 'uploads')
-    console.log('Uploads directory:', uploadsDir)
+    // Try to use public/uploads first, fallback to /tmp/uploads on Render
+    let uploadsDir = join(process.cwd(), 'public', 'uploads')
+    let usePublicDir = true
     
     try {
+      // Test if we can write to public directory
       if (!existsSync(uploadsDir)) {
-        console.log('Creating uploads directory...')
+        console.log('Creating uploads directory in public...')
         await mkdir(uploadsDir, { recursive: true })
-        console.log('Uploads directory created')
+        console.log('Uploads directory created in public')
       } else {
-        console.log('Uploads directory already exists')
+        console.log('Uploads directory already exists in public')
+      }
+      
+      // Test write permissions by creating a test file
+      const testFile = join(uploadsDir, '.test-write')
+      try {
+        await writeFile(testFile, 'test')
+        // Clean up test file
+        const { unlink } = await import('fs/promises')
+        await unlink(testFile).catch(() => {})
+        console.log('Write permissions verified for public/uploads')
+      } catch (testError) {
+        console.warn('Cannot write to public/uploads, trying /tmp/uploads:', testError)
+        usePublicDir = false
       }
     } catch (dirError) {
-      console.error('Error creating uploads directory:', dirError)
-      throw new Error('Failed to create uploads directory')
+      console.warn('Error with public/uploads, trying /tmp/uploads:', dirError)
+      usePublicDir = false
     }
+    
+    // Fallback to /tmp/uploads if public directory doesn't work
+    if (!usePublicDir) {
+      uploadsDir = '/tmp/uploads'
+      try {
+        if (!existsSync(uploadsDir)) {
+          console.log('Creating uploads directory in /tmp...')
+          await mkdir(uploadsDir, { recursive: true })
+          console.log('Uploads directory created in /tmp')
+        } else {
+          console.log('Uploads directory already exists in /tmp')
+        }
+      } catch (tmpDirError) {
+        console.error('Error creating /tmp/uploads directory:', tmpDirError)
+        throw new Error('Failed to create uploads directory in both public and /tmp')
+      }
+    }
+    
+    console.log('Using uploads directory:', uploadsDir)
 
     // Generate unique filename
     const timestamp = Date.now()
@@ -81,7 +114,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Return the public URL
-    const fileUrl = `/uploads/${fileName}`
+    // If we're using /tmp, we need to use the API route to serve files
+    const fileUrl = usePublicDir ? `/uploads/${fileName}` : `/api/static/uploads/${fileName}`
     console.log('File uploaded successfully, URL:', fileUrl)
 
     return NextResponse.json({

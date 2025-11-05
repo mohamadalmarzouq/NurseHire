@@ -12,11 +12,17 @@ export async function GET(
     const fileName = path.join('/')
     
     // Security check - only allow files in uploads directory
-    if (fileName.includes('..') || fileName.includes('/')) {
+    if (fileName.includes('..')) {
       return NextResponse.json({ error: 'Invalid file path' }, { status: 400 })
     }
 
-    const filePath = join(process.cwd(), 'public', 'uploads', fileName)
+    // Try public/uploads first, then /tmp/uploads
+    let filePath = join(process.cwd(), 'public', 'uploads', fileName)
+    
+    if (!existsSync(filePath)) {
+      // Fallback to /tmp/uploads
+      filePath = join('/tmp', 'uploads', fileName)
+    }
     
     // Check if file exists
     if (!existsSync(filePath)) {
