@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import FileUpload from '@/components/FileUpload'
+import MultipleFileUpload from '@/components/MultipleFileUpload'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ export default function RegisterPage() {
   })
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null)
   const [profileImageName, setProfileImageName] = useState<string | null>(null)
+  const [certifications, setCertifications] = useState<Array<{ url: string; name: string }>>([])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -43,6 +45,7 @@ export default function RegisterPage() {
         body: JSON.stringify({
           ...formData,
           profileImageUrl: formData.role === 'NURSE' ? profileImageUrl : null,
+          certifications: formData.role === 'NURSE' ? certifications.map(c => c.url) : [],
         }),
       })
 
@@ -113,6 +116,23 @@ export default function RegisterPage() {
                   ✓ Profile picture uploaded: {profileImageName}
                 </p>
               )}
+            </div>
+          )}
+
+          {/* Certifications Upload - Only for Nurses */}
+          {formData.role === 'NURSE' && (
+            <div>
+              <MultipleFileUpload
+                onFilesChange={setCertifications}
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp"
+                maxSize={5 * 1024 * 1024} // 5MB per file
+                label="Certifications"
+                maxFiles={10}
+                required={false}
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Upload your professional certifications, licenses, and credentials (PDF, DOC, DOCX, or images)
+              </p>
             </div>
           )}
 

@@ -91,6 +91,7 @@ model NurseProfile {
   aboutMe               String?
   cvUrl                 String?
   profileImageUrl       String?
+  certifications        String[]    @default([])
   status                NurseStatus @default(PENDING)
   languages             String[]    @default([])
   availability          String[]    @default([])

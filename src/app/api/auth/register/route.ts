@@ -85,6 +85,7 @@ export async function POST(request: NextRequest) {
           aboutMe: otherData.aboutMe || null,
           cvUrl: otherData.cvUrl || null,
           profileImageUrl: otherData.profileImageUrl, // Required for nurses
+          certifications: Array.isArray(otherData.certifications) ? otherData.certifications : [],
           languages: otherData.languages || [],
           availability: otherData.availability || [],
         },
