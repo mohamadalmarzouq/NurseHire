@@ -73,6 +73,15 @@ export async function POST(request: NextRequest) {
         },
       })
     } else if (role === 'NURSE') {
+      const certificationsArray = Array.isArray(otherData.certifications) ? otherData.certifications : []
+      console.log('Register API: Creating nurse profile', {
+        userId: user.id,
+        name,
+        hasProfileImage: !!otherData.profileImageUrl,
+        certificationsCount: certificationsArray.length,
+        certifications: certificationsArray
+      })
+
       profile = await prisma.nurseProfile.create({
         data: {
           userId: user.id,
@@ -85,10 +94,15 @@ export async function POST(request: NextRequest) {
           aboutMe: otherData.aboutMe || null,
           cvUrl: otherData.cvUrl || null,
           profileImageUrl: otherData.profileImageUrl, // Required for nurses
-          certifications: Array.isArray(otherData.certifications) ? otherData.certifications : [],
+          certifications: certificationsArray,
           languages: otherData.languages || [],
           availability: otherData.availability || [],
         },
+      })
+      
+      console.log('Register API: Nurse profile created successfully', {
+        profileId: profile.id,
+        certificationsCount: profile.certifications.length
       })
     }
 

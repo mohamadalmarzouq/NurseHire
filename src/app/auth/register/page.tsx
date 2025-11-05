@@ -39,13 +39,21 @@ export default function RegisterPage() {
     }
 
     try {
+      const certificationsArray = formData.role === 'NURSE' ? certifications.map(c => c.url) : []
+      console.log('Register: Submitting registration', {
+        role: formData.role,
+        hasProfileImage: !!profileImageUrl,
+        certificationsCount: certifications.length,
+        certificationsUrls: certificationsArray
+      })
+
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
           profileImageUrl: formData.role === 'NURSE' ? profileImageUrl : null,
-          certifications: formData.role === 'NURSE' ? certifications.map(c => c.url) : [],
+          certifications: certificationsArray,
         }),
       })
 

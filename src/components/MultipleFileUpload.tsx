@@ -37,6 +37,7 @@ export default function MultipleFileUpload({
 
   const handleFile = async (file: File) => {
     setError('')
+    console.log('MultipleFileUpload: Starting file upload', { fileName: file.name, size: file.size, type: file.type, folder })
     
     // Check max files limit
     if (files.length >= maxFiles) {
@@ -57,6 +58,7 @@ export default function MultipleFileUpload({
       formData.append('file', file)
       if (folder) {
         formData.append('folder', folder)
+        console.log('MultipleFileUpload: Using folder', folder)
       }
 
       // Upload file
@@ -87,9 +89,11 @@ export default function MultipleFileUpload({
 
       // Verify we have the required data
       if (!result.fileUrl || !result.fileName) {
-        console.error('Invalid response from server:', result)
+        console.error('MultipleFileUpload: Invalid response from server:', result)
         throw new Error('Invalid response from server')
       }
+
+      console.log('MultipleFileUpload: File uploaded successfully', { fileUrl: result.fileUrl, fileName: result.fileName })
 
       // Add to files list
       const newFile: UploadedFile = {
@@ -98,11 +102,16 @@ export default function MultipleFileUpload({
       }
       
       const updatedFiles = [...files, newFile]
+      console.log('MultipleFileUpload: Updated files list', updatedFiles)
       setFiles(updatedFiles)
       onFilesChange(updatedFiles)
 
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload failed')
+      console.error('MultipleFileUpload: Upload error', err)
+      const errorMessage = err instanceof Error ? err.message : 'Upload failed'
+      setError(errorMessage)
+      // Also show alert for visibility
+      alert(`Certification upload failed: ${errorMessage}`)
     } finally {
       setIsUploading(false)
       if (fileInputRef.current) {
