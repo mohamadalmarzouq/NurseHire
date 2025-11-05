@@ -1,11 +1,24 @@
 import { v2 as cloudinary } from 'cloudinary'
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-})
+// Configure Cloudinary - ensure it's configured on each call
+function ensureCloudinaryConfig() {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME
+  const apiKey = process.env.CLOUDINARY_API_KEY
+  const apiSecret = process.env.CLOUDINARY_API_SECRET
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    throw new Error('Cloudinary credentials are missing. Please set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET environment variables.')
+  }
+
+  // Configure if not already configured or if values changed
+  cloudinary.config({
+    cloud_name: cloudName,
+    api_key: apiKey,
+    api_secret: apiSecret,
+  })
+
+  return { cloudName, apiKey, apiSecret: '***' } // Don't log secret
+}
 
 export interface UploadResult {
   url: string
@@ -27,10 +40,16 @@ export async function uploadToCloudinary(
   resourceType: 'image' | 'raw' = 'image'
 ): Promise<UploadResult> {
   try {
+    // Ensure Cloudinary is configured before uploading
+    const config = ensureCloudinaryConfig()
+    console.log('Cloudinary config verified:', { cloudName: config.cloudName, apiKey: config.apiKey })
+    
     // Determine resource type based on file extension
     const fileExtension = fileName.split('.').pop()?.toLowerCase()
     const isDocument = ['pdf', 'doc', 'docx'].includes(fileExtension || '')
     const finalResourceType = isDocument ? 'raw' : resourceType
+
+    console.log('Uploading file:', { fileName, folder, resourceType: finalResourceType, size: Buffer.isBuffer(file) ? file.length : 'unknown' })
 
     // Convert buffer to base64 if it's a buffer
     const fileData = Buffer.isBuffer(file) 
@@ -53,7 +72,20 @@ export async function uploadToCloudinary(
     }
   } catch (error) {
     console.error('Cloudinary upload error:', error)
-    throw new Error(`Failed to upload to Cloudinary: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    
+    // Provide more detailed error information
+    if (error instanceof Error) {
+      // Check for specific Cloudinary errors
+      if (error.message.includes('Invalid Signature')) {
+        throw new Error('Cloudinary authentication failed. Please verify your CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET are correct.')
+      }
+      if (error.message.includes('401')) {
+        throw new Error('Cloudinary authentication failed. Please check your API credentials.')
+      }
+      throw new Error(`Failed to upload to Cloudinary: ${error.message}`)
+    }
+    
+    throw new Error(`Failed to upload to Cloudinary: Unknown error`)
   }
 }
 

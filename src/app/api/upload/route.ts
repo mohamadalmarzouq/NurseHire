@@ -95,13 +95,26 @@ export async function POST(request: NextRequest) {
     const errorMessage = error instanceof Error ? error.message : 'Failed to upload file'
     console.error('Error details:', errorMessage)
     
-    // Check if Cloudinary is configured
-    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    // Check if Cloudinary is configured and log which ones are missing
+    const missingVars = []
+    if (!process.env.CLOUDINARY_CLOUD_NAME) missingVars.push('CLOUDINARY_CLOUD_NAME')
+    if (!process.env.CLOUDINARY_API_KEY) missingVars.push('CLOUDINARY_API_KEY')
+    if (!process.env.CLOUDINARY_API_SECRET) missingVars.push('CLOUDINARY_API_SECRET')
+    
+    if (missingVars.length > 0) {
+      console.error('Missing Cloudinary environment variables:', missingVars)
       return NextResponse.json(
-        { error: 'Cloudinary is not configured. Please set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET environment variables.' },
+        { error: `Cloudinary is not configured. Please set the following environment variables: ${missingVars.join(', ')}` },
         { status: 500 }
       )
     }
+    
+    // Log that variables exist (but not their values)
+    console.log('Cloudinary environment variables check:', {
+      CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME ? '✓ Set' : '✗ Missing',
+      CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY ? '✓ Set' : '✗ Missing',
+      CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET ? '✓ Set' : '✗ Missing',
+    })
     
     return NextResponse.json(
       { error: errorMessage },
