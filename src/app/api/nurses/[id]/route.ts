@@ -45,6 +45,7 @@ export async function GET(
       languages: user.nurseProfile.languages || [],
       availability: user.nurseProfile.availability || [],
       status: user.nurseProfile.status,
+      certifications: user.nurseProfile.certifications || [],
     }
 
     return NextResponse.json({

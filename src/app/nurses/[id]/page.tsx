@@ -19,6 +19,7 @@ interface Nurse {
   reviewCount: number
   languages: string[]
   availability: string[]
+  certifications?: string[]
 }
 
 interface Review {
@@ -343,18 +344,77 @@ export default function NurseProfilePage() {
                 <div>
                   <h3 className="font-semibold text-neutral-900 mb-3">Languages</h3>
                   <div className="flex flex-wrap gap-2">
-                    {nurse.languages.map((language) => (
-                      <span
-                        key={language}
-                        className="px-3 py-1 bg-secondary-100 text-secondary-700 rounded-full text-sm"
-                      >
-                        {language}
-                      </span>
-                    ))}
+                    {nurse.languages && nurse.languages.length > 0 ? (
+                      nurse.languages.map((language) => (
+                        <span
+                          key={language}
+                          className="px-3 py-1 bg-secondary-100 text-secondary-700 rounded-full text-sm"
+                        >
+                          {language}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-neutral-500 text-sm">No languages specified</span>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Certifications Section */}
+            {nurse.certifications && nurse.certifications.length > 0 && (
+              <div className="card">
+                <h2 className="text-xl font-semibold text-neutral-900 mb-4 flex items-center">
+                  <Award className="w-5 h-5 mr-2 text-primary-600" />
+                  Certifications & Credentials
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {nurse.certifications.map((certUrl, index) => {
+                    const fileName = certUrl.split('/').pop() || `Certificate ${index + 1}`
+                    const isImage = /\.(jpg|jpeg|png|webp)$/i.test(fileName)
+                    const isPDF = /\.pdf$/i.test(fileName)
+                    
+                    return (
+                      <a
+                        key={index}
+                        href={certUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="border border-neutral-200 rounded-lg p-4 hover:border-primary-300 hover:shadow-md transition-all group"
+                      >
+                        <div className="flex items-start space-x-3">
+                          <div className="flex-shrink-0">
+                            {isImage ? (
+                              <img
+                                src={certUrl}
+                                alt={fileName}
+                                className="w-16 h-16 object-cover rounded-lg"
+                              />
+                            ) : isPDF ? (
+                              <div className="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center">
+                                <span className="text-2xl">📄</span>
+                              </div>
+                            ) : (
+                              <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <span className="text-2xl">📎</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-neutral-900 truncate group-hover:text-primary-600">
+                              {fileName.length > 30 ? fileName.substring(0, 30) + '...' : fileName}
+                            </p>
+                            <p className="text-xs text-neutral-500 mt-1">
+                              Click to view
+                            </p>
+                          </div>
+                        </div>
+                      </a>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Reviews Section */}
             <div className="card">
