@@ -140,6 +140,11 @@ export default function RegisterPage() {
                 required={false}
                 folder="certifications"
               />
+              {certifications.length > 0 && (
+                <p className="mt-2 text-sm text-green-600">
+                  ✓ {certifications.length} certification{certifications.length !== 1 ? 's' : ''} uploaded successfully
+                </p>
+              )}
               <p className="mt-1 text-xs text-gray-500">
                 Upload your professional certifications, licenses, and credentials (PDF, DOC, DOCX, or images)
               </p>
