@@ -24,7 +24,8 @@ async function migratePricing() {
       await prisma.nurseProfile.update({
         where: { id: nurse.id },
         data: {
-          fullTimeSalary: nurse.nightShiftSalary || 0
+          fullTimeSalary: nurse.nightShiftSalary || 0,
+          nightShiftSalary: null // Clear the old field after migration
         }
       })
       console.log(`Migrated nurse ${nurse.id}: ${nurse.nightShiftSalary} -> ${nurse.fullTimeSalary}`)
