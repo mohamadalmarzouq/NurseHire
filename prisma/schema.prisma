@@ -87,7 +87,8 @@ model NurseProfile {
   totalExperience       Int
   kuwaitExperience      Int
   partTimeSalary        Int
-  fullTimeSalary        Int
+  fullTimeSalary        Int      @default(0)
+  nightShiftSalary      Int?     // Legacy field - will be removed after migration
   aboutMe               String?
   cvUrl                 String?
   profileImageUrl       String?
