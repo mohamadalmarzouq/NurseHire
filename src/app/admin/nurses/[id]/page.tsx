@@ -391,22 +391,30 @@ export default function AdminNurseDetailPage() {
       {/* Image View Modal */}
       {viewingImage && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[9999] p-4"
+          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
           onClick={() => setViewingImage(null)}
         >
-          <div className="relative max-w-4xl max-h-full">
+          <div 
+            className="relative max-w-5xl w-full max-h-[95vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
             <img
               src={viewingImage}
               alt="Profile"
-              className="max-w-full max-h-[90vh] rounded-lg"
-              onClick={(e) => e.stopPropagation()}
+              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+              style={{ maxHeight: '90vh' }}
             />
             <button
               onClick={() => setViewingImage(null)}
-              className="absolute top-4 right-4 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors"
+              className="absolute top-2 right-2 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors shadow-lg z-10"
+              style={{ width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-              <span className="text-2xl">×</span>
+              <span className="text-2xl font-bold text-gray-800 leading-none">×</span>
             </button>
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-lg text-sm">
+              Click outside to close
+            </div>
           </div>
         </div>
       )}
