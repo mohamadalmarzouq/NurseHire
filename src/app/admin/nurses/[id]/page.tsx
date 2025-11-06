@@ -96,8 +96,16 @@ export default function AdminNurseDetailPage() {
     if (type === 'image') {
       setViewingImage(url)
     } else {
-      // Open certificate in new tab for viewing
-      window.open(url, '_blank', 'noopener,noreferrer')
+      // Open certificate in new tab for viewing (not downloading)
+      // Use a data URL approach or ensure the link opens for viewing
+      const link = document.createElement('a')
+      link.href = url
+      link.target = '_blank'
+      link.rel = 'noopener noreferrer'
+      // Don't set download attribute - this allows viewing in browser
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
     }
   }
 
