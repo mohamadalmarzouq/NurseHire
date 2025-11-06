@@ -186,12 +186,15 @@ export default function AdminNurseDetailPage() {
               </h2>
               {nurse.profileImageUrl ? (
                 <div className="flex items-center space-x-4">
-                  <div className="relative flex-shrink-0 w-20 h-20">
+                  <div 
+                    className="relative flex-shrink-0 w-20 h-20 overflow-hidden"
+                    style={{ width: '80px', height: '80px', borderRadius: '50%', border: '2px solid #e5e7eb' }}
+                  >
                     <img
                       src={nurse.profileImageUrl}
                       alt={nurse.name}
-                      className="w-20 h-20 object-cover rounded-full border-2 border-gray-200"
-                      style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '50%' }}
+                      className="w-full h-full object-cover"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                       onError={(e) => {
                         // Hide broken image and show placeholder
                         e.currentTarget.style.display = 'none'
