@@ -12,7 +12,7 @@ interface Nurse {
   totalExperience: number
   kuwaitExperience: number
   partTimeSalary: number
-  nightShiftSalary: number
+  fullTimeSalary: number
   aboutMe: string
   profileImageUrl?: string
   averageRating: number
@@ -293,8 +293,8 @@ export default function NursesPage() {
                         <p className="font-bold text-blue-600">{nurse.partTimeSalary} KD/hr</p>
                       </div>
                       <div className="text-center flex-1">
-                        <p className="text-xs text-gray-500">Night Shift</p>
-                        <p className="font-bold text-blue-600">{nurse.nightShiftSalary} KD/hr</p>
+                        <p className="text-xs text-gray-500">Full-time</p>
+                        <p className="font-bold text-blue-600">{nurse.fullTimeSalary} KD/hr</p>
                       </div>
                     </div>
 

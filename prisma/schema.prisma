@@ -87,7 +87,7 @@ model NurseProfile {
   totalExperience       Int
   kuwaitExperience      Int
   partTimeSalary        Int
-  nightShiftSalary      Int
+  fullTimeSalary        Int
   aboutMe               String?
   cvUrl                 String?
   profileImageUrl       String?

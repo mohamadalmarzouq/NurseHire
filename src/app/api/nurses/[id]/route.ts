@@ -37,7 +37,7 @@ export async function GET(
       totalExperience: user.nurseProfile.totalExperience,
       kuwaitExperience: user.nurseProfile.kuwaitExperience,
       partTimeSalary: user.nurseProfile.partTimeSalary,
-      nightShiftSalary: user.nurseProfile.nightShiftSalary,
+      fullTimeSalary: user.nurseProfile.fullTimeSalary,
       aboutMe: user.nurseProfile.aboutMe || 'No description provided',
       profileImageUrl: user.nurseProfile.profileImageUrl,
       averageRating: averageRating || 0,

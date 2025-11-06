@@ -18,7 +18,7 @@ export const nurseProfileSchema = z.object({
   totalExperience: z.coerce.number().int().min(0),
   kuwaitExperience: z.coerce.number().int().min(0),
   partTimeSalary: z.coerce.number().int().min(0),
-  nightShiftSalary: z.coerce.number().int().min(0),
+  fullTimeSalary: z.coerce.number().int().min(0),
   aboutMe: z.string().optional(),
   cvUrl: z.string().optional(),
   profileImageUrl: z.string().optional(),

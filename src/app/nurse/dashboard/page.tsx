@@ -139,8 +139,8 @@ export default function NurseDashboard() {
                 <span className="text-sm font-medium text-gray-900">KD {user?.profile?.partTimeSalary || 0}/hour</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Night Shift Rate</span>
-                <span className="text-sm font-medium text-gray-900">KD {user?.profile?.nightShiftSalary || 0}/hour</span>
+                <span className="text-sm text-gray-600">Full-time Rate</span>
+                <span className="text-sm font-medium text-gray-900">KD {user?.profile?.fullTimeSalary || 0}/hour</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Languages</span>

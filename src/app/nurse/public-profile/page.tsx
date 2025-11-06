@@ -11,7 +11,7 @@ interface Nurse {
   totalExperience: number
   kuwaitExperience: number
   partTimeSalary: number
-  nightShiftSalary: number
+  fullTimeSalary: number
   aboutMe: string
   profileImageUrl?: string
   averageRating: number
@@ -63,7 +63,7 @@ export default function NursePublicProfilePage() {
             totalExperience: profile.totalExperience,
             kuwaitExperience: profile.kuwaitExperience,
             partTimeSalary: profile.partTimeSalary,
-            nightShiftSalary: profile.nightShiftSalary,
+            fullTimeSalary: profile.fullTimeSalary,
             aboutMe: profile.aboutMe || 'No description provided',
             profileImageUrl: profile.profileImageUrl,
             averageRating: 0, // Will be calculated from reviews later
@@ -351,9 +351,9 @@ export default function NursePublicProfilePage() {
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-neutral-600">Night Shift Rate</span>
+                  <span className="text-neutral-600">Full-time Rate</span>
                   <span className="text-xl font-bold text-primary-600">
-                    {nurse.nightShiftSalary} KD/hour
+                    {nurse.fullTimeSalary} KD/hour
                   </span>
                 </div>
               </div>

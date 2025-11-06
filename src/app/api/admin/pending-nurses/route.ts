@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
         totalExperience: nurse.nurseProfile?.totalExperience || 0,
         kuwaitExperience: nurse.nurseProfile?.kuwaitExperience || 0,
         partTimeSalary: nurse.nurseProfile?.partTimeSalary || 0,
-        nightShiftSalary: nurse.nurseProfile?.nightShiftSalary || 0,
+        fullTimeSalary: nurse.nurseProfile?.fullTimeSalary || 0,
         aboutMe: nurse.nurseProfile?.aboutMe || '',
         languages: nurse.nurseProfile?.languages || [],
         availability: nurse.nurseProfile?.availability || [],

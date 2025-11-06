@@ -21,7 +21,7 @@ export async function PUT(request: NextRequest) {
       totalExperience,
       kuwaitExperience,
       partTimeSalary,
-      nightShiftSalary,
+      fullTimeSalary,
       aboutMe,
       phone,
       location,
@@ -43,7 +43,7 @@ export async function PUT(request: NextRequest) {
     if (totalExperience) updateData.totalExperience = parseInt(totalExperience)
     if (kuwaitExperience) updateData.kuwaitExperience = parseInt(kuwaitExperience)
     if (partTimeSalary) updateData.partTimeSalary = parseFloat(partTimeSalary)
-    if (nightShiftSalary) updateData.nightShiftSalary = parseFloat(nightShiftSalary)
+    if (fullTimeSalary) updateData.fullTimeSalary = parseFloat(fullTimeSalary)
 
     const updatedProfile = await prisma.nurseProfile.update({
       where: { userId: payload.id },

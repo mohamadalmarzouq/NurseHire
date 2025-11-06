@@ -16,7 +16,7 @@ interface NurseProfile {
   totalExperience: number
   kuwaitExperience: number
   partTimeSalary: number
-  nightShiftSalary: number
+  fullTimeSalary: number
   aboutMe?: string
   profileImageUrl?: string
   certifications?: string[]
@@ -407,8 +407,8 @@ export default function AdminNurseDetailPage() {
                   <span className="font-medium">KD {nurse.partTimeSalary}/hour</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Night Shift Rate</span>
-                  <span className="font-medium">KD {nurse.nightShiftSalary}/hour</span>
+                  <span className="text-gray-600">Full-time Rate</span>
+                  <span className="font-medium">KD {nurse.fullTimeSalary}/hour</span>
                 </div>
               </div>
             </div>

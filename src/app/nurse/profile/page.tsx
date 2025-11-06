@@ -14,7 +14,7 @@ export default function NurseProfilePage() {
     totalExperience: '',
     kuwaitExperience: '',
     partTimeSalary: '',
-    nightShiftSalary: '',
+    fullTimeSalary: '',
     aboutMe: '',
     phone: '',
     location: '',
@@ -45,7 +45,7 @@ export default function NurseProfilePage() {
             totalExperience: profile?.totalExperience || '',
             kuwaitExperience: profile?.kuwaitExperience || '',
             partTimeSalary: profile?.partTimeSalary || '',
-            nightShiftSalary: profile?.nightShiftSalary || '',
+            fullTimeSalary: profile?.fullTimeSalary || '',
             aboutMe: profile?.aboutMe || '',
             phone: profile?.phone || '',
             location: profile?.location || '',
@@ -349,17 +349,17 @@ export default function NurseProfilePage() {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Night Shift Rate</label>
+                  <label className="block text-sm font-medium text-gray-700">Full-time Rate</label>
                   {isEditing ? (
                     <input
                       type="number"
-                      name="nightShiftSalary"
-                      value={formData.nightShiftSalary}
+                      name="fullTimeSalary"
+                      value={formData.fullTimeSalary}
                       onChange={handleChange}
                       className="mt-1 block w-full nh-input"
                     />
                   ) : (
-                    <p className="mt-1 text-gray-900">KD {user?.nurseProfile?.nightShiftSalary || 'Not set'}</p>
+                    <p className="mt-1 text-gray-900">KD {user?.nurseProfile?.fullTimeSalary || 'Not set'}</p>
                   )}
                 </div>
               </div>

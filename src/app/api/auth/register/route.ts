@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
           totalExperience: parseInt(otherData.totalExperience) || 0,
           kuwaitExperience: parseInt(otherData.kuwaitExperience) || 0,
           partTimeSalary: parseInt(otherData.partTimeSalary) || 0,
-          nightShiftSalary: parseInt(otherData.nightShiftSalary) || 0,
+          fullTimeSalary: parseInt(otherData.fullTimeSalary) || 0,
           aboutMe: otherData.aboutMe || null,
           cvUrl: otherData.cvUrl || null,
           profileImageUrl: otherData.profileImageUrl, // Required for nurses

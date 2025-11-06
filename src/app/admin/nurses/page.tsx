@@ -208,7 +208,7 @@ export default function AdminNursesPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <div>KD {nurse.partTimeSalary}/hour part-time</div>
-                        <div className="text-gray-500">KD {nurse.nightShiftSalary}/hour night shift</div>
+                        <div className="text-gray-500">KD {nurse.fullTimeSalary}/hour full-time</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(nurse.status)}`}>
