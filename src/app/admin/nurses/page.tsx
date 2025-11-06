@@ -221,11 +221,11 @@ export default function AdminNursesPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <Link
-                          href={`/nurses/${nurse.id}`}
+                          href={`/admin/nurses/${nurse.id}`}
                           className="text-primary-600 hover:text-primary-900 mr-3"
                         >
                           <Eye className="w-4 h-4 inline mr-1" />
-                          View
+                          View Details
                         </Link>
                       </td>
                     </tr>

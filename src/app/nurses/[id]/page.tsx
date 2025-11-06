@@ -380,6 +380,7 @@ export default function NurseProfilePage() {
                         href={certUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        download={false}
                         className="border border-neutral-200 rounded-lg p-4 hover:border-primary-300 hover:shadow-md transition-all group"
                       >
                         <div className="flex items-start space-x-3">

@@ -29,6 +29,8 @@ export async function GET(request: NextRequest) {
         id: nurse.id,
         name: nurse.nurseProfile?.name || 'Unknown',
         email: nurse.email,
+        phone: nurse.nurseProfile?.phone,
+        location: nurse.nurseProfile?.location,
         totalExperience: nurse.nurseProfile?.totalExperience || 0,
         kuwaitExperience: nurse.nurseProfile?.kuwaitExperience || 0,
         partTimeSalary: nurse.nurseProfile?.partTimeSalary || 0,
@@ -38,8 +40,10 @@ export async function GET(request: NextRequest) {
         availability: nurse.nurseProfile?.availability || [],
         cvUrl: nurse.nurseProfile?.cvUrl,
         profileImageUrl: nurse.nurseProfile?.profileImageUrl,
+        certifications: nurse.nurseProfile?.certifications || [],
         status: nurse.nurseProfile?.status || 'PENDING',
         submittedAt: nurse.createdAt,
+        createdAt: nurse.createdAt,
         age: nurse.nurseProfile?.age || 0,
       }))
     })

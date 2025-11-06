@@ -248,11 +248,11 @@ export default function AdminDashboard() {
                     </div>
                     <div className="flex items-center space-x-2">
                       <Link 
-                        href={`/nurses/${nurse.id}`}
+                        href={`/admin/nurses/${nurse.id}`}
                         className="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-200 transition-colors text-sm"
                       >
                         <Eye className="w-4 h-4 inline mr-1" />
-                        View Profile
+                        View Details
                       </Link>
                       <button
                         onClick={() => handleApproveNurse(nurse.id)}
