@@ -186,14 +186,28 @@ export default function AdminNurseDetailPage() {
               </h2>
               {nurse.profileImageUrl ? (
                 <div className="flex items-center space-x-4">
-                  <img
-                    src={nurse.profileImageUrl}
-                    alt={nurse.name}
-                    className="w-20 h-20 object-cover rounded-full border-2 border-gray-200 flex-shrink-0"
-                  />
-                  <div className="flex-1">
+                  <div className="relative flex-shrink-0 w-20 h-20">
+                    <img
+                      src={nurse.profileImageUrl}
+                      alt={nurse.name}
+                      className="w-20 h-20 object-cover rounded-full border-2 border-gray-200"
+                      style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '50%' }}
+                      onError={(e) => {
+                        // Hide broken image and show placeholder
+                        e.currentTarget.style.display = 'none'
+                        const parent = e.currentTarget.parentElement
+                        if (parent && !parent.querySelector('.placeholder')) {
+                          const placeholder = document.createElement('div')
+                          placeholder.className = 'placeholder w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center'
+                          placeholder.innerHTML = '<svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>'
+                          parent.appendChild(placeholder)
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-600 mb-2">Profile Image</p>
-                    <div className="flex space-x-2">
+                    <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => handleView(nurse.profileImageUrl!, 'image')}
                         className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
@@ -213,7 +227,7 @@ export default function AdminNurseDetailPage() {
                 </div>
               ) : (
                 <div className="flex items-center space-x-4">
-                  <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0" style={{ width: '80px', height: '80px' }}>
                     <User className="w-10 h-10 text-gray-400" />
                   </div>
                   <p className="text-gray-500">No profile picture uploaded</p>
