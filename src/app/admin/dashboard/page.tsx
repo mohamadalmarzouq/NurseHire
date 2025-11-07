@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Users, CheckCircle, XCircle, Clock, Settings, LogOut, Eye, UserCheck, AlertTriangle, MessageCircle, Image } from 'lucide-react'
+import { Users, CheckCircle, XCircle, Clock, Settings, LogOut, Eye, UserCheck, AlertTriangle, MessageCircle, Image, MessageSquare } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 
 export default function AdminDashboard() {
@@ -277,7 +277,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
           <Link href="/admin/nurses" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
               <div className="bg-blue-100 p-3 rounded-lg">
@@ -310,6 +310,18 @@ export default function AdminDashboard() {
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-900">Manage Requests</h3>
                 <p className="text-gray-600 text-sm">View and respond to information requests</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/admin/messages" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center">
+              <div className="bg-sky-100 p-3 rounded-lg">
+                <MessageSquare className="w-6 h-6 text-sky-600" />
+              </div>
+              <div className="ml-4">
+                <h3 className="text-lg font-semibold text-gray-900">Review Messages</h3>
+                <p className="text-gray-600 text-sm">Monitor conversations between users and nurses</p>
               </div>
             </div>
           </Link>
