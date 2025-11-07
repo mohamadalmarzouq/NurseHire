@@ -13,7 +13,10 @@ function formatUser(user: any) {
   }
 }
 
-export async function GET(request: NextRequest, { params }: { params: { conversationId: string } }) {
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ conversationId: string }> }
+) {
   try {
     const token = request.cookies.get('auth-token')?.value
     if (!token) {
@@ -25,7 +28,8 @@ export async function GET(request: NextRequest, { params }: { params: { conversa
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const conversationId = decodeURIComponent(params.conversationId)
+    const { conversationId: rawConversationId } = await context.params
+    const conversationId = decodeURIComponent(rawConversationId)
     const participantIds = conversationId.split('__')
 
     if (participantIds.length !== 2) {
