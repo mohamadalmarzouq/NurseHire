@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Users, CheckCircle, XCircle, Clock, Eye, Search, Filter } from 'lucide-react'
+import { ArrowLeft, Users, CheckCircle, XCircle, Clock, Eye, Search, Filter, Trash2 } from 'lucide-react'
 
 export default function AdminNursesPage() {
   const [nurses, setNurses] = useState<any[]>([])
@@ -52,6 +52,29 @@ export default function AdminNursesPage() {
     const matchesStatus = statusFilter === 'ALL' || nurse.status === statusFilter
     return matchesSearch && matchesStatus
   })
+
+  const handleDeleteNurse = async (nurseId: string) => {
+    if (!confirm('Are you sure you want to delete this nurse account? This action cannot be undone.')) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/admin/users/${nurseId}`, {
+        method: 'DELETE',
+      })
+
+      if (res.ok) {
+        setNurses(prev => prev.filter(nurse => nurse.id !== nurseId))
+        alert('Nurse account deleted successfully')
+      } else {
+        const data = await res.json().catch(() => null)
+        alert(data?.error || 'Failed to delete nurse account')
+      }
+    } catch (error) {
+      console.error('Error deleting nurse:', error)
+      alert('Failed to delete nurse account')
+    }
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -187,17 +210,26 @@ export default function AdminNursesPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredNurses.map((nurse) => (
+                  {filteredNurses.map((nurse) => {
+                    const nurseName = nurse.name || 'Unknown'
+                    const initials = nurseName
+                      .split(' ')
+                      .filter(Boolean)
+                      .map((n: string) => n[0])
+                      .join('')
+                      .toUpperCase() || 'N'
+
+                    return (
                     <tr key={nurse.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
                             <span className="text-sm font-medium text-gray-600">
-                              {nurse.name.split(' ').map((n: string) => n[0]).join('')}
+                              {initials}
                             </span>
                           </div>
                           <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{nurse.name}</div>
+                            <div className="text-sm font-medium text-gray-900">{nurseName}</div>
                             <div className="text-sm text-gray-500">{nurse.email}</div>
                           </div>
                         </div>
@@ -220,16 +252,26 @@ export default function AdminNursesPage() {
                         {new Date(nurse.submittedAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <Link
-                          href={`/admin/nurses/${nurse.id}`}
-                          className="text-primary-600 hover:text-primary-900 mr-3"
-                        >
-                          <Eye className="w-4 h-4 inline mr-1" />
-                          View Details
-                        </Link>
+                        <div className="flex items-center gap-3">
+                          <Link
+                            href={`/admin/nurses/${nurse.id}`}
+                            className="text-primary-600 hover:text-primary-900"
+                          >
+                            <Eye className="w-4 h-4 inline mr-1" />
+                            View Details
+                          </Link>
+                          <button
+                            onClick={() => handleDeleteNurse(nurse.id)}
+                            className="text-red-600 hover:text-red-800 inline-flex items-center"
+                          >
+                            <Trash2 className="w-4 h-4 mr-1" />
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
-                  ))}
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
