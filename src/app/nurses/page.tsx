@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Filter, Star, MapPin, Clock, Heart, User, ArrowLeft } from 'lucide-react'
+import { Search, Filter, Star, MapPin, Clock, Heart, User, ArrowLeft, CheckCircle } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 
 interface Nurse {
