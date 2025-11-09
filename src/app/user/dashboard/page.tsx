@@ -257,41 +257,71 @@ export default function UserDashboard() {
 
           {/* Favorites */}
           <div className="nh-card">
-            <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Favorite Nurses</h2>
-            <div className="space-y-4">
-              <div className="border-l-4 border-red-400 pl-4 py-2">
-                <p className="text-sm text-gray-600">No favorite nurses yet</p>
-                <p className="text-xs text-gray-500">Add nurses to your favorites</p>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>Favorite Nurses</h2>
+                <p className="text-xs text-gray-500">
+                  Keep your top nurses handy for quick booking when you need them most
+                </p>
               </div>
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-500 bg-red-50 px-3 py-1 rounded-full border border-red-100">
+                <Heart className="w-3 h-3" />
+                Favorites
+              </span>
             </div>
-            <Link href="/nurses" className="mt-4 inline-flex items-center text-primary-600 hover:text-primary-700">
-              Browse nurses <Heart className="w-4 h-4 ml-1" />
-            </Link>
+
+            <div className="rounded-xl border border-dashed border-red-300 bg-red-50/60 p-6 text-center">
+              <Heart className="w-8 h-8 text-red-400 mx-auto mb-3" />
+              <p className="text-sm font-semibold text-red-700 mb-1">No favorites yet</p>
+              <p className="text-xs text-red-600 mb-4">
+                Tap the heart icon on any nurse profile to add them to this list and access them faster next time.
+              </p>
+              <Link
+                href="/nurses"
+                className="inline-flex items-center gap-2 rounded-full bg-red-500 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-red-600 transition-colors"
+              >
+                Browse nurses
+                <Heart className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
 
         {/* Profile Section */}
         <div className="mt-8 nh-card">
-          <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Profile Information</h2>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+            <div>
+              <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>Profile Information</h2>
+              <p className="text-xs text-gray-500">
+                Keep your details up to date so nurses can learn more about your family&apos;s needs
+              </p>
+            </div>
+            <Link
+              href="/user/profile"
+              className="inline-flex items-center gap-2 rounded-full bg-primary-600 px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-primary-700 transition-colors"
+            >
+              <span>Edit Profile</span>
+            </Link>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
-              <p className="mt-1 text-sm text-gray-900">{user?.profile?.name || 'Not set'}</p>
+            <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
+              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Name</p>
+              <p className="text-sm font-semibold text-gray-900">{user?.profile?.name || 'Not set'}</p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <p className="mt-1 text-sm text-gray-900">{user?.email || 'Not set'}</p>
+            <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
+              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Email</p>
+              <p className="text-sm font-semibold text-gray-900 break-words">{user?.email || 'Not set'}</p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Phone</label>
-              <p className="mt-1 text-sm text-gray-900">{user?.profile?.phone || 'Not set'}</p>
+            <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
+              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Phone</p>
+              <p className="text-sm font-semibold text-gray-900">{user?.profile?.phone || 'Not set'}</p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Location</label>
-              <p className="mt-1 text-sm text-gray-900">{user?.profile?.location || 'Not set'}</p>
+            <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
+              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Location</p>
+              <p className="text-sm font-semibold text-gray-900">{user?.profile?.location || 'Not set'}</p>
             </div>
           </div>
-          <Link href="/user/profile" className="mt-4 inline-block nh-btn nh-btn--primary">Edit Profile</Link>
         </div>
       </div>
     </div>
