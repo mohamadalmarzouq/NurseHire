@@ -190,33 +190,69 @@ export default function UserDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Recent Nurses */}
           <div className="nh-card">
-            <h2 className="nh-h2" style={{fontSize:'18px',marginBottom:'10px'}}>Recent Nurses</h2>
-            <div className="space-y-4">
-              {recentNurses.length === 0 ? (
-                <div className="border-l-4 border-yellow-400 pl-4 py-2">
-                  <p className="text-sm text-gray-600">No approved nurses available</p>
-                  <p className="text-xs text-gray-500">Check back later for new nurses</p>
-                </div>
-              ) : (
-                recentNurses.map((nurse) => (
-                  <div key={nurse.id} className="border-l-4 border-green-400 pl-4 py-2">
-                    <p className="text-sm font-medium text-gray-900">{nurse.name}</p>
-                    <p className="text-xs text-gray-500">
-                      {nurse.totalExperience} years experience • KD {nurse.partTimeSalary}/hour
-                    </p>
-                    <Link 
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>Recent Nurses</h2>
+                <p className="text-xs text-gray-500">Latest approved nurses ready to assist your family</p>
+              </div>
+              <Link
+                href="/nurses"
+                className="inline-flex items-center text-xs font-medium text-primary-600 hover:text-primary-700"
+              >
+                View all
+                <Search className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+
+            {recentNurses.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-yellow-300 bg-yellow-50/60 p-6 text-center">
+                <p className="text-sm font-medium text-yellow-800 mb-1">No nurses available yet</p>
+                <p className="text-xs text-yellow-700">
+                  We&apos;re reviewing new applications daily. Please check back soon.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {recentNurses.map((nurse) => (
+                  <div
+                    key={nurse.id}
+                    className="flex items-center justify-between rounded-xl border border-gray-100 bg-white/70 px-4 py-3 shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <div className="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center border border-primary-100">
+                          <span className="text-sm font-semibold text-primary-600">
+                            {nurse.name
+                              ? nurse.name
+                                  .split(' ')
+                                  .filter(Boolean)
+                                  .slice(0, 2)
+                                  .map((part: string) => part[0])
+                                  .join('')
+                                  .toUpperCase()
+                              : 'N'}
+                          </span>
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900">{nurse.name || 'Nurse'}</p>
+                        <p className="text-xs text-gray-500">
+                          {nurse.totalExperience} yrs experience · KD {nurse.partTimeSalary}/hr
+                        </p>
+                      </div>
+                    </div>
+                    <Link
                       href={`/nurses/${nurse.id}`}
-                      className="text-xs text-primary-600 hover:underline"
+                      className="inline-flex items-center text-xs font-medium text-primary-600 hover:text-primary-700"
                     >
                       View Profile
+                      <span className="ml-1 text-lg leading-none">→</span>
                     </Link>
                   </div>
-                ))
-              )}
-            </div>
-            <Link href="/nurses" className="mt-4 inline-flex items-center text-primary-600 hover:text-primary-700">
-              Find nurses <Search className="w-4 h-4 ml-1" />
-            </Link>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Favorites */}
