@@ -17,6 +17,7 @@ interface Nurse {
   profileImageUrl?: string
   averageRating: number
   reviewCount: number
+  languages?: string[]
 }
 
 export default function NursesPage() {
