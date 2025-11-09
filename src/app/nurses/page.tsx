@@ -254,62 +254,84 @@ export default function NursesPage() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {filteredNurses.map((nurse) => (
-                  <div key={nurse.id} className="nh-card nh-card--lift p-5">
+                  <div
+                    key={nurse.id}
+                    className="nh-card nh-card--lift p-6 h-full flex flex-col gap-5"
+                  >
                     {/* Top Section - Name and Basic Info */}
-                    <div className="flex items-center space-x-3 mb-4">
-                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                        {nurse.profileImageUrl ? (
-                          <img
-                            src={nurse.profileImageUrl}
-                            alt={nurse.name}
-                            className="w-12 h-12 rounded-full object-cover"
-                          />
-                        ) : (
-                          <User className="w-6 h-6 text-blue-600" />
-                        )}
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center border border-blue-200">
+                          {nurse.profileImageUrl ? (
+                            <img
+                              src={nurse.profileImageUrl}
+                              alt={nurse.name}
+                              className="w-16 h-16 rounded-full object-cover"
+                            />
+                          ) : (
+                            <User className="w-8 h-8 text-blue-600" />
+                          )}
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-gray-900">{nurse.name}</h3>
-                        <p className="text-sm text-gray-600">{nurse.age} years old • {nurse.totalExperience} years exp</p>
+                        <h3 className="text-xl font-bold text-gray-900">{nurse.name}</h3>
+                        <p className="text-sm text-gray-600">
+                          {nurse.age} years old • {nurse.totalExperience} years experience
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Languages: {nurse.languages?.length ? nurse.languages.join(', ') : 'Not specified'}
+                        </p>
                       </div>
                     </div>
 
                     {/* Rating */}
-                    <div className="flex items-center space-x-2 mb-4">
-                      <div className="flex items-center space-x-1">
-                        {renderStars(nurse.averageRating)}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center space-x-1">
+                          {renderStars(nurse.averageRating)}
+                        </div>
+                        <span className="text-sm font-medium text-gray-700">
+                          {nurse.averageRating}/5
+                        </span>
                       </div>
                       <span className="text-xs text-gray-500">
-                        {nurse.averageRating}/5 • {nurse.reviewCount} reviews
+                        {nurse.reviewCount} review{nurse.reviewCount === 1 ? '' : 's'}
                       </span>
                     </div>
 
                     {/* Rates */}
-                    <div className="flex justify-between mb-4 p-3 bg-gray-50 rounded-lg">
-                      <div className="text-center flex-1">
-                        <p className="text-xs text-gray-500">Part-time</p>
-                        <p className="font-bold text-blue-600">{nurse.partTimeSalary} KD/hr</p>
+                    <div className="grid grid-cols-2 gap-3 p-4 bg-blue-50/60 border border-blue-100 rounded-xl">
+                      <div className="text-center">
+                        <p className="text-xs uppercase tracking-wide text-blue-400">Part-time</p>
+                        <p className="text-lg font-semibold text-blue-700">{nurse.partTimeSalary} KD/hr</p>
                       </div>
-                      <div className="text-center flex-1">
-                        <p className="text-xs text-gray-500">Full-time</p>
-                        <p className="font-bold text-blue-600">{nurse.fullTimeSalary} KD/hr</p>
+                      <div className="text-center">
+                        <p className="text-xs uppercase tracking-wide text-blue-400">Full-time</p>
+                        <p className="text-lg font-semibold text-blue-700">{nurse.fullTimeSalary} KD/hr</p>
                       </div>
                     </div>
 
                     {/* Kuwait Experience */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <MapPin className="w-4 h-4 mr-1" />
-                        <span>Kuwait: {nurse.kuwaitExperience} years</span>
+                    <div className="flex items-center justify-between text-sm text-gray-600">
+                      <div className="flex items-center">
+                        <MapPin className="w-4 h-4 mr-2 text-primary-500" />
+                        <span>Kuwait experience: {nurse.kuwaitExperience} years</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
+                          <CheckCircle className="w-3 h-3" />
+                          Verified
+                        </span>
                       </div>
                     </div>
 
                     {/* View Profile Button */}
-                    <Link 
-                      href={`/nurses/${nurse.id}`} 
-                      className="w-full nh-btn nh-btn--primary text-center block"
+                    <Link
+                      href={`/nurses/${nurse.id}`}
+                      className="mt-auto nh-btn nh-btn--primary text-center"
                     >
                       View Profile
                     </Link>
