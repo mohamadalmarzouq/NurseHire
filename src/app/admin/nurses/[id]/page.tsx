@@ -32,8 +32,7 @@ export default function AdminNurseDetailPage() {
   const [nurse, setNurse] = useState<NurseProfile | null>(null)
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [viewingImage, setViewingImage] = useState<string | null>(null)
-  const [viewingCert, setViewingCert] = useState<string | null>(null)
+  const [viewer, setViewer] = useState<{ url: string; type: 'image' | 'pdf' } | null>(null)
 
   useEffect(() => {
     const loadUser = async () => {
@@ -92,24 +91,20 @@ export default function AdminNurseDetailPage() {
     }
   }
 
-  const handleView = (url: string, type: 'image' | 'cert') => {
+  const handleView = (url: string) => {
     const normalizedUrl = url.split('?')[0] || url
-    const isImage =
-      type === 'image' ||
-      /\.(png|jpe?g|webp|gif|bmp|svg)$/i.test(normalizedUrl)
-
-    if (isImage) {
-      setViewingImage(url)
+    if (/\.(png|jpe?g|webp|gif|bmp|svg)$/i.test(normalizedUrl)) {
+      setViewer({ url, type: 'image' })
+      return
+    }
+    if (/\.pdf$/i.test(normalizedUrl)) {
+      setViewer({ url, type: 'pdf' })
       return
     }
 
-    const link = document.createElement('a')
-    link.href = url
-    link.target = '_blank'
-    link.rel = 'noopener noreferrer'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    if (typeof window !== 'undefined') {
+      window.open(url, '_blank', 'noopener,noreferrer')
+    }
   }
 
   const handleDownload = (url: string, filename: string) => {
@@ -215,7 +210,7 @@ export default function AdminNurseDetailPage() {
                     <p className="text-sm text-gray-600 mb-2">Profile Image</p>
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => handleView(nurse.profileImageUrl!, 'image')}
+                        onClick={() => handleView(nurse.profileImageUrl!)}
                         className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                       >
                         <Eye className="w-4 h-4 mr-1" />
@@ -290,7 +285,7 @@ export default function AdminNurseDetailPage() {
                           </div>
                           <div className="flex space-x-2 ml-4">
                             <button
-                              onClick={() => handleView(certUrl, 'cert')}
+                              onClick={() => handleView(certUrl)}
                               className="inline-flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                             >
                               <Eye className="w-4 h-4 mr-1" />
@@ -419,25 +414,31 @@ export default function AdminNurseDetailPage() {
         </div>
       </div>
 
-      {/* Image View Modal */}
-      {viewingImage && (
+      {/* Viewer Modal */}
+      {viewer && (
         <div
           className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[9999] p-4"
-          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
-          onClick={() => setViewingImage(null)}
+          onClick={() => setViewer(null)}
         >
-          <div 
+          <div
             className="relative max-w-5xl w-full max-h-[95vh] flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
-              src={viewingImage}
-              alt="Profile"
-              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
-              style={{ maxHeight: '90vh' }}
-            />
+            {viewer.type === 'image' ? (
+              <img
+                src={viewer.url}
+                alt="Preview"
+                className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+              />
+            ) : (
+              <iframe
+                src={`${viewer.url}#toolbar=0&navpanes=0`}
+                className="w-full h-[80vh] rounded-lg bg-white shadow-2xl"
+                title="Document preview"
+              />
+            )}
             <button
-              onClick={() => setViewingImage(null)}
+              onClick={() => setViewer(null)}
               className="absolute top-2 right-2 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors shadow-lg z-10"
               style={{ width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >

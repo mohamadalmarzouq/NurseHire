@@ -47,6 +47,7 @@ export default function NurseProfilePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [viewer, setViewer] = useState<{ url: string; type: 'image' | 'pdf' } | null>(null)
 
   useEffect(() => {
     const loadNurseProfile = async () => {
@@ -219,6 +220,22 @@ export default function NurseProfilePage() {
     }
   }
 
+  const handleViewFile = (url: string) => {
+    const cleanUrl = url.split('?')[0] || url
+    if (/\.(png|jpe?g|webp|gif|bmp|svg)$/i.test(cleanUrl)) {
+      setViewer({ url, type: 'image' })
+      return
+    }
+    if (/\.pdf$/i.test(cleanUrl)) {
+      setViewer({ url, type: 'pdf' })
+      return
+    }
+
+    if (typeof window !== 'undefined') {
+      window.open(url, '_blank', 'noopener,noreferrer')
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
@@ -281,11 +298,18 @@ export default function NurseProfilePage() {
               <div className="flex items-start space-x-6">
                 <div className="w-24 h-24 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
                   {nurse.profileImageUrl ? (
-                    <img
-                      src={nurse.profileImageUrl}
-                      alt={nurse.name}
-                      className="w-24 h-24 rounded-full object-cover"
-                    />
+                    <button
+                      type="button"
+                      onClick={() => handleViewFile(nurse.profileImageUrl!)}
+                      className="w-full h-full focus:outline-none"
+                      aria-label="View profile picture"
+                    >
+                      <img
+                        src={nurse.profileImageUrl}
+                        alt={nurse.name}
+                        className="w-24 h-24 rounded-full object-cover transition-transform duration-150 hover:scale-105"
+                      />
+                    </button>
                   ) : (
                     <User className="w-12 h-12 text-primary-600" />
                   )}
@@ -375,13 +399,11 @@ export default function NurseProfilePage() {
                     const isPDF = /\.pdf$/i.test(fileName)
                     
                     return (
-                      <a
+                      <button
                         key={index}
-                        href={certUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        download={false}
-                        className="border border-neutral-200 rounded-lg p-4 hover:border-primary-300 hover:shadow-md transition-all group"
+                        type="button"
+                        onClick={() => handleViewFile(certUrl)}
+                        className="border border-neutral-200 rounded-lg p-4 hover:border-primary-300 hover:shadow-md transition-all group text-left"
                       >
                         <div className="flex items-start space-x-3">
                           <div className="flex-shrink-0">
@@ -410,7 +432,7 @@ export default function NurseProfilePage() {
                             </p>
                           </div>
                         </div>
-                      </a>
+                      </button>
                     )
                   })}
                 </div>
@@ -661,6 +683,42 @@ export default function NurseProfilePage() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {viewer && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[9999] p-4"
+          onClick={() => setViewer(null)}
+        >
+          <div
+            className="relative max-w-5xl w-full max-h-[95vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {viewer.type === 'image' ? (
+              <img
+                src={viewer.url}
+                alt="Preview"
+                className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+              />
+            ) : (
+              <iframe
+                src={`${viewer.url}#toolbar=0&navpanes=0`}
+                className="w-full h-[80vh] rounded-lg bg-white shadow-2xl"
+                title="Document preview"
+              />
+            )}
+            <button
+              onClick={() => setViewer(null)}
+              className="absolute top-2 right-2 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors shadow-lg"
+              aria-label="Close preview"
+            >
+              <span className="text-2xl font-bold text-gray-800 leading-none">×</span>
+            </button>
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-lg text-sm">
+              Click outside to close
+            </div>
           </div>
         </div>
       )}
