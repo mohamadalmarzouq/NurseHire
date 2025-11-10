@@ -93,20 +93,23 @@ export default function AdminNurseDetailPage() {
   }
 
   const handleView = (url: string, type: 'image' | 'cert') => {
-    if (type === 'image') {
+    const normalizedUrl = url.split('?')[0] || url
+    const isImage =
+      type === 'image' ||
+      /\.(png|jpe?g|webp|gif|bmp|svg)$/i.test(normalizedUrl)
+
+    if (isImage) {
       setViewingImage(url)
-    } else {
-      // Open certificate in new tab for viewing (not downloading)
-      // Use a data URL approach or ensure the link opens for viewing
-      const link = document.createElement('a')
-      link.href = url
-      link.target = '_blank'
-      link.rel = 'noopener noreferrer'
-      // Don't set download attribute - this allows viewing in browser
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+      return
     }
+
+    const link = document.createElement('a')
+    link.href = url
+    link.target = '_blank'
+    link.rel = 'noopener noreferrer'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   const handleDownload = (url: string, filename: string) => {
