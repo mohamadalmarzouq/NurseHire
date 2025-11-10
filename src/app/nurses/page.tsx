@@ -259,77 +259,79 @@ export default function NursesPage() {
                 {filteredNurses.map((nurse) => (
                   <div
                     key={nurse.id}
-                    className="nh-card nh-card--lift p-6 flex flex-col gap-6 md:flex-row md:items-center md:justify-between"
+                    className="nh-card nh-card--lift p-6 space-y-6"
                   >
-                    {/* Nurse Identity */}
-                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:gap-4 md:flex-[2]">
-                      <div className="relative mx-auto md:mx-0">
-                        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center border border-blue-200 overflow-hidden">
-                          {nurse.profileImageUrl ? (
-                            <img
-                              src={nurse.profileImageUrl}
-                              alt={nurse.name}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <User className="w-8 h-8 text-blue-600" />
-                          )}
+                    {/* Header */}
+                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                      <div className="flex items-start gap-4">
+                        <div className="relative">
+                          <div className="w-16 h-16 rounded-full border border-primary-100 bg-primary-50 overflow-hidden flex items-center justify-center">
+                            {nurse.profileImageUrl ? (
+                              <img
+                                src={nurse.profileImageUrl}
+                                alt={nurse.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <User className="w-8 h-8 text-primary-500" />
+                            )}
+                          </div>
+                          <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white bg-green-500" />
                         </div>
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full" />
+                        <div className="space-y-2">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                            <h3 className="text-lg font-semibold text-neutral-900 leading-tight line-clamp-1">
+                              {nurse.name}
+                            </h3>
+                            <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100 sm:mt-0 mt-1 w-max">
+                              <CheckCircle className="w-3 h-3" />
+                              Verified
+                            </span>
+                          </div>
+                          <p className="text-xs text-neutral-600">
+                            {nurse.age} years old • {nurse.totalExperience} years experience
+                          </p>
+                          <p className="text-xs text-neutral-500 line-clamp-2">
+                            Languages: {nurse.languages?.length ? nurse.languages.join(', ') : 'Not specified'}
+                          </p>
+                        </div>
                       </div>
-                      <div className="text-center md:text-left flex-1">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
-                          <h3 className="text-lg font-semibold text-gray-900 leading-tight line-clamp-1">
-                            {nurse.name}
-                          </h3>
-                          <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100 sm:mt-0 mt-2 mx-auto sm:mx-0">
-                            <CheckCircle className="w-3 h-3" />
-                            Verified
-                          </span>
-                        </div>
-                        <p className="mt-2 text-xs text-gray-600">
-                          {nurse.age} years old • {nurse.totalExperience} years experience
-                        </p>
-                        <p className="mt-1 text-xs text-gray-500 line-clamp-2">
-                          Languages: {nurse.languages?.length ? nurse.languages.join(', ') : 'Not specified'}
-                        </p>
-                        <div className="mt-3 flex items-center justify-center sm:justify-start gap-2 text-xs text-gray-600">
-                          <span className="flex items-center gap-1">
-                            {renderStars(nurse.averageRating)}
-                          </span>
-                          <span className="font-medium text-gray-700">
-                            {nurse.averageRating}/5
-                          </span>
-                          <span>• {nurse.reviewCount} review{nurse.reviewCount === 1 ? '' : 's'}</span>
-                        </div>
+                      <div className="flex items-center gap-2 text-xs text-neutral-600">
+                        <span className="flex items-center gap-1 text-primary-500">
+                          {renderStars(nurse.averageRating)}
+                        </span>
+                        <span className="font-medium text-neutral-800">
+                          {nurse.averageRating}/5
+                        </span>
+                        <span>• {nurse.reviewCount} review{nurse.reviewCount === 1 ? '' : 's'}</span>
                       </div>
                     </div>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-xs text-gray-600 md:flex-1">
-                      <div>
-                        <p className="uppercase tracking-wide text-gray-400 mb-1">Part-time</p>
-                        <p className="text-sm font-semibold text-blue-700">{nurse.partTimeSalary} KD/hr</p>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-neutral-600">
+                      <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                        <p className="uppercase tracking-wide text-neutral-400 mb-1">Part-time</p>
+                        <p className="text-base font-semibold text-primary-600">{nurse.partTimeSalary} KD/hr</p>
                       </div>
-                      <div>
-                        <p className="uppercase tracking-wide text-gray-400 mb-1">Full-time</p>
-                        <p className="text-sm font-semibold text-blue-700">{nurse.fullTimeSalary} KD/hr</p>
+                      <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                        <p className="uppercase tracking-wide text-neutral-400 mb-1">Full-time</p>
+                        <p className="text-base font-semibold text-primary-600">{nurse.fullTimeSalary} KD/hr</p>
                       </div>
-                      <div>
-                        <p className="uppercase tracking-wide text-gray-400 mb-1">Kuwait Exp.</p>
-                        <p className="text-sm font-semibold text-gray-800">{nurse.kuwaitExperience} yrs</p>
+                      <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                        <p className="uppercase tracking-wide text-neutral-400 mb-1">Kuwait Exp.</p>
+                        <p className="text-base font-semibold text-neutral-800">{nurse.kuwaitExperience} yrs</p>
                       </div>
-                      <div>
-                        <p className="uppercase tracking-wide text-gray-400 mb-1">Total Exp.</p>
-                        <p className="text-sm font-semibold text-gray-800">{nurse.totalExperience} yrs</p>
+                      <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                        <p className="uppercase tracking-wide text-neutral-400 mb-1">Total Exp.</p>
+                        <p className="text-base font-semibold text-neutral-800">{nurse.totalExperience} yrs</p>
                       </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="flex flex-col gap-3 md:w-40">
+                    <div className="flex justify-end">
                       <Link
                         href={`/nurses/${nurse.id}`}
-                        className="nh-btn nh-btn--primary text-center"
+                        className="nh-btn nh-btn--primary text-center w-full sm:w-auto"
                       >
                         View Profile
                       </Link>
