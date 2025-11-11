@@ -687,41 +687,38 @@ export default function NurseProfilePage() {
         </div>
       )}
 
-      {viewer && (
+    {viewer && (
+      <div
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[9999] p-4"
+        onClick={() => setViewer(null)}
+      >
         <div
-          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[9999] p-4"
-          onClick={() => setViewer(null)}
+          className="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center rounded-3xl shadow-2xl overflow-hidden bg-white/5"
+          onClick={(e) => e.stopPropagation()}
         >
-          <div
-            className="relative max-w-5xl w-full max-h-[95vh] flex items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
+          {viewer.type === 'image' ? (
+            <img
+              src={viewer.url}
+              alt="Preview"
+              className="max-w-full max-h-[85vh] object-contain"
+            />
+          ) : (
+            <iframe
+              src={`${viewer.url}#toolbar=0&navpanes=0`}
+              className="w-full h-[80vh] bg-white"
+              title="Document preview"
+            />
+          )}
+          <button
+            onClick={() => setViewer(null)}
+            className="absolute top-4 right-4 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors shadow-lg"
+            aria-label="Close preview"
           >
-            {viewer.type === 'image' ? (
-              <img
-                src={viewer.url}
-                alt="Preview"
-                className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
-              />
-            ) : (
-              <iframe
-                src={`${viewer.url}#toolbar=0&navpanes=0`}
-                className="w-full h-[80vh] rounded-lg bg-white shadow-2xl"
-                title="Document preview"
-              />
-            )}
-            <button
-              onClick={() => setViewer(null)}
-              className="absolute top-2 right-2 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors shadow-lg"
-              aria-label="Close preview"
-            >
-              <span className="text-2xl font-bold text-gray-800 leading-none">×</span>
-            </button>
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-lg text-sm">
-              Click outside to close
-            </div>
-          </div>
+            <span className="text-2xl font-bold text-gray-800 leading-none">×</span>
+          </button>
         </div>
-      )}
+      </div>
+    )}
     </div>
   )
 }
