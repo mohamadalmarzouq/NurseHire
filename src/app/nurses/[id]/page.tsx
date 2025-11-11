@@ -405,7 +405,7 @@ export default function NurseProfilePage() {
                   <Award className="w-5 h-5 mr-2 text-primary-600" />
                   Certifications & Credentials
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                   {nurse.certifications.map((certUrl, index) => {
                     const fileName = certUrl.split('/').pop() || `Certificate ${index + 1}`
                     const isImage = /\.(jpg|jpeg|png|webp)$/i.test(fileName)
@@ -416,24 +416,20 @@ export default function NurseProfilePage() {
                         key={index}
                         type="button"
                         onClick={() => handleViewFile(certUrl)}
-                        className="border border-neutral-200 rounded-lg p-4 hover:border-primary-300 hover:shadow-md transition-all group text-left"
+                        className="border border-neutral-200 rounded-xl p-4 hover:border-primary-300 hover:shadow-lg transition-all group text-left min-h-[100px] flex items-center"
                       >
-                        <div className="flex items-start space-x-3">
-                          <div className="flex-shrink-0">
+                        <div className="flex items-start gap-3 w-full">
+                          <div className="flex-shrink-0 w-16 h-16 rounded-xl bg-neutral-100 flex items-center justify-center overflow-hidden">
                             {isImage ? (
                               <img
                                 src={certUrl}
                                 alt={fileName}
-                                className="w-16 h-16 object-cover rounded-lg"
+                                className="w-16 h-16 object-cover"
                               />
                             ) : isPDF ? (
-                              <div className="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center">
-                                <span className="text-2xl">📄</span>
-                              </div>
+                              <span className="text-2xl">📄</span>
                             ) : (
-                              <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                                <span className="text-2xl">📎</span>
-                              </div>
+                              <span className="text-2xl">📎</span>
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
@@ -701,35 +697,40 @@ export default function NurseProfilePage() {
       )}
 
     {viewer && (
-      <div
-        className="fixed inset-0 z-[9999] flex items-stretch justify-end bg-black/40 backdrop-blur-sm"
-        onClick={() => setViewer(null)}
-      >
-        <div
-          className="relative w-full max-w-2xl h-full bg-white shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <button
-            onClick={() => setViewer(null)}
-            className="absolute top-4 right-4 bg-white rounded-full p-2 hover:bg-neutral-100 transition-colors shadow-lg z-10"
-            aria-label="Close preview"
-          >
-            <span className="text-2xl font-bold text-neutral-800 leading-none">×</span>
-          </button>
-          <div className="h-full w-full p-6 overflow-auto">
-            {viewer.type === 'image' ? (
-              <img
-                src={viewer.url}
-                alt="Preview"
-                className="w-full h-full object-contain rounded-xl"
-              />
-            ) : (
-              <iframe
-                src={`${viewer.url}#toolbar=0&navpanes=0`}
-                className="w-full h-full rounded-xl bg-white"
-                title="Document preview"
-              />
-            )}
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div className="relative bg-white rounded-2xl shadow-2xl max-w-5xl w-full mx-4 md:mx-10 overflow-hidden">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 bg-neutral-50 p-6 flex items-center justify-center">
+              {viewer.type === 'image' ? (
+                <img
+                  src={viewer.url}
+                  alt="Preview"
+                  className="max-h-[70vh] w-full object-contain rounded-xl"
+                />
+              ) : (
+                <iframe
+                  src={`${viewer.url}#toolbar=0&navpanes=0`}
+                  className="w-full h-[70vh] rounded-xl bg-white"
+                  title="Document preview"
+                />
+              )}
+            </div>
+            <div className="md:w-64 border-t md:border-t-0 md:border-l border-neutral-200 p-6 space-y-4">
+              <h3 className="text-lg font-semibold text-neutral-900">File Preview</h3>
+              <p className="text-sm text-neutral-600">
+                You&apos;re viewing this file inside the page. If you need a copy, please
+                contact our support team.
+              </p>
+              <p className="text-xs text-neutral-400">
+                Only viewing is allowed for this document.
+              </p>
+              <button
+                onClick={() => setViewer(null)}
+                className="w-full btn-secondary"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       </div>
