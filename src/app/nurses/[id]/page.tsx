@@ -697,40 +697,39 @@ export default function NurseProfilePage() {
       )}
 
     {viewer && (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-        <div className="relative bg-white rounded-2xl shadow-2xl max-w-5xl w-full mx-4 md:mx-10 overflow-hidden">
-          <div className="flex flex-col md:flex-row">
-            <div className="flex-1 bg-neutral-50 p-6 flex items-center justify-center">
-              {viewer.type === 'image' ? (
-                <img
-                  src={viewer.url}
-                  alt="Preview"
-                  className="max-h-[70vh] w-full object-contain rounded-xl"
-                />
-              ) : (
-                <iframe
-                  src={`${viewer.url}#toolbar=0&navpanes=0`}
-                  className="w-full h-[70vh] rounded-xl bg-white"
-                  title="Document preview"
-                />
-              )}
+      <div className="fixed inset-0 z-[9999] flex">
+        <div
+          className="hidden md:block flex-1 bg-black/40 backdrop-blur-sm"
+          onClick={() => setViewer(null)}
+        />
+        <div className="w-full md:max-w-lg bg-white shadow-2xl h-full md:h-auto md:my-8 md:mr-8 rounded-none md:rounded-2xl overflow-hidden flex flex-col">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-200">
+            <div>
+              <h3 className="text-base font-semibold text-neutral-900">File Preview</h3>
+              <p className="text-xs text-neutral-500">Viewing only — downloads are disabled.</p>
             </div>
-            <div className="md:w-64 border-t md:border-t-0 md:border-l border-neutral-200 p-6 space-y-4">
-              <h3 className="text-lg font-semibold text-neutral-900">File Preview</h3>
-              <p className="text-sm text-neutral-600">
-                You&apos;re viewing this file inside the page. If you need a copy, please
-                contact our support team.
-              </p>
-              <p className="text-xs text-neutral-400">
-                Only viewing is allowed for this document.
-              </p>
-              <button
-                onClick={() => setViewer(null)}
-                className="w-full btn-secondary"
-              >
-                Close
-              </button>
-            </div>
+            <button
+              onClick={() => setViewer(null)}
+              className="bg-neutral-100 hover:bg-neutral-200 transition-colors rounded-full p-2"
+              aria-label="Close preview"
+            >
+              <span className="text-lg font-bold text-neutral-800 leading-none">×</span>
+            </button>
+          </div>
+          <div className="flex-1 overflow-auto p-5 bg-neutral-50">
+            {viewer.type === 'image' ? (
+              <img
+                src={viewer.url}
+                alt="Preview"
+                className="max-h-[70vh] w-full object-contain rounded-xl mx-auto"
+              />
+            ) : (
+              <iframe
+                src={`${viewer.url}#toolbar=0&navpanes=0`}
+                className="w-full h-[70vh] bg-white rounded-xl"
+                title="Document preview"
+              />
+            )}
           </div>
         </div>
       </div>
