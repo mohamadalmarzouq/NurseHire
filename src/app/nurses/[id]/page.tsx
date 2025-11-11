@@ -697,43 +697,43 @@ export default function NurseProfilePage() {
       )}
 
     {viewer && (
-      <div className="fixed inset-0 z-[9999] flex">
+      <div
+        className="fixed inset-0 z-[9999] flex items-start justify-center bg-black/40 backdrop-blur-sm pt-24 px-4 md:pt-28"
+        onClick={() => setViewer(null)}
+      >
         <div
-          className="hidden md:block flex-1 bg-black/40 backdrop-blur-sm"
-          onClick={() => setViewer(null)}
-        />
-        <div className="w-full md:max-w-[28rem] bg-white shadow-2xl h-full md:h-auto md:my-8 md:mr-8 rounded-none md:rounded-2xl overflow-hidden flex flex-col">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-200">
-            <div>
-              <h3 className="text-base font-semibold text-neutral-900">File Preview</h3>
-              <p className="text-xs text-neutral-500">Viewing only — downloads are disabled.</p>
+          className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={() => setViewer(null)}
+            className="absolute top-3 right-3 bg-neutral-100 hover:bg-neutral-200 transition-colors rounded-full p-2 shadow"
+            aria-label="Close preview"
+          >
+            <span className="text-lg font-bold text-neutral-800 leading-none">×</span>
+          </button>
+          <div className="p-6 space-y-4">
+            <div className="space-y-1">
+              <h3 className="text-base font-semibold text-neutral-900 text-center">File Preview</h3>
+              <p className="text-xs text-neutral-500 text-center">
+                Viewing only — downloads are disabled.
+              </p>
             </div>
-            <button
-              onClick={() => setViewer(null)}
-              className="bg-neutral-100 hover:bg-neutral-200 transition-colors rounded-full p-2"
-              aria-label="Close preview"
-            >
-              <span className="text-lg font-bold text-neutral-800 leading-none">×</span>
-            </button>
-          </div>
-          <div className="flex-1 overflow-auto p-5 bg-neutral-50">
             {viewer.type === 'image' ? (
-              <div className="w-full flex flex-col items-center gap-4">
-                <div className="relative">
-                  <img
-                    src={viewer.url}
-                    alt="Preview"
-                    className="w-48 h-48 rounded-full object-cover border-4 border-white shadow-lg"
-                  />
-                </div>
-                <p className="text-xs text-neutral-500 text-center px-4">
-                  Profile picture preview. Click outside to close.
+              <div className="flex flex-col items-center gap-3">
+                <img
+                  src={viewer.url}
+                  alt="Preview"
+                  className="w-48 h-48 rounded-full object-cover border-4 border-white shadow-lg"
+                />
+                <p className="text-xs text-neutral-500 text-center">
+                  Tap anywhere outside the preview to close.
                 </p>
               </div>
             ) : (
               <iframe
                 src={`${viewer.url}#toolbar=0&navpanes=0`}
-                className="w-full h-[70vh] bg-white rounded-xl"
+                className="w-full h-64 bg-white rounded-xl border border-neutral-200"
                 title="Document preview"
               />
             )}
