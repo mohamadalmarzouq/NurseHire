@@ -702,7 +702,7 @@ export default function NurseProfilePage() {
           className="hidden md:block flex-1 bg-black/40 backdrop-blur-sm"
           onClick={() => setViewer(null)}
         />
-        <div className="w-full md:max-w-lg bg-white shadow-2xl h-full md:h-auto md:my-8 md:mr-8 rounded-none md:rounded-2xl overflow-hidden flex flex-col">
+        <div className="w-full md:max-w-[28rem] bg-white shadow-2xl h-full md:h-auto md:my-8 md:mr-8 rounded-none md:rounded-2xl overflow-hidden flex flex-col">
           <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-200">
             <div>
               <h3 className="text-base font-semibold text-neutral-900">File Preview</h3>
@@ -718,11 +718,18 @@ export default function NurseProfilePage() {
           </div>
           <div className="flex-1 overflow-auto p-5 bg-neutral-50">
             {viewer.type === 'image' ? (
-              <img
-                src={viewer.url}
-                alt="Preview"
-                className="max-h-[70vh] w-full object-contain rounded-xl mx-auto"
-              />
+              <div className="w-full flex flex-col items-center gap-4">
+                <div className="relative">
+                  <img
+                    src={viewer.url}
+                    alt="Preview"
+                    className="w-48 h-48 rounded-full object-cover border-4 border-white shadow-lg"
+                  />
+                </div>
+                <p className="text-xs text-neutral-500 text-center px-4">
+                  Profile picture preview. Click outside to close.
+                </p>
+              </div>
             ) : (
               <iframe
                 src={`${viewer.url}#toolbar=0&navpanes=0`}
