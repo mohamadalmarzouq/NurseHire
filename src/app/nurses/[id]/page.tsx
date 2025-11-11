@@ -702,33 +702,35 @@ export default function NurseProfilePage() {
 
     {viewer && (
       <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[9999] p-4"
+        className="fixed inset-0 z-[9999] flex items-stretch justify-end bg-black/40 backdrop-blur-sm"
         onClick={() => setViewer(null)}
       >
         <div
-          className="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center rounded-3xl shadow-2xl overflow-hidden bg-white/5"
+          className="relative w-full max-w-2xl h-full bg-white shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
-          {viewer.type === 'image' ? (
-            <img
-              src={viewer.url}
-              alt="Preview"
-              className="max-w-full max-h-[85vh] object-contain"
-            />
-          ) : (
-            <iframe
-              src={`${viewer.url}#toolbar=0&navpanes=0`}
-              className="w-full h-[80vh] bg-white"
-              title="Document preview"
-            />
-          )}
           <button
             onClick={() => setViewer(null)}
-            className="absolute top-4 right-4 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors shadow-lg"
+            className="absolute top-4 right-4 bg-white rounded-full p-2 hover:bg-neutral-100 transition-colors shadow-lg z-10"
             aria-label="Close preview"
           >
-            <span className="text-2xl font-bold text-gray-800 leading-none">×</span>
+            <span className="text-2xl font-bold text-neutral-800 leading-none">×</span>
           </button>
+          <div className="h-full w-full p-6 overflow-auto">
+            {viewer.type === 'image' ? (
+              <img
+                src={viewer.url}
+                alt="Preview"
+                className="w-full h-full object-contain rounded-xl"
+              />
+            ) : (
+              <iframe
+                src={`${viewer.url}#toolbar=0&navpanes=0`}
+                className="w-full h-full rounded-xl bg-white"
+                title="Document preview"
+              />
+            )}
+          </div>
         </div>
       </div>
     )}
