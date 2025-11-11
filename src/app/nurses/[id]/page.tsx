@@ -101,6 +101,19 @@ export default function NurseProfilePage() {
     checkAuth()
   }, [])
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    if (viewer) {
+      document.body.style.overflow = 'hidden'
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [viewer])
+
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star

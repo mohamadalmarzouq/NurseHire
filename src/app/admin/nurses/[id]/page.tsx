@@ -57,6 +57,19 @@ export default function AdminNurseDetailPage() {
     loadUser()
   }, [params.id])
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    if (viewer) {
+      document.body.style.overflow = 'hidden'
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [viewer])
+
   const loadNurse = async () => {
     try {
       const res = await fetch(`/api/nurses/${params.id}`, { cache: 'no-store' })
