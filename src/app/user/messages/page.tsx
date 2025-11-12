@@ -299,7 +299,7 @@ export default function MotherMessagesPage() {
                   </div>
 
                   {/* Messages */}
-                  <div className="flex-1 p-6 overflow-y-auto bg-gradient-to-b from-gray-50 to-white">
+                  <div className="flex-1 p-6 overflow-y-auto bg-gray-50">
                     <div className="space-y-4">
                       {selectedConversation.messages && selectedConversation.messages.length > 0 ? (
                         selectedConversation.messages.map((message: any, index: number) => {
@@ -316,26 +316,30 @@ export default function MotherMessagesPage() {
                                         {selectedConversation.partnerName.charAt(0).toUpperCase()}
                                       </span>
                                     </div>
-                                    <span className="text-xs font-medium text-gray-600">
+                                    <span className="text-xs font-medium text-gray-700">
                                       {selectedConversation.partnerName}
                                     </span>
                                   </div>
                                 )}
                                 {showSender && isMe && (
                                   <div className="flex items-center justify-end space-x-2 mb-1">
-                                    <span className="text-xs font-medium text-gray-600">You</span>
-                                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                                      <span className="text-xs font-semibold text-green-700">Y</span>
+                                    <span className="text-xs font-medium text-gray-700">You</span>
+                                    <div className="w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center">
+                                      <span className="text-xs font-semibold text-white">Y</span>
                                     </div>
                                   </div>
                                 )}
-                                <div className={`px-4 py-3 rounded-2xl shadow-sm ${
+                                <div className={`px-4 py-3 rounded-2xl shadow-md ${
                                   isMe 
-                                    ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-br-md' 
-                                    : 'bg-white text-gray-900 rounded-bl-md border border-gray-200'
+                                    ? 'bg-primary-600 text-white rounded-br-md' 
+                                    : 'bg-white text-gray-900 rounded-bl-md border-2 border-gray-200'
                                 }`}>
-                                  <p className="text-sm leading-relaxed">{message.content}</p>
-                                  <p className={`text-xs mt-2 ${
+                                  <p className={`text-sm leading-relaxed font-medium ${
+                                    isMe ? 'text-white' : 'text-gray-900'
+                                  }`}>
+                                    {message.content}
+                                  </p>
+                                  <p className={`text-xs mt-2 font-normal ${
                                     isMe ? 'text-primary-100' : 'text-gray-500'
                                   }`}>
                                     {new Date(message.createdAt).toLocaleTimeString([], { 
