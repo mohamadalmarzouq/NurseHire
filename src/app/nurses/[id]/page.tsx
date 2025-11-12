@@ -702,12 +702,12 @@ export default function NurseProfilePage() {
         onClick={() => setViewer(null)}
       >
         <div
-          className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden"
+          className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           <button
             onClick={() => setViewer(null)}
-            className="absolute top-3 right-3 bg-neutral-100 hover:bg-neutral-200 transition-colors rounded-full p-2 shadow"
+            className="absolute top-3 right-3 bg-neutral-100 hover:bg-neutral-200 transition-colors rounded-full p-2 shadow z-10"
             aria-label="Close preview"
           >
             <span className="text-lg font-bold text-neutral-800 leading-none">×</span>
@@ -724,7 +724,7 @@ export default function NurseProfilePage() {
                 <img
                   src={viewer.url}
                   alt="Preview"
-                  className="w-48 h-48 rounded-full object-cover border-4 border-white shadow-lg"
+                  className="w-72 h-72 rounded-xl object-contain border-4 border-white shadow-lg bg-neutral-50"
                 />
                 <p className="text-xs text-neutral-500 text-center">
                   Tap anywhere outside the preview to close.

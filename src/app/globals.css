@@ -425,8 +425,24 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 24rem;
 }
 
+.max-w-md {
+  max-width: 28rem;
+}
+
+.max-w-lg {
+  max-width: 32rem;
+}
+
 .overflow-hidden {
   overflow: hidden;
+}
+
+.object-contain {
+  object-fit: contain;
+}
+
+.object-cover {
+  object-fit: cover;
 }
 
 .border-4 {
@@ -596,6 +612,10 @@ h1, h2, h3, h4, h5, h6 {
   width: 12rem;
 }
 
+.w-72 {
+  width: 18rem;
+}
+
 .w-full {
   width: 100%;
 }
@@ -638,6 +658,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .h-64 {
   height: 16rem;
+}
+
+.h-72 {
+  height: 18rem;
 }
 
 /* Responsive */
