@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
       totalUsers,
       totalRequests,
       totalReviews,
+      pendingReviews,
       recentRequests
     ] = await Promise.all([
       prisma.user.count({ where: { role: 'NURSE' } }),
@@ -40,6 +41,7 @@ export async function GET(request: NextRequest) {
       prisma.user.count({ where: { role: 'USER' } }),
       prisma.informationRequest.count(),
       prisma.review.count(),
+      prisma.review.count({ where: { status: 'PENDING' } }),
       prisma.informationRequest.findMany({
         take: 5,
         orderBy: { createdAt: 'desc' },
@@ -62,6 +64,7 @@ export async function GET(request: NextRequest) {
         totalUsers,
         totalRequests,
         totalReviews,
+        pendingReviews,
       },
       recentRequests: recentRequests.map(request => ({
         id: request.id,
