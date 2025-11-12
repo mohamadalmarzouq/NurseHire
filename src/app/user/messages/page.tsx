@@ -207,55 +207,74 @@ export default function MotherMessagesPage() {
                     <p className="text-gray-500 text-xs mt-1">Try a different search term</p>
                   </div>
                 ) : (
-                  filteredConversations.map((conversation) => (
-                    <div
-                      key={conversation.partnerId}
-                      className={`p-4 border-b border-gray-100 cursor-pointer transition-all ${
-                        selectedConversation?.partnerId === conversation.partnerId 
-                          ? 'bg-primary-50 border-l-4 border-l-primary-600' 
-                          : 'hover:bg-white'
-                      }`}
-                      onClick={() => loadConversation(conversation)}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="relative flex-shrink-0">
-                          <div className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold text-sm ${
-                            selectedConversation?.partnerId === conversation.partnerId
-                              ? 'bg-primary-600 text-white'
-                              : 'bg-gradient-to-br from-primary-100 to-secondary-100 text-primary-700'
-                          }`}>
-                            {conversation.partnerName.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
-                          </div>
-                          {conversation.unreadCount > 0 && (
-                            <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full border-2 border-white flex items-center justify-center">
-                              <span className="text-xs text-white font-bold">{conversation.unreadCount}</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between mb-1">
-                            <h3 className={`text-sm font-semibold truncate ${
+                  <div className="p-3 space-y-2">
+                    {filteredConversations.map((conversation) => (
+                      <button
+                        key={conversation.partnerId}
+                        type="button"
+                        className={`w-full p-4 rounded-lg border-2 text-left transition-all duration-200 ${
+                          selectedConversation?.partnerId === conversation.partnerId 
+                            ? 'bg-primary-600 border-primary-600 shadow-md transform scale-[1.02]' 
+                            : 'bg-white border-gray-200 hover:border-primary-300 hover:bg-primary-50 hover:shadow-sm active:scale-[0.98]'
+                        }`}
+                        onClick={() => loadConversation(conversation)}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div className="relative flex-shrink-0">
+                            <div className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold text-sm ${
                               selectedConversation?.partnerId === conversation.partnerId
-                                ? 'text-primary-900'
-                                : 'text-gray-900'
+                                ? 'bg-white text-primary-600'
+                                : 'bg-gradient-to-br from-primary-100 to-secondary-100 text-primary-700'
                             }`}>
-                              {conversation.partnerName}
-                            </h3>
-                            <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
-                              {formatRelativeTime(conversation.lastMessageTime)}
-                            </span>
+                              {conversation.partnerName.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
+                            </div>
+                            {conversation.unreadCount > 0 && (
+                              <div className={`absolute -top-1 -right-1 w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                                selectedConversation?.partnerId === conversation.partnerId
+                                  ? 'bg-white border-primary-600'
+                                  : 'bg-red-500 border-white'
+                              }`}>
+                                <span className={`text-xs font-bold ${
+                                  selectedConversation?.partnerId === conversation.partnerId
+                                    ? 'text-red-500'
+                                    : 'text-white'
+                                }`}>
+                                  {conversation.unreadCount}
+                                </span>
+                              </div>
+                            )}
                           </div>
-                          <p className={`text-sm truncate ${
-                            conversation.unreadCount > 0
-                              ? 'text-gray-900 font-medium'
-                              : 'text-gray-600'
-                          }`}>
-                            {conversation.lastMessage || 'No messages yet'}
-                          </p>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1">
+                              <h3 className={`text-sm font-semibold truncate ${
+                                selectedConversation?.partnerId === conversation.partnerId
+                                  ? 'text-white'
+                                  : 'text-gray-900'
+                              }`}>
+                                {conversation.partnerName}
+                              </h3>
+                              <span className={`text-xs flex-shrink-0 ml-2 ${
+                                selectedConversation?.partnerId === conversation.partnerId
+                                  ? 'text-primary-100'
+                                  : 'text-gray-500'
+                              }`}>
+                                {formatRelativeTime(conversation.lastMessageTime)}
+                              </span>
+                            </div>
+                            <p className={`text-sm truncate ${
+                              selectedConversation?.partnerId === conversation.partnerId
+                                ? 'text-primary-100'
+                                : conversation.unreadCount > 0
+                                  ? 'text-gray-900 font-medium'
+                                  : 'text-gray-600'
+                            }`}>
+                              {conversation.lastMessage || 'No messages yet'}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  ))
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
