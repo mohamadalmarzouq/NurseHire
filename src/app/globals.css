@@ -109,6 +109,10 @@ h1, h2, h3, h4, h5, h6 {
   background-clip: text;
 }
 
+.no-underline {
+  text-decoration: none;
+}
+
 .section-padding {
   padding: 4rem 1rem;
 }
