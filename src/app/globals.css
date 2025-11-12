@@ -1017,6 +1017,25 @@ nav a:hover {
   z-index: 50;
 }
 
+.z-\[100\] {
+  z-index: 100;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
 /* Star rating */
 .stars {
   display: flex;

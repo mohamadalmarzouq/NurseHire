@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Star, MapPin, Clock, Heart, User, MessageCircle, Calendar, Shield, Award } from 'lucide-react'
+import { ArrowLeft, Star, MapPin, Clock, Heart, User, MessageCircle, Calendar, Shield, Award, CheckCircle, X } from 'lucide-react'
 
 interface Nurse {
   id: string
@@ -48,6 +48,18 @@ export default function NurseProfilePage() {
   const [user, setUser] = useState<any>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [viewer, setViewer] = useState<{ url: string; type: 'image' | 'pdf' } | null>(null)
+  const [showReviewModal, setShowReviewModal] = useState(false)
+  const [hasReviewed, setHasReviewed] = useState(false)
+  const [existingReview, setExistingReview] = useState<any>(null)
+  const [reviewForm, setReviewForm] = useState({
+    appearance: 0,
+    attitude: 0,
+    knowledge: 0,
+    hygiene: 0,
+    salary: 0,
+    comment: ''
+  })
+  const [showSuccess, setShowSuccess] = useState(false)
 
   useEffect(() => {
     const loadNurseProfile = async () => {
@@ -100,6 +112,30 @@ export default function NurseProfilePage() {
     }
     checkAuth()
   }, [])
+
+  useEffect(() => {
+    const checkIfReviewed = async () => {
+      if (!isAuthenticated || !user || user.role !== 'USER' || !nurse) return
+      
+      try {
+        const res = await fetch('/api/reviews?type=given', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          const foundReview = data.reviews?.find((r: any) => r.receiver.id === nurse.id)
+          if (foundReview) {
+            setHasReviewed(true)
+            setExistingReview(foundReview)
+          } else {
+            setHasReviewed(false)
+            setExistingReview(null)
+          }
+        }
+      } catch (e) {
+        console.error('Error checking review status:', e)
+      }
+    }
+    checkIfReviewed()
+  }, [isAuthenticated, user, nurse])
 
   useEffect(() => {
     if (typeof document === 'undefined') return
@@ -249,6 +285,84 @@ export default function NurseProfilePage() {
     }
   }
 
+  const handleStarClick = (category: string, rating: number) => {
+    setReviewForm(prev => ({
+      ...prev,
+      [category]: rating
+    }))
+  }
+
+  const handleSubmitReview = async () => {
+    if (!nurse) return
+    
+    if (reviewForm.appearance === 0 || reviewForm.attitude === 0 || reviewForm.knowledge === 0 || reviewForm.hygiene === 0 || reviewForm.salary === 0) {
+      // Validation is handled by the disabled button and warning message
+      return
+    }
+
+    if (!isAuthenticated || user?.role !== 'USER') {
+      alert('Please log in as a user to submit a review.')
+      window.location.href = '/auth/login'
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          receiverId: nurse.id,
+          ...reviewForm,
+        }),
+      })
+
+      if (res.ok) {
+        setShowSuccess(true)
+        setShowReviewModal(false)
+        setReviewForm({
+          appearance: 0,
+          attitude: 0,
+          knowledge: 0,
+          hygiene: 0,
+          salary: 0,
+          comment: ''
+        })
+        setHasReviewed(true)
+        // Reload nurse profile to update review count
+        const nurseRes = await fetch(`/api/nurses/${params.id}`, { cache: 'no-store' })
+        if (nurseRes.ok) {
+          const nurseData = await nurseRes.json()
+          if (nurseData.nurse) {
+            setNurse(nurseData.nurse)
+            setReviews(nurseData.reviews || [])
+          }
+        }
+        // Reload review status
+        const reviewRes = await fetch('/api/reviews?type=given', { cache: 'no-store' })
+        if (reviewRes.ok) {
+          const reviewData = await reviewRes.json()
+          const foundReview = reviewData.reviews?.find((r: any) => r.receiver.id === nurse.id)
+          if (foundReview) {
+            setExistingReview(foundReview)
+          }
+        }
+        // Hide success message after 5 seconds
+        setTimeout(() => setShowSuccess(false), 5000)
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to submit review. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error)
+      alert('Failed to submit review. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
@@ -286,6 +400,27 @@ export default function NurseProfilePage() {
               Back to Nurses
             </Link>
             <div className="flex items-center space-x-4">
+              {isAuthenticated && user?.role === 'USER' && (
+                <>
+                  {!hasReviewed ? (
+                    <button 
+                      onClick={() => setShowReviewModal(true)}
+                      className="btn-primary"
+                    >
+                      <Star className="w-4 h-4 mr-2" />
+                      Review this Nurse
+                    </button>
+                  ) : (
+                    <Link 
+                      href="/user/reviews"
+                      className="btn-secondary"
+                    >
+                      <Star className="w-4 h-4 mr-2" />
+                      View My Review
+                    </Link>
+                  )}
+                </>
+              )}
               <button className="btn-secondary">
                 <MessageCircle className="w-4 h-4 mr-2" />
                 Message
@@ -301,6 +436,27 @@ export default function NurseProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Success Notification */}
+      {showSuccess && (
+        <div className="fixed top-4 right-4 z-[100] bg-green-50 border border-green-200 rounded-lg shadow-lg p-4 max-w-md animate-slide-in">
+          <div className="flex items-start">
+            <CheckCircle className="w-5 h-5 text-green-600 mr-3 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <h4 className="text-sm font-semibold text-green-900 mb-1">Review Submitted!</h4>
+              <p className="text-sm text-green-700">
+                Your review is pending admin approval and will be visible once approved.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowSuccess(false)}
+              className="ml-3 text-green-600 hover:text-green-800"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="container-custom py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -692,6 +848,185 @@ export default function NurseProfilePage() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Review Modal */}
+      {showReviewModal && (
+        <div 
+          className="fixed inset-0 flex items-center justify-center p-4 z-50" 
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          onClick={() => {
+            if (!isSubmitting) {
+              setShowReviewModal(false)
+              setReviewForm({
+                appearance: 0,
+                attitude: 0,
+                knowledge: 0,
+                hygiene: 0,
+                salary: 0,
+                comment: ''
+              })
+            }
+          }}
+        >
+          <div 
+            className="bg-white rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header with nurse info */}
+            <div className="flex items-center justify-between mb-6 pb-6 border-b border-neutral-200">
+              <div className="flex items-center space-x-4">
+                {nurse?.profileImageUrl ? (
+                  <img
+                    src={nurse.profileImageUrl}
+                    alt={nurse?.name}
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center">
+                    <User className="w-8 h-8 text-primary-600" />
+                  </div>
+                )}
+                <div>
+                  <h3 className="text-2xl font-semibold text-neutral-900">Review {nurse?.name}</h3>
+                  <p className="text-sm text-neutral-600 mt-1">
+                    Share your experience • Pending admin approval
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setShowReviewModal(false)
+                  setReviewForm({
+                    appearance: 0,
+                    attitude: 0,
+                    knowledge: 0,
+                    hygiene: 0,
+                    salary: 0,
+                    comment: ''
+                  })
+                }}
+                className="text-neutral-400 hover:text-neutral-900 transition-colors p-1"
+                disabled={isSubmitting}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Rating Categories */}
+              <div className="bg-neutral-50 rounded-xl p-4 mb-4">
+                <p className="text-sm font-medium text-neutral-700 mb-4">Rate the following categories (required):</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    { key: 'appearance', label: 'Appearance', icon: '✨' },
+                    { key: 'attitude', label: 'Attitude', icon: '😊' },
+                    { key: 'knowledge', label: 'Knowledge', icon: '📚' },
+                    { key: 'hygiene', label: 'Hygiene', icon: '🧼' },
+                    { key: 'salary', label: 'Salary Value', icon: '💰' }
+                  ].map(({ key, label, icon }) => {
+                    const rating = reviewForm[key as keyof typeof reviewForm] as number
+                    const isComplete = rating > 0
+                    return (
+                      <div key={key} className={`space-y-2 p-3 rounded-lg transition-colors ${isComplete ? 'bg-white border border-green-200' : 'bg-transparent'}`}>
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium text-neutral-700 flex items-center">
+                            <span className="mr-2">{icon}</span>
+                            {label}
+                          </label>
+                          {isComplete && (
+                            <CheckCircle className="w-4 h-4 text-green-600" />
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {Array.from({ length: 5 }, (_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-5 h-5 cursor-pointer transition-all ${
+                                i < rating
+                                  ? 'text-yellow-400 fill-current scale-110'
+                                  : 'text-neutral-300 hover:text-yellow-300 hover:scale-105'
+                              }`}
+                              onClick={() => handleStarClick(key, i + 1)}
+                            />
+                          ))}
+                          <span className={`text-sm font-medium ml-2 ${isComplete ? 'text-green-600' : 'text-neutral-500'}`}>
+                            {rating > 0 ? `${rating}/5` : 'Not rated'}
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Comment */}
+              <div className="bg-neutral-50 rounded-xl p-4">
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  Additional Comments (Optional)
+                </label>
+                <textarea
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none bg-white"
+                  rows={4}
+                  placeholder="Share your experience with this nurse... (e.g., punctuality, communication, professionalism, etc.)"
+                  value={reviewForm.comment}
+                  onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
+                />
+                <p className="text-xs text-neutral-500 mt-2">
+                  {reviewForm.comment.length} characters
+                </p>
+              </div>
+
+              {/* Validation Message */}
+              {(reviewForm.appearance === 0 || reviewForm.attitude === 0 || reviewForm.knowledge === 0 || reviewForm.hygiene === 0 || reviewForm.salary === 0) && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex items-start">
+                  <div className="text-yellow-600 mr-2 mt-0.5">⚠️</div>
+                  <p className="text-sm text-yellow-800">
+                    Please rate all categories before submitting your review.
+                  </p>
+                </div>
+              )}
+
+              {/* Submit Buttons */}
+              <div className="flex justify-end space-x-3 pt-4 border-t border-neutral-200">
+                <button
+                  onClick={() => {
+                    setShowReviewModal(false)
+                    setReviewForm({
+                      appearance: 0,
+                      attitude: 0,
+                      knowledge: 0,
+                      hygiene: 0,
+                      salary: 0,
+                      comment: ''
+                    })
+                  }}
+                  className="px-6 py-2.5 text-neutral-600 border border-neutral-300 rounded-lg hover:bg-neutral-50 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSubmitReview}
+                  className="px-6 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-sm hover:shadow-md"
+                  disabled={isSubmitting || reviewForm.appearance === 0 || reviewForm.attitude === 0 || reviewForm.knowledge === 0 || reviewForm.hygiene === 0 || reviewForm.salary === 0}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Star className="w-4 h-4 mr-2" />
+                      Submit Review
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
