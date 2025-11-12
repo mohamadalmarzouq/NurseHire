@@ -441,6 +441,26 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 32rem;
 }
 
+.max-w-3xl {
+  max-width: 48rem;
+}
+
+.max-w-4xl {
+  max-width: 56rem;
+}
+
+.max-w-5xl {
+  max-width: 64rem;
+}
+
+.max-h-\[75vh\] {
+  max-height: 75vh;
+}
+
+.max-h-\[90vh\] {
+  max-height: 90vh;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }

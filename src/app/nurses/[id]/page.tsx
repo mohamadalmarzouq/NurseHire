@@ -698,11 +698,13 @@ export default function NurseProfilePage() {
 
     {viewer && (
       <div
-        className="fixed inset-0 z-[9999] flex items-start justify-center bg-black/40 backdrop-blur-sm pt-24 px-4 md:pt-28"
+        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
         onClick={() => setViewer(null)}
       >
         <div
-          className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden"
+          className={`relative w-full bg-white rounded-2xl shadow-2xl overflow-hidden ${
+            viewer.type === 'pdf' ? 'max-w-5xl max-h-[90vh]' : 'max-w-4xl'
+          }`}
           onClick={(e) => e.stopPropagation()}
         >
           <button
@@ -720,22 +722,25 @@ export default function NurseProfilePage() {
               </p>
             </div>
             {viewer.type === 'image' ? (
-              <div className="flex flex-col items-center gap-3">
+              <div className="flex flex-col items-center gap-3 max-h-[75vh] overflow-y-auto">
                 <img
                   src={viewer.url}
                   alt="Preview"
-                  className="w-72 h-72 rounded-xl object-contain border-4 border-white shadow-lg bg-neutral-50"
+                  className="w-full max-w-3xl rounded-xl object-contain border-4 border-white shadow-lg bg-neutral-50"
+                  style={{ maxHeight: '70vh' }}
                 />
                 <p className="text-xs text-neutral-500 text-center">
                   Tap anywhere outside the preview to close.
                 </p>
               </div>
             ) : (
-              <iframe
-                src={`${viewer.url}#toolbar=0&navpanes=0`}
-                className="w-full h-64 bg-white rounded-xl border border-neutral-200"
-                title="Document preview"
-              />
+              <div className="w-full" style={{ height: '75vh' }}>
+                <iframe
+                  src={`${viewer.url}#toolbar=0&navpanes=0`}
+                  className="w-full h-full bg-white rounded-xl border border-neutral-200"
+                  title="Document preview"
+                />
+              </div>
             )}
           </div>
         </div>
