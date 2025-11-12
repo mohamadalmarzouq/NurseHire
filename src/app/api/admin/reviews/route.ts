@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
+// GET all reviews with status filter
 export async function GET(request: NextRequest) {
   try {
     const token = request.cookies.get('auth-token')?.value
@@ -10,29 +11,16 @@ export async function GET(request: NextRequest) {
     }
 
     const payload = await verifyToken(token)
-    if (!payload) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!payload || payload.role !== 'ADMIN') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     const { searchParams } = new URL(request.url)
-    const type = searchParams.get('type') // 'given' or 'received'
-    const includePending = searchParams.get('includePending') === 'true' // For users to see their own pending reviews
+    const status = searchParams.get('status') // 'PENDING', 'APPROVED', 'REJECTED', or null for all
 
     let whereClause: any = {}
-
-    if (type === 'given') {
-      // Users can see all their reviews (including pending)
-      whereClause = { giverId: payload.id }
-    } else if (type === 'received') {
-      // For received reviews, show only approved unless user is viewing their own
-      if (payload.role === 'NURSE' && includePending) {
-        whereClause = { receiverId: payload.id }
-      } else {
-        whereClause = { receiverId: payload.id, status: 'APPROVED' }
-      }
-    } else {
-      // Default: show only approved reviews for public viewing
-      whereClause = { receiverId: payload.id, status: 'APPROVED' }
+    if (status && ['PENDING', 'APPROVED', 'REJECTED'].includes(status)) {
+      whereClause.status = status
     }
 
     const reviews = await prisma.review.findMany({
@@ -41,12 +29,10 @@ export async function GET(request: NextRequest) {
         giver: {
           include: {
             userProfile: true,
-            nurseProfile: true,
           },
         },
         receiver: {
           include: {
-            userProfile: true,
             nurseProfile: true,
           },
         },
@@ -65,18 +51,18 @@ export async function GET(request: NextRequest) {
         hygiene: review.hygiene,
         salary: review.salary,
         comment: review.comment,
+        status: review.status,
         createdAt: review.createdAt,
+        updatedAt: review.updatedAt,
         giver: {
           id: review.giver.id,
-          name: review.giver.userProfile?.name || review.giver.nurseProfile?.name || 'Unknown',
-          role: review.giver.role,
+          name: review.giver.userProfile?.name || 'Unknown',
+          email: review.giver.email,
         },
         receiver: {
           id: review.receiver.id,
-          name: review.receiver.userProfile?.name || review.receiver.nurseProfile?.name || 'Unknown',
-          role: review.receiver.role,
+          name: review.receiver.nurseProfile?.name || 'Unknown',
         },
-        status: review.status,
         averageRating: (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5,
       })),
     })
@@ -89,7 +75,8 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+// PATCH to approve or reject a review
+export async function PATCH(request: NextRequest) {
   try {
     const token = request.cookies.get('auth-token')?.value
     if (!token) {
@@ -97,54 +84,24 @@ export async function POST(request: NextRequest) {
     }
 
     const payload = await verifyToken(token)
-    if (!payload || payload.role !== 'USER') {
+    if (!payload || payload.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     const body = await request.json()
-    const { receiverId, appearance, attitude, knowledge, hygiene, salary, comment } = body
+    const { reviewId, status } = body
 
-    if (!receiverId || !appearance || !attitude || !knowledge || !hygiene || !salary) {
-      return NextResponse.json({ error: 'All rating fields are required' }, { status: 400 })
+    if (!reviewId || !status) {
+      return NextResponse.json({ error: 'Review ID and status are required' }, { status: 400 })
     }
 
-    // Check if receiver exists and is a nurse
-    const receiver = await prisma.user.findUnique({
-      where: { id: receiverId },
-      include: { nurseProfile: true },
-    })
-
-    if (!receiver || !receiver.nurseProfile) {
-      return NextResponse.json({ error: 'Nurse not found' }, { status: 404 })
+    if (!['APPROVED', 'REJECTED'].includes(status)) {
+      return NextResponse.json({ error: 'Invalid status. Must be APPROVED or REJECTED' }, { status: 400 })
     }
 
-    // Check if review already exists
-    const existingReview = await prisma.review.findUnique({
-      where: {
-        giverId_receiverId: {
-          giverId: payload.id,
-          receiverId: receiverId,
-        },
-      },
-    })
-
-    if (existingReview) {
-      return NextResponse.json({ error: 'Review already exists for this nurse' }, { status: 400 })
-    }
-
-    // Create review with PENDING status
-    const review = await prisma.review.create({
-      data: {
-        giverId: payload.id,
-        receiverId,
-        appearance: parseInt(appearance),
-        attitude: parseInt(attitude),
-        knowledge: parseInt(knowledge),
-        hygiene: parseInt(hygiene),
-        salary: parseInt(salary),
-        comment: comment || null,
-        status: 'PENDING',
-      },
+    const review = await prisma.review.update({
+      where: { id: reviewId },
+      data: { status },
       include: {
         giver: {
           include: {
@@ -163,6 +120,7 @@ export async function POST(request: NextRequest) {
       success: true,
       review: {
         id: review.id,
+        status: review.status,
         appearance: review.appearance,
         attitude: review.attitude,
         knowledge: review.knowledge,
@@ -170,6 +128,7 @@ export async function POST(request: NextRequest) {
         salary: review.salary,
         comment: review.comment,
         createdAt: review.createdAt,
+        updatedAt: review.updatedAt,
         giver: {
           id: review.giver.id,
           name: review.giver.userProfile?.name || 'Unknown',
@@ -178,15 +137,15 @@ export async function POST(request: NextRequest) {
           id: review.receiver.id,
           name: review.receiver.nurseProfile?.name || 'Unknown',
         },
-        status: review.status,
         averageRating: (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5,
       },
     })
   } catch (error) {
-    console.error('Error creating review:', error)
+    console.error('Error updating review:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     )
   }
 }
+

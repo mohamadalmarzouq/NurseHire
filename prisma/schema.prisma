@@ -34,6 +34,12 @@ enum BannerPosition {
   DASHBOARD_HEADER
 }
 
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -150,17 +156,18 @@ model InformationRequest {
 }
 
 model Review {
-  id          String @id @default(cuid())
+  id          String      @id @default(cuid())
   giverId     String
   receiverId  String
-  appearance  Int    // 1-5 stars
-  attitude    Int    // 1-5 stars
-  knowledge   Int    // 1-5 stars
-  hygiene     Int    // 1-5 stars
-  salary      Int    // 1-5 stars
+  appearance  Int         // 1-5 stars
+  attitude    Int         // 1-5 stars
+  knowledge   Int         // 1-5 stars
+  hygiene     Int         // 1-5 stars
+  salary      Int         // 1-5 stars
   comment     String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status      ReviewStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   giver    User @relation("ReviewGiver", fields: [giverId], references: [id], onDelete: Cascade)
   receiver User @relation("ReviewReceiver", fields: [receiverId], references: [id], onDelete: Cascade)

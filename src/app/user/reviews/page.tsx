@@ -108,7 +108,7 @@ export default function MotherReviewsPage() {
       })
 
       if (res.ok) {
-        alert('Review submitted successfully!')
+        alert('Review submitted successfully! It is now pending admin approval and will be visible once approved.')
         setShowReviewForm(null)
         setReviewForm({
           appearance: 0,
@@ -357,17 +357,27 @@ export default function MotherReviewsPage() {
                   </div>
                 )}
 
-                {/* Actions */}
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
-                  <div className="text-sm text-gray-500">
-                    Review submitted on {new Date(review.createdAt).toLocaleDateString()}
+                {/* Status Badge */}
+                {review.status && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                          review.status === 'APPROVED'
+                            ? 'bg-green-100 text-green-800'
+                            : review.status === 'REJECTED'
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {review.status === 'APPROVED' ? '✓ Approved' : review.status === 'REJECTED' ? '✗ Rejected' : '⏳ Pending Approval'}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          Submitted on {new Date(review.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <button className="text-gray-500 hover:text-gray-700 p-1">
-                      <MessageCircle className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
+                )}
               </div>
             ))
           ) : null}
