@@ -26,7 +26,7 @@ export default function Footer() {
               <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold">NurseHire</span>
+              <span className="text-2xl font-bold">ENFAS</span>
             </div>
             <p className="text-neutral-300 text-sm leading-relaxed">
               Connecting mothers in Kuwait with qualified, vetted nurses for newborn care. 
@@ -94,7 +94,7 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-primary-400" />
-                <span className="text-neutral-300 text-sm">info@nursehire.com</span>
+                <span className="text-neutral-300 text-sm">info@enfas.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-primary-400" />
@@ -111,7 +111,7 @@ export default function Footer() {
         <div className="border-t border-neutral-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-neutral-400 text-sm">
-              © 2024 NurseHire. All rights reserved.
+              © 2024 ENFAS. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <Link href="/privacy" className="text-neutral-400 hover:text-white text-sm transition-colors">

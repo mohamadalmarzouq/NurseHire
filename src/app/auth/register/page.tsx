@@ -82,7 +82,7 @@ export default function RegisterPage() {
           <div className="nh-card" style={{minHeight:'520px',width:'100%',justifySelf:'stretch'}}>
           <div className="text-center mb-4">
             <h1 className="nh-h2">Create Account</h1>
-            <p className="nh-sub">Join NurseHire and get started in minutes</p>
+            <p className="nh-sub">Join ENFAS and get started in minutes</p>
           </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">

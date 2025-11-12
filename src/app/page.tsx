@@ -280,7 +280,7 @@ export default function HomePage() {
         <div className="nh-container text-center">
           <h2 className="nh-h2 mb-3" style={{color:'#fff'}}>Ready to Get Started?</h2>
           <p className="text-xl mb-8" style={{color:'rgba(255,255,255,.85)'}}>
-            Join hundreds of families and nurses who trust NurseHire for newborn care in Kuwait.
+            Join hundreds of families and nurses who trust ENFAS for newborn care in Kuwait.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/nurses" className="nh-btn nh-btn--ghost" style={{background:'#fff'}}>Find a Nurse</Link>

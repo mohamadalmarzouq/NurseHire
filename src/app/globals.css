@@ -1002,7 +1002,7 @@ nav a:hover {
   background: #e5e5e5;
 }
 
-/* =============== NurseHire UI tokens (non-breaking) =============== */
+/* =============== ENFAS UI tokens (non-breaking) =============== */
 :root{
   --nh-primary:#0F73EE; --nh-primary-600:#1D4ED8; --nh-secondary:#10B981; --nh-accent:#F59E0B;
   --nh-text:#111827; --nh-muted:#6B7280; --nh-line:#E5E7EB; --nh-bg:#F9FAFB; --nh-surface:#FFFFFF;

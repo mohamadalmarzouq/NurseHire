@@ -16,7 +16,7 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'NurseHire - Trusted Newborn Care Nurses in Kuwait',
+  title: 'ENFAS - Trusted Newborn Care Nurses in Kuwait',
   description: 'Connect with qualified, vetted nurses for newborn care in Kuwait. Safe, professional, and caring service for your little ones.',
   keywords: 'nurse, newborn care, Kuwait, baby care, childcare, professional nurses',
 }
