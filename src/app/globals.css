@@ -1036,6 +1036,10 @@ nav a:hover {
   animation: slide-in 0.3s ease-out;
 }
 
+.fill-current {
+  fill: currentColor;
+}
+
 /* Star rating */
 .stars {
   display: flex;

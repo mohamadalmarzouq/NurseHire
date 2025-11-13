@@ -64,14 +64,17 @@ export default function MotherReviewsPage() {
   }, [])
 
   const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-4 h-4 ${
-          i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
-        }`}
-      />
-    ))
+    return Array.from({ length: 5 }, (_, i) => {
+      const filled = i < rating
+      return (
+        <Star
+          key={i}
+          className={`w-4 h-4 ${
+            filled ? 'text-yellow-400 fill-current' : 'text-gray-300'
+          }`}
+        />
+      )
+    })
   }
 
   const getRatingLabel = (rating: number) => {
