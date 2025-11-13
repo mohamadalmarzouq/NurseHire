@@ -416,7 +416,7 @@ export default function NurseProfilePage() {
                       className="btn-secondary"
                     >
                       <Star className="w-4 h-4 mr-2" />
-                      View My Review
+                      Reviews
                     </Link>
                   )}
                 </>

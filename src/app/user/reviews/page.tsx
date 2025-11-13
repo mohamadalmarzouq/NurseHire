@@ -162,7 +162,7 @@ export default function MotherReviewsPage() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
-          <h1 className="nh-h2">My Reviews</h1>
+          <h1 className="nh-h2">Reviews</h1>
           <p className="nh-sub mt-1">Rate and review the nurses you've hired</p>
         </div>
 
