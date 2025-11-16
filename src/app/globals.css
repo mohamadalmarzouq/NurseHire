@@ -361,6 +361,11 @@ h1, h2, h3, h4, h5, h6 {
   color: white;
 }
 
+/* Visibility */
+.hidden {
+  display: none;
+}
+
 /* Additional utility helpers used across modals and viewers */
 .fixed {
   position: fixed;
