@@ -66,7 +66,7 @@ export default function HomePage() {
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link href="/auth/register" className="nh-btn nh-btn--ghost">
-                Become a Nurse
+                Register as a Nurse
               </Link>
             </div>
           </div>
