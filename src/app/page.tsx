@@ -284,7 +284,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/nurses" className="nh-btn nh-btn--ghost" style={{background:'#fff'}}>Find a Nurse</Link>
-            <Link href="/auth/register" className="nh-btn nh-btn--primary" style={{background:'#10B981'}}>Join as Nurse</Link>
+            <Link href="/auth/register" className="nh-btn nh-btn--primary" style={{background:'#10B981'}}>Register as a nurse</Link>
           </div>
         </div>
       </section>
