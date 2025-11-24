@@ -36,22 +36,26 @@ export default function NurseProfilePage() {
           return
         }
         const data = await res.json()
+        console.log('Initial user data load:', data)
         if (data?.authenticated) {
           setUser(data.user)
-          const profile = data.user.nurseProfile
-          setFormData({
-            name: profile?.name || '',
-            age: profile?.age !== undefined && profile?.age !== null ? String(profile.age) : '',
-            totalExperience: profile?.totalExperience !== undefined && profile?.totalExperience !== null ? String(profile.totalExperience) : '',
-            kuwaitExperience: profile?.kuwaitExperience !== undefined && profile?.kuwaitExperience !== null ? String(profile.kuwaitExperience) : '',
-            partTimeSalary: profile?.partTimeSalary !== undefined && profile?.partTimeSalary !== null ? String(profile.partTimeSalary) : '',
-            fullTimeSalary: profile?.fullTimeSalary !== undefined && profile?.fullTimeSalary !== null ? String(profile.fullTimeSalary) : '',
-            aboutMe: profile?.aboutMe || '',
-            phone: profile?.phone || '',
-            location: profile?.location || '',
-            languages: profile?.languages || [],
-            availability: profile?.availability || [],
-          })
+          const profile = data.user.nurseProfile || data.user.profile
+          console.log('Initial profile data:', profile)
+          if (profile) {
+            setFormData({
+              name: profile.name || '',
+              age: profile.age !== undefined && profile.age !== null ? String(profile.age) : '',
+              totalExperience: profile.totalExperience !== undefined && profile.totalExperience !== null ? String(profile.totalExperience) : '',
+              kuwaitExperience: profile.kuwaitExperience !== undefined && profile.kuwaitExperience !== null ? String(profile.kuwaitExperience) : '',
+              partTimeSalary: profile.partTimeSalary !== undefined && profile.partTimeSalary !== null ? String(profile.partTimeSalary) : '',
+              fullTimeSalary: profile.fullTimeSalary !== undefined && profile.fullTimeSalary !== null ? String(profile.fullTimeSalary) : '',
+              aboutMe: profile.aboutMe || '',
+              phone: profile.phone || '',
+              location: profile.location || '',
+              languages: profile.languages || [],
+              availability: profile.availability || [],
+            })
+          }
         }
       } catch (e) {
         console.error(e)
@@ -108,22 +112,26 @@ export default function NurseProfilePage() {
       const userRes = await fetch('/api/auth/me', { cache: 'no-store' })
       if (userRes.ok) {
         const userData = await userRes.json()
+        console.log('Reloaded user data after update:', userData)
         if (userData?.authenticated) {
           setUser(userData.user)
-          const profile = userData.user.nurseProfile
-          setFormData({
-            name: profile?.name || '',
-            age: profile?.age !== undefined && profile?.age !== null ? String(profile.age) : '',
-            totalExperience: profile?.totalExperience !== undefined && profile?.totalExperience !== null ? String(profile.totalExperience) : '',
-            kuwaitExperience: profile?.kuwaitExperience !== undefined && profile?.kuwaitExperience !== null ? String(profile.kuwaitExperience) : '',
-            partTimeSalary: profile?.partTimeSalary !== undefined && profile?.partTimeSalary !== null ? String(profile.partTimeSalary) : '',
-            fullTimeSalary: profile?.fullTimeSalary !== undefined && profile?.fullTimeSalary !== null ? String(profile.fullTimeSalary) : '',
-            aboutMe: profile?.aboutMe || '',
-            phone: profile?.phone || '',
-            location: profile?.location || '',
-            languages: profile?.languages || [],
-            availability: profile?.availability || [],
-          })
+          const profile = userData.user.nurseProfile || userData.user.profile
+          console.log('Profile data after reload:', profile)
+          if (profile) {
+            setFormData({
+              name: profile.name || '',
+              age: profile.age !== undefined && profile.age !== null ? String(profile.age) : '',
+              totalExperience: profile.totalExperience !== undefined && profile.totalExperience !== null ? String(profile.totalExperience) : '',
+              kuwaitExperience: profile.kuwaitExperience !== undefined && profile.kuwaitExperience !== null ? String(profile.kuwaitExperience) : '',
+              partTimeSalary: profile.partTimeSalary !== undefined && profile.partTimeSalary !== null ? String(profile.partTimeSalary) : '',
+              fullTimeSalary: profile.fullTimeSalary !== undefined && profile.fullTimeSalary !== null ? String(profile.fullTimeSalary) : '',
+              aboutMe: profile.aboutMe || '',
+              phone: profile.phone || '',
+              location: profile.location || '',
+              languages: profile.languages || [],
+              availability: profile.availability || [],
+            })
+          }
         }
       }
     } catch (err) {
@@ -154,6 +162,13 @@ export default function NurseProfilePage() {
       </div>
     )
   }
+
+  // Helper to get profile from user object
+  const getProfile = () => {
+    return user?.nurseProfile || user?.profile || null
+  }
+
+  const profile = getProfile()
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -220,7 +235,7 @@ export default function NurseProfilePage() {
             {/* Profile Image */}
             <div className="flex flex-col items-center">
               <img
-                src={user?.nurseProfile?.profileImageUrl || '/default-avatar.png'}
+                src={profile?.profileImageUrl || '/default-avatar.png'}
                 alt="Profile"
                 className="w-32 h-32 rounded-full object-cover border-4 border-primary-100 shadow-md"
               />
@@ -246,7 +261,7 @@ export default function NurseProfilePage() {
                       className="mt-1 block w-full nh-input"
                     />
                   ) : (
-                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.name || 'Not set'}</p>
+                    <p className="mt-1 text-gray-900">{profile?.name || 'Not set'}</p>
                   )}
                 </div>
                 <div>
@@ -265,7 +280,7 @@ export default function NurseProfilePage() {
                       className="mt-1 block w-full nh-input"
                     />
                   ) : (
-                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.age || 'Not set'}</p>
+                    <p className="mt-1 text-gray-900">{profile?.age || 'Not set'}</p>
                   )}
                 </div>
                 <div>
@@ -279,7 +294,7 @@ export default function NurseProfilePage() {
                       className="mt-1 block w-full nh-input"
                     />
                   ) : (
-                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.phone || 'Not set'}</p>
+                    <p className="mt-1 text-gray-900">{profile?.phone || 'Not set'}</p>
                   )}
                 </div>
                 <div>
@@ -293,7 +308,7 @@ export default function NurseProfilePage() {
                       className="mt-1 block w-full nh-input"
                     />
                   ) : (
-                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.location || 'Not set'}</p>
+                    <p className="mt-1 text-gray-900">{profile?.location || 'Not set'}</p>
                   )}
                 </div>
               </div>
@@ -313,7 +328,7 @@ export default function NurseProfilePage() {
                 placeholder="Tell users about yourself, your experience, and what makes you special..."
               ></textarea>
             ) : (
-              <p className="mt-1 text-gray-900">{user?.nurseProfile?.aboutMe || 'Not set'}</p>
+              <p className="mt-1 text-gray-900">{profile?.aboutMe || 'Not set'}</p>
             )}
           </div>
 
@@ -333,7 +348,7 @@ export default function NurseProfilePage() {
                       className="mt-1 block w-full nh-input"
                     />
                   ) : (
-                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.totalExperience || 'Not set'}</p>
+                    <p className="mt-1 text-gray-900">{profile?.totalExperience || 'Not set'}</p>
                   )}
                 </div>
                 <div>
@@ -347,7 +362,7 @@ export default function NurseProfilePage() {
                       className="mt-1 block w-full nh-input"
                     />
                   ) : (
-                    <p className="mt-1 text-gray-900">{user?.nurseProfile?.kuwaitExperience || 'Not set'}</p>
+                    <p className="mt-1 text-gray-900">{profile?.kuwaitExperience || 'Not set'}</p>
                   )}
                 </div>
               </div>
@@ -366,7 +381,7 @@ export default function NurseProfilePage() {
                       className="mt-1 block w-full nh-input"
                     />
                   ) : (
-                    <p className="mt-1 text-gray-900">KD {user?.nurseProfile?.partTimeSalary || 'Not set'}</p>
+                    <p className="mt-1 text-gray-900">KD {profile?.partTimeSalary || 'Not set'}</p>
                   )}
                 </div>
                 <div>
@@ -380,7 +395,7 @@ export default function NurseProfilePage() {
                       className="mt-1 block w-full nh-input"
                     />
                   ) : (
-                    <p className="mt-1 text-gray-900">KD {user?.nurseProfile?.fullTimeSalary || 'Not set'}</p>
+                    <p className="mt-1 text-gray-900">KD {profile?.fullTimeSalary || 'Not set'}</p>
                   )}
                 </div>
               </div>
@@ -408,7 +423,7 @@ export default function NurseProfilePage() {
                 ))}
               </div>
             ) : (
-              <p className="mt-1 text-gray-900">{user?.nurseProfile?.languages?.join(', ') || 'Not set'}</p>
+              <p className="mt-1 text-gray-900">{profile?.languages?.join(', ') || 'Not set'}</p>
             )}
           </div>
 
@@ -433,7 +448,7 @@ export default function NurseProfilePage() {
                 ))}
               </div>
             ) : (
-              <p className="mt-1 text-gray-900">{user?.nurseProfile?.availability?.join(', ') || 'Not set'}</p>
+              <p className="mt-1 text-gray-900">{profile?.availability?.join(', ') || 'Not set'}</p>
             )}
           </div>
 

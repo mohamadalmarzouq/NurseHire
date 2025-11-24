@@ -35,6 +35,9 @@ export async function GET(request: NextRequest) {
         email: user.email,
         role: user.role,
         profile: user.userProfile || user.nurseProfile || user.adminProfile,
+        userProfile: user.userProfile,
+        nurseProfile: user.nurseProfile,
+        adminProfile: user.adminProfile,
       },
     })
   } catch (err) {
