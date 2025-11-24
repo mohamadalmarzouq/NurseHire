@@ -41,11 +41,11 @@ export default function NurseProfilePage() {
           const profile = data.user.nurseProfile
           setFormData({
             name: profile?.name || '',
-            age: profile?.age || '',
-            totalExperience: profile?.totalExperience || '',
-            kuwaitExperience: profile?.kuwaitExperience || '',
-            partTimeSalary: profile?.partTimeSalary || '',
-            fullTimeSalary: profile?.fullTimeSalary || '',
+            age: profile?.age !== undefined && profile?.age !== null ? String(profile.age) : '',
+            totalExperience: profile?.totalExperience !== undefined && profile?.totalExperience !== null ? String(profile.totalExperience) : '',
+            kuwaitExperience: profile?.kuwaitExperience !== undefined && profile?.kuwaitExperience !== null ? String(profile.kuwaitExperience) : '',
+            partTimeSalary: profile?.partTimeSalary !== undefined && profile?.partTimeSalary !== null ? String(profile.partTimeSalary) : '',
+            fullTimeSalary: profile?.fullTimeSalary !== undefined && profile?.fullTimeSalary !== null ? String(profile.fullTimeSalary) : '',
             aboutMe: profile?.aboutMe || '',
             phone: profile?.phone || '',
             location: profile?.location || '',
@@ -83,6 +83,8 @@ export default function NurseProfilePage() {
     setError('')
     setSuccess('')
     
+    console.log('Saving profile with formData:', formData)
+    
     try {
       const res = await fetch('/api/nurse/profile', {
         method: 'PUT',
@@ -91,6 +93,9 @@ export default function NurseProfilePage() {
         },
         body: JSON.stringify(formData),
       })
+      
+      const responseData = await res.json()
+      console.log('Profile update response:', responseData)
 
       if (!res.ok) {
         throw new Error('Failed to update profile')
@@ -99,11 +104,27 @@ export default function NurseProfilePage() {
       setSuccess('Profile updated successfully!')
       setIsEditing(false)
       
-      // Reload user data
+      // Reload user data and update formData
       const userRes = await fetch('/api/auth/me', { cache: 'no-store' })
       if (userRes.ok) {
         const userData = await userRes.json()
-        if (userData?.authenticated) setUser(userData.user)
+        if (userData?.authenticated) {
+          setUser(userData.user)
+          const profile = userData.user.nurseProfile
+          setFormData({
+            name: profile?.name || '',
+            age: profile?.age !== undefined && profile?.age !== null ? String(profile.age) : '',
+            totalExperience: profile?.totalExperience !== undefined && profile?.totalExperience !== null ? String(profile.totalExperience) : '',
+            kuwaitExperience: profile?.kuwaitExperience !== undefined && profile?.kuwaitExperience !== null ? String(profile.kuwaitExperience) : '',
+            partTimeSalary: profile?.partTimeSalary !== undefined && profile?.partTimeSalary !== null ? String(profile.partTimeSalary) : '',
+            fullTimeSalary: profile?.fullTimeSalary !== undefined && profile?.fullTimeSalary !== null ? String(profile.fullTimeSalary) : '',
+            aboutMe: profile?.aboutMe || '',
+            phone: profile?.phone || '',
+            location: profile?.location || '',
+            languages: profile?.languages || [],
+            availability: profile?.availability || [],
+          })
+        }
       }
     } catch (err) {
       setError('Failed to update profile. Please try again.')
