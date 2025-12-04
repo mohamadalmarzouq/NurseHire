@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Star, MapPin, Clock, Heart, User, MessageCircle, Calendar, Shield, Award, CheckCircle, X } from 'lucide-react'
 
-interface Nurse {
+interface CareTaker {
   id: string
   name: string
   age: number
@@ -34,9 +34,9 @@ interface Review {
   createdAt: string
 }
 
-export default function NurseProfilePage() {
+export default function CareTakerProfilePage() {
   const params = useParams()
-  const [nurse, setNurse] = useState<Nurse | null>(null)
+  const [caretaker, setCaretaker] = useState<CareTaker | null>(null)
   const [reviews, setReviews] = useState<Review[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showRequestModal, setShowRequestModal] = useState(false)
@@ -62,25 +62,25 @@ export default function NurseProfilePage() {
   const [showSuccess, setShowSuccess] = useState(false)
 
   useEffect(() => {
-    const loadNurseProfile = async () => {
+    const loadCaretakerProfile = async () => {
       try {
-        const res = await fetch(`/api/nurses/${params.id}`, { cache: 'no-store' })
+        const res = await fetch(`/api/caretakers/${params.id}`, { cache: 'no-store' })
         if (!res.ok) {
           setIsLoading(false)
           return
         }
         const data = await res.json()
-        if (data.nurse) {
-          setNurse(data.nurse)
+        if (data.caretaker) {
+          setCaretaker(data.caretaker)
           setReviews(data.reviews || [])
         }
       } catch (e) {
-        console.error('Error loading nurse profile:', e)
+        console.error('Error loading care taker profile:', e)
       } finally {
         setIsLoading(false)
       }
     }
-    loadNurseProfile()
+    loadCaretakerProfile()
   }, [params.id])
 
   useEffect(() => {
@@ -115,13 +115,13 @@ export default function NurseProfilePage() {
 
   useEffect(() => {
     const checkIfReviewed = async () => {
-      if (!isAuthenticated || !user || user.role !== 'USER' || !nurse) return
+      if (!isAuthenticated || !user || user.role !== 'USER' || !caretaker) return
       
       try {
         const res = await fetch('/api/reviews?type=given', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
-          const foundReview = data.reviews?.find((r: any) => r.receiver.id === nurse.id)
+          const foundReview = data.reviews?.find((r: any) => r.receiver.id === caretaker.id)
           if (foundReview) {
             setHasReviewed(true)
             setExistingReview(foundReview)
@@ -135,7 +135,7 @@ export default function NurseProfilePage() {
       }
     }
     checkIfReviewed()
-  }, [isAuthenticated, user, nurse])
+  }, [isAuthenticated, user, caretaker])
 
   useEffect(() => {
     if (typeof document === 'undefined') return
@@ -166,10 +166,10 @@ export default function NurseProfilePage() {
   }
 
   const handleInformationRequest = async () => {
-    if (!nurse) return
+    if (!caretaker) return
     
     console.log('Information request - isAuthenticated:', isAuthenticated, 'user role:', user?.role)
-    console.log('Nurse ID:', nurse.id)
+    console.log('Care taker ID:', caretaker.id)
     
     // Check authentication before proceeding
     if (!isAuthenticated || user?.role !== 'USER') {
@@ -192,7 +192,7 @@ export default function NurseProfilePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          nurseId: nurse.id,
+          caretakerId: caretaker.id,
           message: requestMessage,
           phone: requestPhone || null,
           preferredContactTime: preferredContactTime || null,
@@ -229,11 +229,11 @@ export default function NurseProfilePage() {
   }
 
   const handleSendMessage = async () => {
-    if (!nurse) return
+    if (!caretaker) return
     
     // Check authentication before proceeding
     if (!isAuthenticated || user?.role !== 'USER') {
-      alert('You must be logged in as a mother to message a nurse. Please sign in.')
+      alert('You must be logged in as a mother to message a care taker. Please sign in.')
       return
     }
     
@@ -245,8 +245,8 @@ export default function NurseProfilePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          receiverId: nurse.id,
-          content: `Hello ${nurse.name}, I'm interested in your nursing services.`,
+          receiverId: caretaker.id,
+          content: `Hello ${caretaker.name}, I'm interested in your care taking services.`,
         }),
       })
 
@@ -256,9 +256,9 @@ export default function NurseProfilePage() {
       } else {
         const error = await res.json()
         if (res.status === 401) {
-          alert('Please sign in to message a nurse.')
+          alert('Please sign in to message a care taker.')
         } else if (res.status === 403) {
-          alert('Only mothers can message nurses. Please sign in with a mother account.')
+          alert('Only mothers can message care takers. Please sign in with a mother account.')
         } else {
           alert(error.error || 'Failed to send message. Please try again.')
         }
@@ -293,7 +293,7 @@ export default function NurseProfilePage() {
   }
 
   const handleSubmitReview = async () => {
-    if (!nurse) return
+    if (!caretaker) return
     
     if (reviewForm.appearance === 0 || reviewForm.attitude === 0 || reviewForm.knowledge === 0 || reviewForm.hygiene === 0 || reviewForm.salary === 0) {
       // Validation is handled by the disabled button and warning message
@@ -314,7 +314,7 @@ export default function NurseProfilePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          receiverId: nurse.id,
+          receiverId: caretaker.id,
           ...reviewForm,
         }),
       })
@@ -331,20 +331,20 @@ export default function NurseProfilePage() {
           comment: ''
         })
         setHasReviewed(true)
-        // Reload nurse profile to update review count
-        const nurseRes = await fetch(`/api/nurses/${params.id}`, { cache: 'no-store' })
-        if (nurseRes.ok) {
-          const nurseData = await nurseRes.json()
-          if (nurseData.nurse) {
-            setNurse(nurseData.nurse)
-            setReviews(nurseData.reviews || [])
+        // Reload care taker profile to update review count
+        const caretakerRes = await fetch(`/api/caretakers/${params.id}`, { cache: 'no-store' })
+        if (caretakerRes.ok) {
+          const caretakerData = await caretakerRes.json()
+          if (caretakerData.caretaker) {
+            setCaretaker(caretakerData.caretaker)
+            setReviews(caretakerData.reviews || [])
           }
         }
         // Reload review status
         const reviewRes = await fetch('/api/reviews?type=given', { cache: 'no-store' })
         if (reviewRes.ok) {
           const reviewData = await reviewRes.json()
-          const foundReview = reviewData.reviews?.find((r: any) => r.receiver.id === nurse.id)
+          const foundReview = reviewData.reviews?.find((r: any) => r.receiver.id === caretaker.id)
           if (foundReview) {
             setExistingReview(foundReview)
           }
@@ -368,21 +368,21 @@ export default function NurseProfilePage() {
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-neutral-600">Loading nurse profile...</p>
+          <p className="text-neutral-600">Loading care taker profile...</p>
         </div>
       </div>
     )
   }
 
-  if (!nurse) {
+  if (!caretaker) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
           <User className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-semibold text-neutral-900 mb-2">Nurse not found</h2>
-          <p className="text-neutral-600 mb-6">The nurse you're looking for doesn't exist.</p>
-          <Link href="/nurses" className="btn-primary">
-            Browse All Nurses
+          <h2 className="text-2xl font-semibold text-neutral-900 mb-2">Care taker not found</h2>
+          <p className="text-neutral-600 mb-6">The care taker you're looking for doesn't exist.</p>
+          <Link href="/caretakers" className="btn-primary">
+            Browse All Care Takers
           </Link>
         </div>
       </div>
@@ -395,9 +395,9 @@ export default function NurseProfilePage() {
       <div className="bg-white shadow-soft">
         <div className="container-custom py-6">
           <div className="flex items-center justify-between">
-            <Link href="/nurses" className="flex items-center text-neutral-600 hover:text-neutral-900">
+            <Link href="/caretakers" className="flex items-center text-neutral-600 hover:text-neutral-900">
               <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Nurses
+              Back to Care Takers
             </Link>
             <div className="flex items-center space-x-4">
               {isAuthenticated && user?.role === 'USER' && (
@@ -408,7 +408,7 @@ export default function NurseProfilePage() {
                       className="btn-primary"
                     >
                       <Star className="w-4 h-4 mr-2" />
-                      Review this Nurse
+                      Review this Care Taker
                     </button>
                   ) : (
                     <Link 
@@ -466,16 +466,16 @@ export default function NurseProfilePage() {
             <div className="card">
               <div className="flex items-start space-x-6">
                 <div className="w-24 h-24 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
-                  {nurse.profileImageUrl ? (
+                  {caretaker.profileImageUrl ? (
                     <button
                       type="button"
-                      onClick={() => handleViewFile(nurse.profileImageUrl!)}
+                      onClick={() => handleViewFile(caretaker.profileImageUrl!)}
                       className="w-full h-full focus:outline-none"
                       aria-label="View profile picture"
                     >
                       <img
-                        src={nurse.profileImageUrl}
-                        alt={nurse.name}
+                        src={caretaker.profileImageUrl}
+                        alt={caretaker.name}
                         className="w-24 h-24 rounded-full object-cover transition-transform duration-150 hover:scale-105"
                       />
                     </button>
@@ -484,21 +484,21 @@ export default function NurseProfilePage() {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h1 className="text-3xl font-bold text-neutral-900 mb-2">{nurse.name}</h1>
+                  <h1 className="text-3xl font-bold text-neutral-900 mb-2">{caretaker.name}</h1>
                   <p className="text-lg text-neutral-600 mb-4">
-                    {nurse.age} years old • {nurse.totalExperience} years experience
+                    {caretaker.age} years old • {caretaker.totalExperience} years experience
                   </p>
                   <div className="flex items-center space-x-1 mb-4">
-                    {renderStars(nurse.averageRating)}
+                    {renderStars(caretaker.averageRating)}
                     <span className="text-lg font-semibold text-neutral-900 ml-2">
-                      {nurse.averageRating}
+                      {caretaker.averageRating}
                     </span>
                     <span className="text-neutral-600 ml-2">
-                      ({nurse.reviewCount} reviews)
+                      ({caretaker.reviewCount} reviews)
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {nurse.availability.map((avail) => (
+                    {caretaker.availability.map((avail) => (
                       <span
                         key={avail}
                         className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium"
@@ -513,8 +513,8 @@ export default function NurseProfilePage() {
 
             {/* About Section */}
             <div className="card">
-              <h2 className="text-xl font-semibold text-neutral-900 mb-4">About {nurse.name}</h2>
-              <p className="text-neutral-600 leading-relaxed">{nurse.aboutMe}</p>
+              <h2 className="text-xl font-semibold text-neutral-900 mb-4">About {caretaker.name}</h2>
+              <p className="text-neutral-600 leading-relaxed">{caretaker.aboutMe}</p>
             </div>
 
             {/* Experience & Skills */}
@@ -526,19 +526,19 @@ export default function NurseProfilePage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-neutral-600">Total Experience</span>
-                      <span className="font-medium">{nurse.totalExperience} years</span>
+                      <span className="font-medium">{caretaker.totalExperience} years</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-neutral-600">Kuwait Experience</span>
-                      <span className="font-medium">{nurse.kuwaitExperience} years</span>
+                      <span className="font-medium">{caretaker.kuwaitExperience} years</span>
                     </div>
                   </div>
                 </div>
                 <div>
                   <h3 className="font-semibold text-neutral-900 mb-3">Languages</h3>
                   <div className="flex flex-wrap gap-2">
-                    {nurse.languages && nurse.languages.length > 0 ? (
-                      nurse.languages.map((language) => (
+                    {caretaker.languages && caretaker.languages.length > 0 ? (
+                      caretaker.languages.map((language) => (
                         <span
                           key={language}
                           className="px-3 py-1 bg-secondary-100 text-secondary-700 rounded-full text-sm"
@@ -555,14 +555,14 @@ export default function NurseProfilePage() {
             </div>
 
             {/* Certifications Section */}
-            {nurse.certifications && nurse.certifications.length > 0 && (
+            {caretaker.certifications && caretaker.certifications.length > 0 && (
               <div className="card">
                 <h2 className="text-xl font-semibold text-neutral-900 mb-4 flex items-center">
                   <Award className="w-5 h-5 mr-2 text-primary-600" />
                   Certifications & Credentials
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                  {nurse.certifications.map((certUrl, index) => {
+                  {caretaker.certifications.map((certUrl, index) => {
                     const fileName = certUrl.split('/').pop() || `Certificate ${index + 1}`
                     const isImage = /\.(jpg|jpeg|png|webp)$/i.test(fileName)
                     const isPDF = /\.pdf$/i.test(fileName)
@@ -606,7 +606,7 @@ export default function NurseProfilePage() {
 
             {/* Reviews Section */}
             <div className="card">
-              <h2 className="text-xl font-semibold text-neutral-900 mb-6">Reviews ({nurse.reviewCount})</h2>
+              <h2 className="text-xl font-semibold text-neutral-900 mb-6">Reviews ({caretaker.reviewCount})</h2>
               <div className="space-y-6">
                 {reviews.map((review) => (
                   <div key={review.id} className="border-b border-neutral-100 pb-6 last:border-b-0 last:pb-0">
@@ -671,13 +671,13 @@ export default function NurseProfilePage() {
                 <div className="flex justify-between items-center">
                   <span className="text-neutral-600">Part-time Rate</span>
                   <span className="text-xl font-bold text-primary-600">
-                    {nurse.partTimeSalary} KD/hour
+                    {caretaker.partTimeSalary} KD/hour
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-neutral-600">Full-time Rate</span>
                   <span className="text-xl font-bold text-primary-600">
-                    {nurse.fullTimeSalary} KD/hour
+                    {caretaker.fullTimeSalary} KD/hour
                   </span>
                 </div>
               </div>
@@ -693,7 +693,7 @@ export default function NurseProfilePage() {
                 </div>
                 <div className="flex items-center text-sm text-neutral-600">
                   <Heart className="w-4 h-4 mr-2 text-red-500" />
-                  {nurse.reviewCount} Reviews
+                  {caretaker.reviewCount} Reviews
                 </div>
               </div>
 
@@ -762,7 +762,7 @@ export default function NurseProfilePage() {
       {showRequestModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 max-w-lg w-full">
-            <h3 className="text-xl font-semibold text-neutral-900 mb-4">Request Information About {nurse.name}</h3>
+            <h3 className="text-xl font-semibold text-neutral-900 mb-4">Request Information About {caretaker.name}</h3>
             {!isAuthenticated || user?.role !== 'USER' ? (
               <div className="text-center py-8">
                 <p className="text-red-600 mb-4">You must be logged in as a user to request information.</p>
@@ -776,7 +776,7 @@ export default function NurseProfilePage() {
             ) : (
               <>
                 <p className="text-neutral-600 mb-6">
-                  Tell us what information you need about {nurse.name}. Our admin will contact you with the details.
+                  Tell us what information you need about {caretaker.name}. Our admin will contact you with the details.
                 </p>
                 <div className="space-y-4">
                   <div>
@@ -880,7 +880,7 @@ export default function NurseProfilePage() {
               <div className="flex items-center space-x-4">
                 {nurse?.profileImageUrl ? (
                   <img
-                    src={nurse.profileImageUrl}
+                    src={caretaker.profileImageUrl}
                     alt={nurse?.name}
                     className="w-16 h-16 rounded-full object-cover"
                   />
@@ -970,7 +970,7 @@ export default function NurseProfilePage() {
                 <textarea
                   className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none bg-white"
                   rows={4}
-                  placeholder="Share your experience with this nurse... (e.g., punctuality, communication, professionalism, etc.)"
+                  placeholder="Share your experience with this caretaker... (e.g., punctuality, communication, professionalism, etc.)"
                   value={reviewForm.comment}
                   onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
                 />

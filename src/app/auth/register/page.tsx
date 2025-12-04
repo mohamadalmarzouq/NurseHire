@@ -31,15 +31,15 @@ export default function RegisterPage() {
     setLoading(true)
     setError('')
 
-    // Validation for nurses
-    if (formData.role === 'NURSE' && !profileImageUrl) {
-      setError('Profile picture is required for nurse registration')
+    // Validation for care takers
+    if (formData.role === 'CARETAKER' && !profileImageUrl) {
+      setError('Profile picture is required for care taker registration')
       setLoading(false)
       return
     }
 
     try {
-      const certificationsArray = formData.role === 'NURSE' ? certifications.map(c => c.url) : []
+      const certificationsArray = formData.role === 'CARETAKER' ? certifications.map(c => c.url) : []
       console.log('Register: Submitting registration', {
         role: formData.role,
         hasProfileImage: !!profileImageUrl,
@@ -52,7 +52,7 @@ export default function RegisterPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          profileImageUrl: formData.role === 'NURSE' ? profileImageUrl : null,
+          profileImageUrl: formData.role === 'CARETAKER' ? profileImageUrl : null,
           certifications: certificationsArray,
         }),
       })
@@ -60,7 +60,7 @@ export default function RegisterPage() {
       const data = await res.json()
 
       if (data.success) {
-        const path = data.user.role === 'NURSE' ? '/nurse/dashboard' : '/user/dashboard'
+        const path = data.user.role === 'CARETAKER' ? '/caretaker/dashboard' : '/user/dashboard'
         
         window.location.href = path
       } else {
@@ -104,12 +104,12 @@ export default function RegisterPage() {
             >
               <option value="">Select role</option>
               <option value="USER">User</option>
-              <option value="NURSE">Nurse</option>
+              <option value="CARETAKER">Care Taker</option>
             </select>
           </div>
 
-          {/* Profile Picture Upload - Only for Nurses */}
-          {formData.role === 'NURSE' && (
+          {/* Profile Picture Upload - Only for Care Takers */}
+          {formData.role === 'CARETAKER' && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Profile Picture <span className="text-red-500">*</span>
@@ -118,7 +118,7 @@ export default function RegisterPage() {
                 onFileSelect={handleFileUpload}
                 accept="image/*"
                 maxSize={5 * 1024 * 1024} // 5MB
-                folder="nurse-profiles"
+                folder="caretaker-profiles"
               />
               {profileImageName && (
                 <p className="mt-2 text-sm text-green-600">
@@ -128,8 +128,8 @@ export default function RegisterPage() {
             </div>
           )}
 
-          {/* Certifications Upload - Only for Nurses */}
-          {formData.role === 'NURSE' && (
+          {/* Certifications Upload - Only for Care Takers */}
+          {formData.role === 'CARETAKER' && (
             <div>
               <MultipleFileUpload
                 onFilesChange={setCertifications}

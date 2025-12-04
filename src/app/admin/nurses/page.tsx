@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Users, CheckCircle, XCircle, Clock, Eye, Search, Filter, Trash2 } from 'lucide-react'
 
-export default function AdminNursesPage() {
-  const [nurses, setNurses] = useState<any[]>([])
+export default function AdminCaretakersPage() {
+  const [caretakers, setCaretakers] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -32,13 +32,13 @@ export default function AdminNursesPage() {
   useEffect(() => {
     const loadNurses = async () => {
       try {
-        const res = await fetch('/api/admin/nurses', { cache: 'no-store' })
+        const res = await fetch('/api/admin/caretakers', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
-          setNurses(data.nurses || [])
+          setCaretakers(data.caretakers || [])
         }
       } catch (e) {
-        console.error('Error loading nurses:', e)
+        console.error('Error loading care takers:', e)
       } finally {
         setIsLoading(false)
       }
@@ -46,33 +46,33 @@ export default function AdminNursesPage() {
     loadNurses()
   }, [])
 
-  const filteredNurses = nurses.filter(nurse => {
-    const matchesSearch = nurse.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         nurse.email.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = statusFilter === 'ALL' || nurse.status === statusFilter
+  const filteredCaretakers = caretakers.filter(caretaker => {
+    const matchesSearch = caretaker.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         caretaker.email.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesStatus = statusFilter === 'ALL' || caretaker.status === statusFilter
     return matchesSearch && matchesStatus
   })
 
-  const handleDeleteNurse = async (nurseId: string) => {
-    if (!confirm('Are you sure you want to delete this nurse account? This action cannot be undone.')) {
+  const handleDeleteCaretaker = async (caretakerId: string) => {
+    if (!confirm('Are you sure you want to delete this care taker account? This action cannot be undone.')) {
       return
     }
 
     try {
-      const res = await fetch(`/api/admin/users/${nurseId}`, {
+      const res = await fetch(`/api/admin/users/${caretakerId}`, {
         method: 'DELETE',
       })
 
       if (res.ok) {
-        setNurses(prev => prev.filter(nurse => nurse.id !== nurseId))
-        alert('Nurse account deleted successfully')
+        setCaretakers(prev => prev.filter(caretaker => caretaker.id !== caretakerId))
+        alert('Care taker account deleted successfully')
       } else {
         const data = await res.json().catch(() => null)
-        alert(data?.error || 'Failed to delete nurse account')
+        alert(data?.error || 'Failed to delete care taker account')
       }
     } catch (error) {
-      console.error('Error deleting nurse:', error)
-      alert('Failed to delete nurse account')
+      console.error('Error deleting care taker:', error)
+      alert('Failed to delete care taker account')
     }
   }
 

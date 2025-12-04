@@ -9,14 +9,14 @@ export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [stats, setStats] = useState({
-    totalNurses: 0,
+    totalCaretakers: 0,
     pendingApprovals: 0,
-    approvedNurses: 0,
+    approvedCaretakers: 0,
     totalMothers: 0,
     totalRequests: 0,
     pendingReviews: 0
   })
-  const [pendingNurses, setPendingNurses] = useState<any[]>([])
+  const [pendingCaretakers, setPendingCaretakers] = useState<any[]>([])
 
   useEffect(() => {
     const loadUser = async () => {
@@ -54,13 +54,13 @@ export default function AdminDashboard() {
   useEffect(() => {
     const loadPendingNurses = async () => {
       try {
-        const res = await fetch('/api/admin/pending-nurses', { cache: 'no-store' })
+        const res = await fetch('/api/admin/pending-caretakers', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
-          setPendingNurses(data.nurses)
+          setPendingCaretakers(data.caretakers)
         }
       } catch (e) {
-        console.error('Error loading pending nurses:', e)
+        console.error('Error loading pending care takers:', e)
       } finally {
         setIsLoading(false)
       }
@@ -68,9 +68,9 @@ export default function AdminDashboard() {
     loadPendingNurses()
   }, [])
 
-  const handleApproveNurse = async (nurseId: string) => {
+  const handleApproveCaretaker = async (caretakerId: string) => {
     try {
-      const res = await fetch(`/api/admin/nurses/${nurseId}`, {
+      const res = await fetch(`/api/admin/caretakers/${caretakerId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -80,26 +80,26 @@ export default function AdminDashboard() {
 
       if (res.ok) {
         // Remove from pending list and update stats
-        setPendingNurses(prev => prev.filter(nurse => nurse.id !== nurseId))
+        setPendingCaretakers(prev => prev.filter(caretaker => caretaker.id !== caretakerId))
         setStats(prev => ({
           ...prev,
           pendingApprovals: prev.pendingApprovals - 1,
-          approvedNurses: prev.approvedNurses + 1
+          approvedCaretakers: prev.approvedCaretakers + 1
         }))
-        alert('Nurse approved successfully!')
+        alert('Care taker approved successfully!')
       } else {
         const error = await res.json()
-        alert(error.error || 'Failed to approve nurse')
+        alert(error.error || 'Failed to approve care taker')
       }
     } catch (error) {
-      console.error('Error approving nurse:', error)
-      alert('Failed to approve nurse')
+      console.error('Error approving care taker:', error)
+      alert('Failed to approve care taker')
     }
   }
 
-  const handleRejectNurse = async (nurseId: string) => {
+  const handleRejectCaretaker = async (caretakerId: string) => {
     try {
-      const res = await fetch(`/api/admin/nurses/${nurseId}`, {
+      const res = await fetch(`/api/admin/caretakers/${caretakerId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -109,19 +109,19 @@ export default function AdminDashboard() {
 
       if (res.ok) {
         // Remove from pending list and update stats
-        setPendingNurses(prev => prev.filter(nurse => nurse.id !== nurseId))
+        setPendingCaretakers(prev => prev.filter(caretaker => caretaker.id !== caretakerId))
         setStats(prev => ({
           ...prev,
           pendingApprovals: prev.pendingApprovals - 1
         }))
-        alert('Nurse rejected successfully!')
+        alert('Care taker rejected successfully!')
       } else {
         const error = await res.json()
-        alert(error.error || 'Failed to reject nurse')
+        alert(error.error || 'Failed to reject care taker')
       }
     } catch (error) {
-      console.error('Error rejecting nurse:', error)
-      alert('Failed to reject nurse')
+      console.error('Error rejecting care taker:', error)
+      alert('Failed to reject care taker')
     }
   }
 
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
             Admin Dashboard
           </h1>
           <p className="text-gray-600">
-            Manage nurse approvals, monitor platform activity, and oversee the community.
+            Manage care taker approvals, monitor platform activity, and oversee the community.
           </p>
         </div>
 
@@ -159,8 +159,8 @@ export default function AdminDashboard() {
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Nurses</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.totalNurses}</p>
+                <p className="text-sm font-medium text-gray-600">Total Care Takers</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.totalCaretakers}</p>
               </div>
             </div>
           </div>
@@ -183,8 +183,8 @@ export default function AdminDashboard() {
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Approved Nurses</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.approvedNurses}</p>
+                <p className="text-sm font-medium text-gray-600">Approved Care Takers</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.approvedCaretakers}</p>
               </div>
             </div>
           </div>
@@ -229,53 +229,53 @@ export default function AdminDashboard() {
         {/* Pending Nurse Approvals */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Pending Nurse Approvals</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Pending Care Taker Approvals</h2>
             <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
               {stats.pendingApprovals} pending
             </span>
           </div>
           
-          {pendingNurses.length === 0 ? (
+          {pendingCaretakers.length === 0 ? (
             <div className="text-center py-8">
               <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
               <p className="text-gray-600">No pending approvals</p>
-              <p className="text-sm text-gray-500">All nurse applications have been reviewed</p>
+              <p className="text-sm text-gray-500">All care taker applications have been reviewed</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {pendingNurses.map((nurse) => (
-                <div key={nurse.id} className="border border-gray-200 rounded-lg p-4">
+              {pendingCaretakers.map((caretaker) => (
+                <div key={caretaker.id} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <h3 className="text-sm font-medium text-gray-900">{nurse.name}</h3>
-                      <p className="text-sm text-gray-600">{nurse.email}</p>
+                      <h3 className="text-sm font-medium text-gray-900">{caretaker.name}</h3>
+                      <p className="text-sm text-gray-600">{caretaker.email}</p>
                       <div className="mt-2 flex items-center space-x-4 text-xs text-gray-500">
-                        <span>{nurse.totalExperience} years total experience</span>
-                        <span>{nurse.kuwaitExperience} years in Kuwait</span>
-                        <span>KD {nurse.partTimeSalary}/hour part-time</span>
-                        <span>Submitted {new Date(nurse.submittedAt).toLocaleDateString()}</span>
+                        <span>{caretaker.totalExperience} years total experience</span>
+                        <span>{caretaker.kuwaitExperience} years in Kuwait</span>
+                        <span>KD {caretaker.partTimeSalary}/hour part-time</span>
+                        <span>Submitted {new Date(caretaker.submittedAt).toLocaleDateString()}</span>
                       </div>
-                      {nurse.aboutMe && (
-                        <p className="text-xs text-gray-600 mt-2 line-clamp-2">{nurse.aboutMe}</p>
+                      {caretaker.aboutMe && (
+                        <p className="text-xs text-gray-600 mt-2 line-clamp-2">{caretaker.aboutMe}</p>
                       )}
                     </div>
                     <div className="flex items-center space-x-2">
                       <Link 
-                        href={`/admin/nurses/${nurse.id}`}
+                        href={`/admin/caretakers/${caretaker.id}`}
                         className="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-200 transition-colors text-sm"
                       >
                         <Eye className="w-4 h-4 inline mr-1" />
                         View Details
                       </Link>
                       <button
-                        onClick={() => handleApproveNurse(nurse.id)}
+                        onClick={() => handleApproveCaretaker(caretaker.id)}
                         className="bg-green-600 text-white px-3 py-1 rounded-lg hover:bg-green-700 transition-colors text-sm"
                       >
                         <CheckCircle className="w-4 h-4 inline mr-1" />
                         Approve
                       </button>
                       <button
-                        onClick={() => handleRejectNurse(nurse.id)}
+                        onClick={() => handleRejectCaretaker(caretaker.id)}
                         className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700 transition-colors text-sm"
                       >
                         <XCircle className="w-4 h-4 inline mr-1" />
@@ -291,7 +291,7 @@ export default function AdminDashboard() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-6">
-          <Link href="/admin/nurses" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/admin/caretakers" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
               <div className="bg-blue-100 p-3 rounded-lg">
                 <Users className="w-6 h-6 text-blue-600" />

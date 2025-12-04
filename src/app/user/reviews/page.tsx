@@ -92,7 +92,7 @@ export default function MotherReviewsPage() {
     }))
   }
 
-  const handleSubmitReview = async (nurseId: string) => {
+  const handleSubmitReview = async (caretakerId: string) => {
     if (reviewForm.appearance === 0 || reviewForm.attitude === 0 || reviewForm.knowledge === 0 || reviewForm.hygiene === 0 || reviewForm.salary === 0) {
       alert('Please rate all categories before submitting your review.')
       return
@@ -105,7 +105,7 @@ export default function MotherReviewsPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          receiverId: nurseId,
+          receiverId: caretakerId,
           ...reviewForm,
         }),
       })
@@ -139,7 +139,7 @@ export default function MotherReviewsPage() {
   const getRequestsToReview = () => {
     return requests.filter(request => 
       request.status === 'COMPLETED' && 
-      !reviews.some(review => review.receiverId === request.nurse.id)
+      !reviews.some(review => review.receiverId === request.caretaker.id)
     )
   }
 
@@ -166,7 +166,7 @@ export default function MotherReviewsPage() {
             Back to Dashboard
           </Link>
           <h1 className="nh-h2">Reviews</h1>
-          <p className="nh-sub mt-1">Rate and review the nurses you've hired</p>
+          <p className="nh-sub mt-1">Rate and review the care takers you've hired</p>
         </div>
 
         {/* Trust strip */}
@@ -190,22 +190,22 @@ export default function MotherReviewsPage() {
                         <User className="w-6 h-6 text-blue-600" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{request.nurse?.nurseProfile?.name || 'Nurse'}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">{request.caretaker?.caretakerProfile?.name || 'Care Taker'}</h3>
                         <p className="text-gray-600">Request completed - Please rate your experience</p>
                       </div>
                     </div>
                     <button
-                      onClick={() => setShowReviewForm(showReviewForm === request.nurse.id ? null : request.nurse.id)}
+                      onClick={() => setShowReviewForm(showReviewForm === request.caretaker.id ? null : request.caretaker.id)}
                       className="nh-btn nh-btn--primary"
                     >
-                      {showReviewForm === request.nurse.id ? 'Cancel' : 'Write Review'}
+                      {showReviewForm === request.caretaker.id ? 'Cancel' : 'Write Review'}
                     </button>
                   </div>
 
                   {/* Review Form */}
-                  {showReviewForm === request.nurse.id && (
+                  {showReviewForm === request.caretaker.id && (
                     <div className="mt-6 pt-6 border-t border-gray-200 pb-4">
-                      <h4 className="text-lg font-medium text-gray-900 mb-4">Rate {request.nurse?.nurseProfile?.name || 'Nurse'}</h4>
+                      <h4 className="text-lg font-medium text-gray-900 mb-4">Rate {request.caretaker?.caretakerProfile?.name || 'Care Taker'}</h4>
                       
                       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
                         {[
@@ -244,7 +244,7 @@ export default function MotherReviewsPage() {
                         <textarea
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           rows={3}
-                          placeholder="Share your experience with this nurse..."
+                          placeholder="Share your experience with this care taker..."
                           value={reviewForm.comment}
                           onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
                         />
@@ -258,7 +258,7 @@ export default function MotherReviewsPage() {
                           Cancel
                         </button>
                         <button
-                          onClick={() => handleSubmitReview(request.nurse.id)}
+                          onClick={() => handleSubmitReview(request.caretaker.id)}
                           className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
                         >
                           Submit Review
@@ -278,9 +278,9 @@ export default function MotherReviewsPage() {
             <div className="text-center py-12">
               <Star className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No reviews yet</h3>
-              <p className="text-gray-600 mb-6">Start by booking and hiring a nurse</p>
-              <Link href="/nurses" className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors">
-                Find Nurses
+              <p className="text-gray-600 mb-6">Start by booking and hiring a care taker</p>
+              <Link href="/caretakers" className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors">
+                Find Care Takers
               </Link>
             </div>
           ) : reviews.length > 0 ? (

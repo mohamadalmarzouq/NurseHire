@@ -6,7 +6,7 @@ import { Calendar, MessageCircle, Star, User, Settings, LogOut, Eye, Edit, Clock
 import DashboardHeader from '@/components/DashboardHeader'
 import BannerAd from '@/components/BannerAd'
 
-export default function NurseDashboard() {
+export default function CareTakerDashboard() {
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -71,7 +71,7 @@ export default function NurseDashboard() {
         {/* Welcome Section */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Welcome to your dashboard, {user?.profile?.name || 'Nurse'}!
+            Welcome to your dashboard, {user?.profile?.name || 'Care Taker'}!
           </h1>
           <p className="text-gray-600">
             {isApproved 
@@ -83,7 +83,7 @@ export default function NurseDashboard() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Link href="/nurse/profile" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/caretaker/profile" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
               <div className="bg-primary-100 p-3 rounded-lg">
                 <User className="w-6 h-6 text-primary-600" />
@@ -95,7 +95,7 @@ export default function NurseDashboard() {
             </div>
           </Link>
 
-          <Link href="/nurse/messages" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/caretaker/messages" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
               <div className="bg-green-100 p-3 rounded-lg">
                 <MessageCircle className="w-6 h-6 text-green-600" />
@@ -107,7 +107,7 @@ export default function NurseDashboard() {
             </div>
           </Link>
 
-          <Link href="/nurse/reviews" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/caretaker/reviews" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
               <div className="bg-yellow-100 p-3 rounded-lg">
                 <Star className="w-6 h-6 text-yellow-600" />
@@ -156,12 +156,12 @@ export default function NurseDashboard() {
               </div>
             </div>
             <div className="mt-4 flex space-x-2">
-              <Link href="/nurse/profile" className="flex-1 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors text-center">
+              <Link href="/caretaker/profile" className="flex-1 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors text-center">
                 <Edit className="w-4 h-4 inline mr-1" />
                 Edit Profile
               </Link>
                       <Link 
-                        href="/nurse/public-profile"
+                        href="/caretaker/public-profile"
                         className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-center"
                       >
                         <Eye className="w-4 h-4 inline mr-1" />
