@@ -20,8 +20,8 @@ export default function HomePage() {
             // Redirect logged-in users to their dashboard
             if (data.user.role === 'USER') {
               router.push('/user/dashboard')
-            } else if (data.user.role === 'NURSE') {
-              router.push('/nurse/dashboard')
+            } else if (data.user.role === 'CARETAKER') {
+              router.push('/caretaker/dashboard')
             } else if (data.user.role === 'ADMIN') {
               router.push('/admin/dashboard')
             }
@@ -54,19 +54,19 @@ export default function HomePage() {
         <div className="nh-container">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="nh-h1 mb-4 text-balance">
-              Trusted Newborn Care Nurses in{' '}
+              Trusted Newborn Care Takers in{' '}
               <span className="text-gradient">Kuwait</span>
             </h1>
             <p className="nh-sub mb-8 max-w-2xl mx-auto">
-              Connect with qualified, vetted nurses for your newborn&apos;s care. Safe, professional, and caring service you can trust.
+              Connect with qualified, vetted care takers for your newborn&apos;s care. Safe, professional, and caring service you can trust.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/nurses" className="nh-btn nh-btn--primary">
-                Find a Nurse
+              <Link href="/caretakers" className="nh-btn nh-btn--primary">
+                Find a Care Taker
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link href="/auth/register" className="nh-btn nh-btn--ghost">
-                Register as a Nurse
+                Register as a Care Taker
               </Link>
             </div>
           </div>
@@ -89,7 +89,7 @@ export default function HomePage() {
                 <Shield className="w-6 h-6" color="#0284c7" />
               </div>
               <h3 className="text-xl font-semibold mt-3">Verified</h3>
-              <p className="nh-muted text-sm mt-1">All nurses are verified by the platform</p>
+              <p className="nh-muted text-sm mt-1">All care takers are verified by the platform</p>
             </div>
             <div className="nh-card nh-card--lift">
               <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#dcfce7'}}>
@@ -103,7 +103,7 @@ export default function HomePage() {
                 <Star className="w-6 h-6" color="#F59E0B" />
               </div>
               <h3 className="text-xl font-semibold mt-3">Rated & Reviewed</h3>
-              <p className="nh-muted text-sm mt-1">Real reviews from mothers who have hired our nurses</p>
+              <p className="nh-muted text-sm mt-1">Real reviews from mothers who have hired our care takers</p>
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@ export default function HomePage() {
           <div className="text-center" style={{marginBottom: '14px'}}>
             <h2 className="nh-h2" style={{marginBottom:'8px'}}>How It Works</h2>
             <div className="flex justify-center" style={{marginBottom:'14px'}}>
-              <span className="nh-badge nh-badge--info" style={{fontSize:'14px',padding:'6px 12px'}}>Simple steps to find the perfect nurse for your newborn</span>
+              <span className="nh-badge nh-badge--info" style={{fontSize:'14px',padding:'6px 12px'}}>Simple steps to find the perfect care taker for your newborn</span>
             </div>
           </div>
 
@@ -123,12 +123,12 @@ export default function HomePage() {
             <div className="nh-card nh-card--lift text-center">
               <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#e0f2fe',color:'#0F73EE',fontWeight:700}}>1</div>
               <h3 className="text-xl font-semibold mb-2">Browse & Search</h3>
-              <p className="nh-muted">Search verified nurse profiles with details about experience, availability, and rates.</p>
+              <p className="nh-muted">Search verified care taker profiles with details about experience, availability, and rates.</p>
             </div>
             <div className="nh-card nh-card--lift text-center">
               <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#dcfce7',color:'#10B981',fontWeight:700}}>2</div>
               <h3 className="text-xl font-semibold mb-2">Connect & Chat</h3>
-              <p className="nh-muted">Message nurses directly to discuss your needs and get to know them.</p>
+              <p className="nh-muted">Message care takers directly to discuss your needs and get to know them.</p>
             </div>
             <div className="nh-card nh-card--lift text-center">
               <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#FEF3C7',color:'#F59E0B',fontWeight:700}}>3</div>
@@ -157,7 +157,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2">Verified Professionals</h3>
-                    <p className="text-neutral-600">All nurses are licensed, background-checked, and experienced in newborn care.</p>
+                    <p className="text-neutral-600">All care takers are licensed, background-checked, and experienced in newborn care.</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -166,7 +166,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2">Flexible Scheduling</h3>
-                    <p className="text-neutral-600">Find nurses available for part-time, night shifts, or emergency care.</p>
+                    <p className="text-neutral-600">Find care takers available for part-time, night shifts, or emergency care.</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -175,7 +175,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2">Real Reviews</h3>
-                    <p className="text-neutral-600">Read authentic reviews from other users who have hired our nurses.</p>
+                    <p className="text-neutral-600">Read authentic reviews from other users who have hired our care takers.</p>
                   </div>
                 </div>
               </div>
@@ -197,7 +197,7 @@ export default function HomePage() {
                   {/* Text Content */}
                   <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Caring & Professional</h3>
                   <p className="text-lg md:text-xl text-gray-700 leading-relaxed mb-8 max-w-2xl mx-auto">
-                    Our nurses provide gentle, expert care for your newborn with the warmth and professionalism you can trust.
+                    Our care takers provide gentle, expert care for your newborn with the warmth and professionalism you can trust.
                   </p>
                   
                   {/* Stats */}
@@ -208,7 +208,7 @@ export default function HomePage() {
                     </div>
                     <div className="text-center">
                       <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">50+</div>
-                      <div className="text-sm md:text-base text-gray-600">Expert Nurses</div>
+                      <div className="text-sm md:text-base text-gray-600">Expert Care Takers</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">99%</div>
@@ -239,7 +239,7 @@ export default function HomePage() {
             </div>
             <div className="order-1 lg:order-2">
               <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-6">
-                For Nurses
+                For Care Takers
               </h2>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
@@ -280,11 +280,11 @@ export default function HomePage() {
         <div className="nh-container text-center">
           <h2 className="nh-h2 mb-3" style={{color:'#fff'}}>Ready to Get Started?</h2>
           <p className="text-xl mb-8" style={{color:'rgba(255,255,255,.85)'}}>
-            Join hundreds of families and nurses who trust ENFAS for newborn care in Kuwait.
+            Join hundreds of families and care takers who trust ENFAS for newborn care in Kuwait.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/nurses" className="nh-btn nh-btn--ghost" style={{background:'#fff'}}>Find a Nurse</Link>
-            <Link href="/auth/register" className="nh-btn nh-btn--primary" style={{background:'#10B981'}}>Register as a nurse</Link>
+            <Link href="/caretakers" className="nh-btn nh-btn--ghost" style={{background:'#fff'}}>Find a Care Taker</Link>
+            <Link href="/auth/register" className="nh-btn nh-btn--primary" style={{background:'#10B981'}}>Register as a Care Taker</Link>
           </div>
         </div>
       </section>

@@ -32,8 +32,8 @@ export async function PUT(
         requester: {
           include: { userProfile: true }
         },
-        nurse: {
-          include: { nurseProfile: true }
+        caretaker: {
+          include: { caretakerProfile: true }
         }
       }
     })

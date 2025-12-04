@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Search, Filter, Star, User, ArrowLeft, CheckCircle } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 
-interface Nurse {
+interface CareTaker {
   id: string
   name: string
   age: number
@@ -20,9 +20,9 @@ interface Nurse {
   languages?: string[]
 }
 
-export default function NursesPage() {
-  const [nurses, setNurses] = useState<Nurse[]>([])
-  const [filteredNurses, setFilteredNurses] = useState<Nurse[]>([])
+export default function CareTakersPage() {
+  const [caretakers, setCaretakers] = useState<CareTaker[]>([])
+  const [filteredCaretakers, setFilteredCaretakers] = useState<CareTaker[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [filters, setFilters] = useState({
     minExperience: '',
@@ -57,49 +57,49 @@ export default function NursesPage() {
   }, [])
 
   useEffect(() => {
-    const loadNurses = async () => {
+    const loadCaretakers = async () => {
       try {
-        const res = await fetch('/api/nurses', { cache: 'no-store' })
+        const res = await fetch('/api/caretakers', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
-          setNurses(data.nurses || [])
-          setFilteredNurses(data.nurses || [])
+          setCaretakers(data.caretakers || [])
+          setFilteredCaretakers(data.caretakers || [])
         }
       } catch (e) {
-        console.error('Error loading nurses:', e)
+        console.error('Error loading care takers:', e)
       } finally {
         setIsLoading(false)
       }
     }
     if (isAuthenticated) {
-      loadNurses()
+      loadCaretakers()
     }
   }, [isAuthenticated])
 
-  // Filter nurses based on search and filters
+  // Filter care takers based on search and filters
   useEffect(() => {
-    let filtered = nurses
+    let filtered = caretakers
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(nurse =>
-        nurse.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        nurse.aboutMe.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(caretaker =>
+        caretaker.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        caretaker.aboutMe.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
     // Experience filter
     if (filters.minExperience) {
-      filtered = filtered.filter(nurse => nurse.totalExperience >= parseInt(filters.minExperience))
+      filtered = filtered.filter(caretaker => caretaker.totalExperience >= parseInt(filters.minExperience))
     }
 
     // Salary filter
     if (filters.maxSalary) {
-      filtered = filtered.filter(nurse => nurse.partTimeSalary <= parseInt(filters.maxSalary))
+      filtered = filtered.filter(caretaker => caretaker.partTimeSalary <= parseInt(filters.maxSalary))
     }
 
-    setFilteredNurses(filtered)
-  }, [nurses, searchTerm, filters])
+    setFilteredCaretakers(filtered)
+  }, [caretakers, searchTerm, filters])
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -117,7 +117,7 @@ export default function NursesPage() {
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-neutral-600">Loading nurses...</p>
+          <p className="text-neutral-600">Loading care takers...</p>
         </div>
       </div>
     )
@@ -143,10 +143,10 @@ export default function NursesPage() {
           
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-              Find Your Perfect Nurse
+              Find Your Perfect Care Taker
             </h1>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Browse through our verified nurses and find the perfect match for your newborn's care
+              Browse through our verified care takers and find the perfect match for your newborn's care
             </p>
           </div>
         </div>
@@ -229,18 +229,18 @@ export default function NursesPage() {
             </div>
           </div>
 
-          {/* Nurses Grid */}
+          {/* Care Takers Grid */}
           <div className="lg:col-span-3">
             <div className="mb-6">
               <p className="text-neutral-600">
-                Showing {filteredNurses.length} of {nurses.length} nurses
+                Showing {filteredCaretakers.length} of {caretakers.length} care takers
               </p>
             </div>
 
-            {filteredNurses.length === 0 ? (
+            {filteredCaretakers.length === 0 ? (
               <div className="text-center py-12">
                 <User className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-neutral-900 mb-2">No nurses found</h3>
+                <h3 className="text-xl font-semibold text-neutral-900 mb-2">No care takers found</h3>
                 <p className="text-neutral-600 mb-6">
                   Try adjusting your search criteria or filters
                 </p>
@@ -256,9 +256,9 @@ export default function NursesPage() {
               </div>
             ) : (
               <div className="space-y-6">
-                {filteredNurses.map((nurse) => (
+                {filteredCaretakers.map((caretaker) => (
                   <div
-                    key={nurse.id}
+                    key={caretaker.id}
                     className="nh-card nh-card--lift p-6 space-y-6"
                   >
                     {/* Header */}
@@ -266,10 +266,10 @@ export default function NursesPage() {
                       <div className="flex items-start gap-4">
                         <div className="relative">
                           <div className="w-16 h-16 rounded-full border border-primary-100 bg-primary-50 overflow-hidden flex items-center justify-center">
-                            {nurse.profileImageUrl ? (
+                            {caretaker.profileImageUrl ? (
                               <img
-                                src={nurse.profileImageUrl}
-                                alt={nurse.name}
+                                src={caretaker.profileImageUrl}
+                                alt={caretaker.name}
                                 className="w-full h-full object-cover"
                               />
                             ) : (
@@ -281,7 +281,7 @@ export default function NursesPage() {
                         <div className="space-y-2">
                           <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
                             <h3 className="text-lg font-semibold text-neutral-900 leading-tight line-clamp-1">
-                              {nurse.name}
+                              {caretaker.name}
                             </h3>
                             <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100 sm:mt-0 mt-1 w-max">
                               <CheckCircle className="w-3 h-3" />
@@ -289,21 +289,21 @@ export default function NursesPage() {
                             </span>
                           </div>
                           <p className="text-xs text-neutral-600">
-                            {nurse.age} years old • {nurse.totalExperience} years experience
+                            {caretaker.age} years old • {caretaker.totalExperience} years experience
                           </p>
                           <p className="text-xs text-neutral-500 line-clamp-2">
-                            Languages: {nurse.languages?.length ? nurse.languages.join(', ') : 'Not specified'}
+                            Languages: {caretaker.languages?.length ? caretaker.languages.join(', ') : 'Not specified'}
                           </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-neutral-600">
                         <span className="flex items-center gap-1 text-primary-500">
-                          {renderStars(nurse.averageRating)}
+                          {renderStars(caretaker.averageRating)}
                         </span>
                         <span className="font-medium text-neutral-800">
-                          {nurse.averageRating}/5
+                          {caretaker.averageRating}/5
                         </span>
-                        <span>• {nurse.reviewCount} review{nurse.reviewCount === 1 ? '' : 's'}</span>
+                        <span>• {caretaker.reviewCount} review{caretaker.reviewCount === 1 ? '' : 's'}</span>
                       </div>
                     </div>
 
@@ -311,26 +311,26 @@ export default function NursesPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-neutral-600">
                       <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
                         <p className="uppercase tracking-wide text-neutral-400 mb-1">Part-time</p>
-                        <p className="text-base font-semibold text-primary-600">{nurse.partTimeSalary} KD/hr</p>
+                        <p className="text-base font-semibold text-primary-600">{caretaker.partTimeSalary} KD/hr</p>
                       </div>
                       <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
                         <p className="uppercase tracking-wide text-neutral-400 mb-1">Full-time</p>
-                        <p className="text-base font-semibold text-primary-600">{nurse.fullTimeSalary} KD/hr</p>
+                        <p className="text-base font-semibold text-primary-600">{caretaker.fullTimeSalary} KD/hr</p>
                       </div>
                       <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
                         <p className="uppercase tracking-wide text-neutral-400 mb-1">Kuwait Exp.</p>
-                        <p className="text-base font-semibold text-neutral-800">{nurse.kuwaitExperience} yrs</p>
+                        <p className="text-base font-semibold text-neutral-800">{caretaker.kuwaitExperience} yrs</p>
                       </div>
                       <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
                         <p className="uppercase tracking-wide text-neutral-400 mb-1">Total Exp.</p>
-                        <p className="text-base font-semibold text-neutral-800">{nurse.totalExperience} yrs</p>
+                        <p className="text-base font-semibold text-neutral-800">{caretaker.totalExperience} yrs</p>
                       </div>
                     </div>
 
                     {/* Actions */}
                     <div className="flex justify-end">
                       <Link
-                        href={`/nurses/${nurse.id}`}
+                        href={`/caretakers/${caretaker.id}`}
                         className="nh-btn nh-btn--primary text-center w-full sm:w-auto"
                       >
                         View Profile

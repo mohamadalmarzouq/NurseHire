@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     try {
       user = await prisma.user.findUnique({
         where: { id: payload.id },
-        include: { userProfile: true, nurseProfile: true, adminProfile: true },
+        include: { userProfile: true, caretakerProfile: true, adminProfile: true },
       })
       console.log('User found:', user ? 'yes' : 'no')
     } catch (dbError) {
@@ -34,9 +34,9 @@ export async function GET(request: NextRequest) {
         id: user.id,
         email: user.email,
         role: user.role,
-        profile: user.userProfile || user.nurseProfile || user.adminProfile,
+        profile: user.userProfile || user.caretakerProfile || user.adminProfile,
         userProfile: user.userProfile,
-        nurseProfile: user.nurseProfile,
+        caretakerProfile: user.caretakerProfile,
         adminProfile: user.adminProfile,
       },
     })

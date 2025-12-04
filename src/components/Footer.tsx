@@ -7,11 +7,11 @@ import { usePathname } from 'next/navigation'
 export default function Footer() {
   const pathname = usePathname()
 
-  // Hide footer for dashboard pages and nurses listing
+  // Hide footer for dashboard pages and care takers listing
   const isDashboardPage = pathname?.startsWith('/user/') ||
-                         pathname?.startsWith('/nurse/') ||
+                         pathname?.startsWith('/caretaker/') ||
                          pathname?.startsWith('/admin/') ||
-                         pathname === '/nurses'
+                         pathname === '/caretakers'
 
   if (isDashboardPage) {
     return null
@@ -29,7 +29,7 @@ export default function Footer() {
               <span className="text-2xl font-bold">ENFAS</span>
             </div>
             <p className="text-neutral-300 text-sm leading-relaxed">
-              Connecting mothers in Kuwait with qualified, vetted nurses for newborn care. 
+              Connecting mothers in Kuwait with qualified, vetted care takers for newborn care. 
               Safe, professional, and caring service for your little ones.
             </p>
           </div>
@@ -39,8 +39,8 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/nurses" className="text-neutral-300 hover:text-white transition-colors">
-                  Find Nurses
+                <Link href="/caretakers" className="text-neutral-300 hover:text-white transition-colors">
+                  Find Care Takers
                 </Link>
               </li>
               <li>
@@ -61,27 +61,27 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* For Nurses */}
+          {/* For Care Takers */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">For Nurses</h3>
+            <h3 className="font-semibold text-lg mb-4">For Care Takers</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/auth/register" className="text-neutral-300 hover:text-white transition-colors">
-                  Join as Nurse
+                  Join as Care Taker
                 </Link>
               </li>
               <li>
-                <Link href="/nurse/benefits" className="text-neutral-300 hover:text-white transition-colors">
+                <Link href="/caretaker/benefits" className="text-neutral-300 hover:text-white transition-colors">
                   Benefits
                 </Link>
               </li>
               <li>
-                <Link href="/nurse/requirements" className="text-neutral-300 hover:text-white transition-colors">
+                <Link href="/caretaker/requirements" className="text-neutral-300 hover:text-white transition-colors">
                   Requirements
                 </Link>
               </li>
               <li>
-                <Link href="/nurse/support" className="text-neutral-300 hover:text-white transition-colors">
+                <Link href="/caretaker/support" className="text-neutral-300 hover:text-white transition-colors">
                   Support
                 </Link>
               </li>

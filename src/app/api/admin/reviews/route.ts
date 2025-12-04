@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
         },
         receiver: {
           include: {
-            nurseProfile: true,
+            caretakerProfile: true,
           },
         },
       },
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
         },
         receiver: {
           id: review.receiver.id,
-          name: review.receiver.nurseProfile?.name || 'Unknown',
+          name: review.receiver.caretakerProfile?.name || 'Unknown',
         },
         averageRating: (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5,
       })),
@@ -110,7 +110,7 @@ export async function PATCH(request: NextRequest) {
         },
         receiver: {
           include: {
-            nurseProfile: true,
+            caretakerProfile: true,
           },
         },
       },
@@ -135,7 +135,7 @@ export async function PATCH(request: NextRequest) {
         },
         receiver: {
           id: review.receiver.id,
-          name: review.receiver.nurseProfile?.name || 'Unknown',
+          name: review.receiver.caretakerProfile?.name || 'Unknown',
         },
         averageRating: (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5,
       },

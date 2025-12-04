@@ -14,13 +14,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const pendingNurses = await prisma.user.findMany({
+    const pendingCaretakers = await prisma.user.findMany({
       where: {
-        role: 'NURSE',
-        nurseProfile: { status: 'PENDING' }
+        role: 'CARETAKER',
+        caretakerProfile: { status: 'PENDING' }
       },
       include: {
-        nurseProfile: true
+        caretakerProfile: true
       },
       orderBy: {
         createdAt: 'asc'
@@ -28,25 +28,25 @@ export async function GET(request: NextRequest) {
     })
 
     return NextResponse.json({
-      nurses: pendingNurses.map(nurse => ({
-        id: nurse.id,
-        name: nurse.nurseProfile?.name || 'Unknown',
-        email: nurse.email,
-        totalExperience: nurse.nurseProfile?.totalExperience || 0,
-        kuwaitExperience: nurse.nurseProfile?.kuwaitExperience || 0,
-        partTimeSalary: nurse.nurseProfile?.partTimeSalary || 0,
-        fullTimeSalary: nurse.nurseProfile?.fullTimeSalary || 0,
-        aboutMe: nurse.nurseProfile?.aboutMe || '',
-        languages: nurse.nurseProfile?.languages || [],
-        availability: nurse.nurseProfile?.availability || [],
-        cvUrl: nurse.nurseProfile?.cvUrl,
-        profileImageUrl: nurse.nurseProfile?.profileImageUrl,
-        submittedAt: nurse.createdAt,
-        age: nurse.nurseProfile?.age || 0,
+      caretakers: pendingCaretakers.map(caretaker => ({
+        id: caretaker.id,
+        name: caretaker.caretakerProfile?.name || 'Unknown',
+        email: caretaker.email,
+        totalExperience: caretaker.caretakerProfile?.totalExperience || 0,
+        kuwaitExperience: caretaker.caretakerProfile?.kuwaitExperience || 0,
+        partTimeSalary: caretaker.caretakerProfile?.partTimeSalary || 0,
+        fullTimeSalary: caretaker.caretakerProfile?.fullTimeSalary || 0,
+        aboutMe: caretaker.caretakerProfile?.aboutMe || '',
+        languages: caretaker.caretakerProfile?.languages || [],
+        availability: caretaker.caretakerProfile?.availability || [],
+        cvUrl: caretaker.caretakerProfile?.cvUrl,
+        profileImageUrl: caretaker.caretakerProfile?.profileImageUrl,
+        submittedAt: caretaker.createdAt,
+        age: caretaker.caretakerProfile?.age || 0,
       }))
     })
   } catch (error) {
-    console.error('Error fetching pending nurses:', error)
+    console.error('Error fetching pending care takers:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

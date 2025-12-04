@@ -17,7 +17,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const { id: nurseId } = await params
+    const { id: caretakerId } = await params
     const body = await request.json()
     const { action } = body // 'approve' or 'reject'
 
@@ -25,40 +25,40 @@ export async function PUT(
       return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
     }
 
-    // Check if nurse exists and is pending
-    const nurse = await prisma.user.findUnique({
-      where: { id: nurseId },
-      include: { nurseProfile: true }
+    // Check if care taker exists and is pending
+    const caretaker = await prisma.user.findUnique({
+      where: { id: caretakerId },
+      include: { caretakerProfile: true }
     })
 
-    if (!nurse || !nurse.nurseProfile) {
-      return NextResponse.json({ error: 'Nurse not found' }, { status: 404 })
+    if (!caretaker || !caretaker.caretakerProfile) {
+      return NextResponse.json({ error: 'Care taker not found' }, { status: 404 })
     }
 
-    if (nurse.nurseProfile.status !== 'PENDING') {
-      return NextResponse.json({ error: 'Nurse is not pending approval' }, { status: 400 })
+    if (caretaker.caretakerProfile.status !== 'PENDING') {
+      return NextResponse.json({ error: 'Care taker is not pending approval' }, { status: 400 })
     }
 
-    // Update nurse status
+    // Update care taker status
     const newStatus = action === 'approve' ? 'APPROVED' : 'REJECTED'
     
-    await prisma.nurseProfile.update({
-      where: { userId: nurseId },
+    await prisma.caretakerProfile.update({
+      where: { userId: caretakerId },
       data: { status: newStatus }
     })
 
     return NextResponse.json({
       success: true,
-      message: `Nurse ${action === 'approve' ? 'approved' : 'rejected'} successfully`,
-      nurse: {
-        id: nurse.id,
-        name: nurse.nurseProfile.name,
-        email: nurse.email,
+      message: `Care taker ${action === 'approve' ? 'approved' : 'rejected'} successfully`,
+      caretaker: {
+        id: caretaker.id,
+        name: caretaker.caretakerProfile.name,
+        email: caretaker.email,
         status: newStatus
       }
     })
   } catch (error) {
-    console.error('Error updating nurse status:', error)
+    console.error('Error updating care taker status:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

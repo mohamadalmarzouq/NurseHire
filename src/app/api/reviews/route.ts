@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       whereClause = { giverId: payload.id }
     } else if (type === 'received') {
       // For received reviews, show only approved unless user is viewing their own
-      if (payload.role === 'NURSE' && includePending) {
+      if (payload.role === 'CARETAKER' && includePending) {
         whereClause = { receiverId: payload.id }
       } else {
         whereClause = { receiverId: payload.id, status: 'APPROVED' }
@@ -41,13 +41,13 @@ export async function GET(request: NextRequest) {
         giver: {
           include: {
             userProfile: true,
-            nurseProfile: true,
+            caretakerProfile: true,
           },
         },
         receiver: {
           include: {
             userProfile: true,
-            nurseProfile: true,
+            caretakerProfile: true,
           },
         },
       },
@@ -68,12 +68,12 @@ export async function GET(request: NextRequest) {
         createdAt: review.createdAt,
         giver: {
           id: review.giver.id,
-          name: review.giver.userProfile?.name || review.giver.nurseProfile?.name || 'Unknown',
+          name: review.giver.userProfile?.name || review.giver.caretakerProfile?.name || 'Unknown',
           role: review.giver.role,
         },
         receiver: {
           id: review.receiver.id,
-          name: review.receiver.userProfile?.name || review.receiver.nurseProfile?.name || 'Unknown',
+          name: review.receiver.userProfile?.name || review.receiver.caretakerProfile?.name || 'Unknown',
           role: review.receiver.role,
         },
         status: review.status,
@@ -108,14 +108,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'All rating fields are required' }, { status: 400 })
     }
 
-    // Check if receiver exists and is a nurse
+    // Check if receiver exists and is a care taker
     const receiver = await prisma.user.findUnique({
       where: { id: receiverId },
-      include: { nurseProfile: true },
+      include: { caretakerProfile: true },
     })
 
-    if (!receiver || !receiver.nurseProfile) {
-      return NextResponse.json({ error: 'Nurse not found' }, { status: 404 })
+    if (!receiver || !receiver.caretakerProfile) {
+      return NextResponse.json({ error: 'Care taker not found' }, { status: 404 })
     }
 
     // Check if review already exists
@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (existingReview) {
-      return NextResponse.json({ error: 'Review already exists for this nurse' }, { status: 400 })
+      return NextResponse.json({ error: 'Review already exists for this care taker' }, { status: 400 })
     }
 
     // Create review with PENDING status
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
         },
         receiver: {
           include: {
-            nurseProfile: true,
+            caretakerProfile: true,
           },
         },
       },
@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
         },
         receiver: {
           id: review.receiver.id,
-          name: review.receiver.nurseProfile?.name || 'Unknown',
+          name: review.receiver.caretakerProfile?.name || 'Unknown',
         },
         status: review.status,
         averageRating: (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5,

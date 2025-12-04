@@ -6,27 +6,27 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: nurseId } = await params
+    const { id: caretakerId } = await params
 
-    // Find user with nurse profile
+    // Find user with care taker profile
     const user = await prisma.user.findUnique({
-      where: { id: nurseId },
+      where: { id: caretakerId },
       include: {
-        nurseProfile: true,
+        caretakerProfile: true,
       },
     })
 
-    if (!user || !user.nurseProfile) {
+    if (!user || !user.caretakerProfile) {
       return NextResponse.json(
-        { error: 'Nurse not found' },
+        { error: 'Care taker not found' },
         { status: 404 }
       )
     }
 
-    // Get approved reviews for this nurse
+    // Get approved reviews for this care taker
     const reviewsData = await prisma.review.findMany({
       where: {
-        receiverId: nurseId,
+        receiverId: caretakerId,
         status: 'APPROVED',
       },
       include: {
@@ -62,30 +62,30 @@ export async function GET(
         }, 0) / reviewCount
       : 0
 
-    const nurse = {
+    const caretaker = {
       id: user.id,
-      name: user.nurseProfile.name,
-      age: user.nurseProfile.age,
-      totalExperience: user.nurseProfile.totalExperience,
-      kuwaitExperience: user.nurseProfile.kuwaitExperience,
-      partTimeSalary: user.nurseProfile.partTimeSalary,
-      fullTimeSalary: user.nurseProfile.fullTimeSalary,
-      aboutMe: user.nurseProfile.aboutMe || 'No description provided',
-      profileImageUrl: user.nurseProfile.profileImageUrl,
+      name: user.caretakerProfile.name,
+      age: user.caretakerProfile.age,
+      totalExperience: user.caretakerProfile.totalExperience,
+      kuwaitExperience: user.caretakerProfile.kuwaitExperience,
+      partTimeSalary: user.caretakerProfile.partTimeSalary,
+      fullTimeSalary: user.caretakerProfile.fullTimeSalary,
+      aboutMe: user.caretakerProfile.aboutMe || 'No description provided',
+      profileImageUrl: user.caretakerProfile.profileImageUrl,
       averageRating: averageRating || 0,
       reviewCount: reviewCount,
-      languages: user.nurseProfile.languages || [],
-      availability: user.nurseProfile.availability || [],
-      status: user.nurseProfile.status,
-      certifications: user.nurseProfile.certifications || [],
+      languages: user.caretakerProfile.languages || [],
+      availability: user.caretakerProfile.availability || [],
+      status: user.caretakerProfile.status,
+      certifications: user.caretakerProfile.certifications || [],
     }
 
     return NextResponse.json({
-      nurse,
+      caretaker,
       reviews,
     })
   } catch (error) {
-    console.error('Error fetching nurse profile:', error)
+    console.error('Error fetching care taker profile:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

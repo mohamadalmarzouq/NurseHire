@@ -16,26 +16,26 @@ export async function GET(request: NextRequest) {
 
     // Get all stats in parallel
     const [
-      totalNurses,
-      pendingNurses,
-      approvedNurses,
+      totalCaretakers,
+      pendingCaretakers,
+      approvedCaretakers,
       totalUsers,
       totalRequests,
       totalReviews,
       pendingReviews,
       recentRequests
     ] = await Promise.all([
-      prisma.user.count({ where: { role: 'NURSE' } }),
+      prisma.user.count({ where: { role: 'CARETAKER' } }),
       prisma.user.count({ 
         where: { 
-          role: 'NURSE',
-          nurseProfile: { status: 'PENDING' }
+          role: 'CARETAKER',
+          caretakerProfile: { status: 'PENDING' }
         } 
       }),
       prisma.user.count({ 
         where: { 
-          role: 'NURSE',
-          nurseProfile: { status: 'APPROVED' }
+          role: 'CARETAKER',
+          caretakerProfile: { status: 'APPROVED' }
         } 
       }),
       prisma.user.count({ where: { role: 'USER' } }),
@@ -49,8 +49,8 @@ export async function GET(request: NextRequest) {
           requester: {
             include: { userProfile: true }
           },
-          nurse: {
-            include: { nurseProfile: true }
+          caretaker: {
+            include: { caretakerProfile: true }
           }
         }
       })
@@ -58,9 +58,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       stats: {
-        totalNurses,
-        pendingApprovals: pendingNurses,
-        approvedNurses,
+        totalCaretakers,
+        pendingApprovals: pendingCaretakers,
+        approvedCaretakers,
         totalUsers,
         totalRequests,
         totalReviews,
@@ -75,9 +75,9 @@ export async function GET(request: NextRequest) {
           name: request.requester.userProfile?.name || 'Unknown',
           email: request.requester.email,
         },
-        nurse: {
-          name: request.nurse.nurseProfile?.name || 'Unknown',
-          email: request.nurse.email,
+        caretaker: {
+          name: request.caretaker.caretakerProfile?.name || 'Unknown',
+          email: request.caretaker.email,
         },
       }))
     })

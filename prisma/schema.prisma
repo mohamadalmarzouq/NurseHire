@@ -12,11 +12,11 @@ datasource db {
 
 enum UserRole {
   USER
-  NURSE
+  CARETAKER
   ADMIN
 }
 
-enum NurseStatus {
+enum CareTakerStatus {
   PENDING
   APPROVED
   REJECTED
@@ -49,9 +49,9 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  userProfile   UserProfile?
-  nurseProfile  NurseProfile?
-  adminProfile  AdminProfile?
+  userProfile      UserProfile?
+  caretakerProfile CareTakerProfile?
+  adminProfile     AdminProfile?
 
   // Chat relations
   sentMessages     Message[] @relation("MessageSender")
@@ -59,7 +59,7 @@ model User {
 
   // Information request relations
   sentRequests     InformationRequest[] @relation("InformationRequester")
-  receivedRequests InformationRequest[] @relation("InformationNurse")
+  receivedRequests InformationRequest[] @relation("InformationCaretaker")
 
   // Review relations
   reviewsGiven   Review[] @relation("ReviewGiver")
@@ -83,9 +83,9 @@ model UserProfile {
   @@map("user_profiles")
 }
 
-model NurseProfile {
-  id                    String      @id @default(cuid())
-  userId                String      @unique
+model CareTakerProfile {
+  id                    String          @id @default(cuid())
+  userId                String          @unique
   name                  String
   age                   Int
   phone                 String?
@@ -93,20 +93,20 @@ model NurseProfile {
   totalExperience       Int
   kuwaitExperience      Int
   partTimeSalary        Int
-  fullTimeSalary        Int      @default(0)
+  fullTimeSalary        Int             @default(0)
   aboutMe               String?
   cvUrl                 String?
   profileImageUrl       String?
-  certifications        String[]    @default([])
-  status                NurseStatus @default(PENDING)
-  languages             String[]    @default([])
-  availability          String[]    @default([])
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
+  certifications        String[]        @default([])
+  status                CareTakerStatus @default(PENDING)
+  languages             String[]        @default([])
+  availability          String[]        @default([])
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("nurse_profiles")
+  @@map("caretaker_profiles")
 }
 
 model AdminProfile {
@@ -139,7 +139,7 @@ model Message {
 model InformationRequest {
   id          String        @id @default(cuid())
   requesterId String
-  nurseId     String
+  caretakerId String
   status      RequestStatus @default(PENDING)
   message     String
   phone       String?
@@ -150,7 +150,7 @@ model InformationRequest {
   updatedAt   DateTime      @updatedAt
 
   requester User @relation("InformationRequester", fields: [requesterId], references: [id], onDelete: Cascade)
-  nurse     User @relation("InformationNurse", fields: [nurseId], references: [id], onDelete: Cascade)
+  caretaker User @relation("InformationCaretaker", fields: [caretakerId], references: [id], onDelete: Cascade)
 
   @@map("information_requests")
 }

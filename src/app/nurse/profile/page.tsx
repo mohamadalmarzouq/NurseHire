@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, User, Save, Edit, LogOut } from 'lucide-react'
 
-export default function NurseProfilePage() {
+export default function CareTakerProfilePage() {
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
@@ -39,7 +39,7 @@ export default function NurseProfilePage() {
         console.log('Initial user data load:', data)
         if (data?.authenticated) {
           setUser(data.user)
-          const profile = data.user.nurseProfile || data.user.profile
+          const profile = data.user.caretakerProfile || data.user.profile
           console.log('Initial profile data:', profile)
           if (profile) {
             setFormData({
@@ -90,7 +90,7 @@ export default function NurseProfilePage() {
     console.log('Saving profile with formData:', formData)
     
     try {
-      const res = await fetch('/api/nurse/profile', {
+      const res = await fetch('/api/caretaker/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -165,7 +165,7 @@ export default function NurseProfilePage() {
 
   // Helper to get profile from user object
   const getProfile = () => {
-    return user?.nurseProfile || user?.profile || null
+    return user?.caretakerProfile || user?.profile || null
   }
 
   const profile = getProfile()
@@ -182,7 +182,7 @@ export default function NurseProfilePage() {
               </Link>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/nurse/dashboard" className="text-gray-600 hover:text-gray-900">
+              <Link href="/caretaker/dashboard" className="text-gray-600 hover:text-gray-900">
                 Dashboard
               </Link>
               <button 
@@ -202,12 +202,12 @@ export default function NurseProfilePage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <Link href="/nurse/dashboard" className="flex items-center text-gray-600 hover:text-gray-900 mb-2">
+            <Link href="/caretaker/dashboard" className="flex items-center text-gray-600 hover:text-gray-900 mb-2">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Link>
             <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-            <p className="text-gray-600 mt-1">Manage your nurse profile information</p>
+            <p className="text-gray-600 mt-1">Manage your care taker profile information</p>
           </div>
           {!isEditing && (
             <button

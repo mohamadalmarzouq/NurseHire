@@ -21,16 +21,16 @@ export async function GET(request: NextRequest) {
       requests = await prisma.informationRequest.findMany({
         where: { requesterId: payload.id },
         include: {
-          nurse: {
-            include: { nurseProfile: true }
+          caretaker: {
+            include: { caretakerProfile: true }
           }
         },
         orderBy: { createdAt: 'desc' }
       })
-    } else if (payload.role === 'NURSE') {
-      // Nurses see requests about them
+    } else if (payload.role === 'CARETAKER') {
+      // Care takers see requests about them
       requests = await prisma.informationRequest.findMany({
-        where: { nurseId: payload.id },
+        where: { caretakerId: payload.id },
         include: {
           requester: {
             include: { userProfile: true }
@@ -66,29 +66,29 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { nurseId, message, phone, preferredContactTime, urgency } = body
+    const { caretakerId, message, phone, preferredContactTime, urgency } = body
 
-    if (!nurseId || !message) {
+    if (!caretakerId || !message) {
       return NextResponse.json(
-        { error: 'Nurse ID and message are required' },
+        { error: 'Care taker ID and message are required' },
         { status: 400 }
       )
     }
 
-    // Verify nurse exists and is approved
-    const nurse = await prisma.user.findFirst({
+    // Verify care taker exists and is approved
+    const caretaker = await prisma.user.findFirst({
       where: {
-        id: nurseId,
-        role: 'NURSE',
-        nurseProfile: {
+        id: caretakerId,
+        role: 'CARETAKER',
+        caretakerProfile: {
           status: 'APPROVED'
         }
       }
     })
 
-    if (!nurse) {
+    if (!caretaker) {
       return NextResponse.json(
-        { error: 'Nurse not found or not approved' },
+        { error: 'Care taker not found or not approved' },
         { status: 404 }
       )
     }
@@ -96,15 +96,15 @@ export async function POST(request: NextRequest) {
     const informationRequest = await prisma.informationRequest.create({
       data: {
         requesterId: payload.id,
-        nurseId,
+        caretakerId,
         message,
         phone: phone || null,
         preferredContactTime: preferredContactTime || null,
         urgency: urgency || 'MEDIUM',
       },
       include: {
-        nurse: {
-          include: { nurseProfile: true }
+        caretaker: {
+          include: { caretakerProfile: true }
         }
       }
     })

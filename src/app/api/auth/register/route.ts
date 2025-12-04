@@ -23,10 +23,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Additional validation for nurses
-    if (role === 'NURSE' && !otherData.profileImageUrl) {
+    // Additional validation for care takers
+    if (role === 'CARETAKER' && !otherData.profileImageUrl) {
       return NextResponse.json(
-        { error: 'Profile picture is required for nurse registration' },
+        { error: 'Profile picture is required for care taker registration' },
         { status: 400 }
       )
     }
@@ -72,9 +72,9 @@ export async function POST(request: NextRequest) {
           location: otherData.location || null,
         },
       })
-    } else if (role === 'NURSE') {
+    } else if (role === 'CARETAKER') {
       const certificationsArray = Array.isArray(otherData.certifications) ? otherData.certifications : []
-      console.log('Register API: Creating nurse profile', {
+      console.log('Register API: Creating care taker profile', {
         userId: user.id,
         name,
         hasProfileImage: !!otherData.profileImageUrl,
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
         certifications: certificationsArray
       })
 
-      profile = await prisma.nurseProfile.create({
+      profile = await prisma.caretakerProfile.create({
         data: {
           userId: user.id,
           name,
@@ -93,14 +93,14 @@ export async function POST(request: NextRequest) {
           fullTimeSalary: parseInt(otherData.fullTimeSalary) || 0,
           aboutMe: otherData.aboutMe || null,
           cvUrl: otherData.cvUrl || null,
-          profileImageUrl: otherData.profileImageUrl, // Required for nurses
+          profileImageUrl: otherData.profileImageUrl, // Required for care takers
           certifications: certificationsArray,
           languages: otherData.languages || [],
           availability: otherData.availability || [],
         },
       })
       
-      console.log('Register API: Nurse profile created successfully', {
+      console.log('Register API: Care taker profile created successfully', {
         profileId: profile.id,
         certificationsCount: profile.certifications.length
       })

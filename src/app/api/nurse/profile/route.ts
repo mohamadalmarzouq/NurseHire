@@ -10,12 +10,12 @@ export async function PUT(request: NextRequest) {
     }
 
     const payload = await verifyToken(token)
-    if (!payload || payload.role !== 'NURSE') {
+    if (!payload || payload.role !== 'CARETAKER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const body = await request.json()
-    console.log('Nurse profile update request:', { userId: payload.id, body })
+    console.log('Care taker profile update request:', { userId: payload.id, body })
     
     const {
       name,
@@ -62,21 +62,21 @@ export async function PUT(request: NextRequest) {
     updateData.partTimeSalary = parseToInt(partTimeSalary, 'partTimeSalary')
     updateData.fullTimeSalary = parseToInt(fullTimeSalary, 'fullTimeSalary')
 
-    console.log('Updating nurse profile with data:', updateData)
+    console.log('Updating care taker profile with data:', updateData)
 
-    const updatedProfile = await prisma.nurseProfile.update({
+    const updatedProfile = await prisma.caretakerProfile.update({
       where: { userId: payload.id },
       data: updateData,
     })
 
-    console.log('Nurse profile updated successfully:', updatedProfile)
+    console.log('Care taker profile updated successfully:', updatedProfile)
 
     return NextResponse.json({
       success: true,
       profile: updatedProfile,
     })
   } catch (error: any) {
-    console.error('Error updating nurse profile:', error)
+    console.error('Error updating care taker profile:', error)
     console.error('Error details:', {
       message: error?.message,
       code: error?.code,

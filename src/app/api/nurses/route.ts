@@ -12,24 +12,24 @@ export async function GET(request: NextRequest) {
 
     // Build where clause for filtering
     const whereClause: any = {
-      nurseProfile: {
-        status: 'APPROVED', // Only show approved nurses
+      caretakerProfile: {
+        status: 'APPROVED', // Only show approved care takers
       },
     }
 
     // Add search filter
     if (search) {
       whereClause.OR = [
-        { nurseProfile: { name: { contains: search, mode: 'insensitive' } } },
-        { nurseProfile: { aboutMe: { contains: search, mode: 'insensitive' } } },
+        { caretakerProfile: { name: { contains: search, mode: 'insensitive' } } },
+        { caretakerProfile: { aboutMe: { contains: search, mode: 'insensitive' } } },
       ]
     }
 
     // Add experience filter
     if (experience) {
       const expValue = parseInt(experience)
-      whereClause.nurseProfile = {
-        ...whereClause.nurseProfile,
+      whereClause.caretakerProfile = {
+        ...whereClause.caretakerProfile,
         totalExperience: { gte: expValue },
       }
     }
@@ -37,84 +37,84 @@ export async function GET(request: NextRequest) {
     // Add salary filter
     if (salary) {
       const salaryValue = parseFloat(salary)
-      whereClause.nurseProfile = {
-        ...whereClause.nurseProfile,
+      whereClause.caretakerProfile = {
+        ...whereClause.caretakerProfile,
         partTimeSalary: { lte: salaryValue },
       }
     }
 
     // Add availability filter
     if (availability) {
-      whereClause.nurseProfile = {
-        ...whereClause.nurseProfile,
+      whereClause.caretakerProfile = {
+        ...whereClause.caretakerProfile,
         availability: { has: availability },
       }
     }
 
     // Add language filter
     if (language) {
-      whereClause.nurseProfile = {
-        ...whereClause.nurseProfile,
+      whereClause.caretakerProfile = {
+        ...whereClause.caretakerProfile,
         languages: { has: language },
       }
     }
 
-    const nurses = await prisma.user.findMany({
+    const caretakers = await prisma.user.findMany({
       where: whereClause,
       include: {
-        nurseProfile: true,
+        caretakerProfile: true,
       },
       orderBy: {
         createdAt: 'desc',
       },
     })
 
-    // Get approved reviews for all nurses
-    const nurseIds = nurses.map(n => n.id)
+    // Get approved reviews for all care takers
+    const caretakerIds = caretakers.map(c => c.id)
     const reviews = await prisma.review.findMany({
       where: {
-        receiverId: { in: nurseIds },
+        receiverId: { in: caretakerIds },
         status: 'APPROVED',
       },
     })
 
-    // Calculate ratings per nurse
-    const ratingsByNurse: Record<string, { sum: number; count: number }> = {}
+    // Calculate ratings per care taker
+    const ratingsByCaretaker: Record<string, { sum: number; count: number }> = {}
     reviews.forEach(review => {
-      if (!ratingsByNurse[review.receiverId]) {
-        ratingsByNurse[review.receiverId] = { sum: 0, count: 0 }
+      if (!ratingsByCaretaker[review.receiverId]) {
+        ratingsByCaretaker[review.receiverId] = { sum: 0, count: 0 }
       }
       const avg = (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5
-      ratingsByNurse[review.receiverId].sum += avg
-      ratingsByNurse[review.receiverId].count += 1
+      ratingsByCaretaker[review.receiverId].sum += avg
+      ratingsByCaretaker[review.receiverId].count += 1
     })
 
     // Format the response
-    const formattedNurses = nurses.map(nurse => {
-      const ratingData = ratingsByNurse[nurse.id] || { sum: 0, count: 0 }
+    const formattedCaretakers = caretakers.map(caretaker => {
+      const ratingData = ratingsByCaretaker[caretaker.id] || { sum: 0, count: 0 }
       return {
-        id: nurse.id,
-        name: nurse.nurseProfile?.name || 'Unknown',
-        age: nurse.nurseProfile?.age || 0,
-        totalExperience: nurse.nurseProfile?.totalExperience || 0,
-        kuwaitExperience: nurse.nurseProfile?.kuwaitExperience || 0,
-        partTimeSalary: nurse.nurseProfile?.partTimeSalary || 0,
-        fullTimeSalary: nurse.nurseProfile?.fullTimeSalary || 0,
-        aboutMe: nurse.nurseProfile?.aboutMe || '',
-        profileImageUrl: nurse.nurseProfile?.profileImageUrl,
-        languages: nurse.nurseProfile?.languages || [],
-        availability: nurse.nurseProfile?.availability || [],
+        id: caretaker.id,
+        name: caretaker.caretakerProfile?.name || 'Unknown',
+        age: caretaker.caretakerProfile?.age || 0,
+        totalExperience: caretaker.caretakerProfile?.totalExperience || 0,
+        kuwaitExperience: caretaker.caretakerProfile?.kuwaitExperience || 0,
+        partTimeSalary: caretaker.caretakerProfile?.partTimeSalary || 0,
+        fullTimeSalary: caretaker.caretakerProfile?.fullTimeSalary || 0,
+        aboutMe: caretaker.caretakerProfile?.aboutMe || '',
+        profileImageUrl: caretaker.caretakerProfile?.profileImageUrl,
+        languages: caretaker.caretakerProfile?.languages || [],
+        availability: caretaker.caretakerProfile?.availability || [],
         averageRating: ratingData.count > 0 ? ratingData.sum / ratingData.count : 0,
         reviewCount: ratingData.count,
       }
     })
 
     return NextResponse.json({
-      nurses: formattedNurses,
-      total: formattedNurses.length,
+      caretakers: formattedCaretakers,
+      total: formattedCaretakers.length,
     })
   } catch (error) {
-    console.error('Error fetching nurses:', error)
+    console.error('Error fetching care takers:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
