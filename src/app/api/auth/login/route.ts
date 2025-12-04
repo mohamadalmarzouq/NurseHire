@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       where: { email },
       include: {
         userProfile: true,
-        nurseProfile: true,
+        caretakerProfile: true,
         adminProfile: true,
       },
     })
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
         id: user.id,
         email: user.email,
         role: user.role,
-        profile: user.userProfile || user.nurseProfile || user.adminProfile,
+        profile: user.userProfile || user.caretakerProfile || user.adminProfile,
       },
     })
 

@@ -37,13 +37,13 @@ export async function GET(
         sender: {
           include: {
             userProfile: true,
-            nurseProfile: true,
+            caretakerProfile: true,
           },
         },
         receiver: {
           include: {
             userProfile: true,
-            nurseProfile: true,
+            caretakerProfile: true,
           },
         },
       },
@@ -69,7 +69,7 @@ export async function GET(
       where: { id: otherUserId },
       include: {
         userProfile: true,
-        nurseProfile: true,
+        caretakerProfile: true,
       },
     })
 
@@ -88,18 +88,18 @@ export async function GET(
         fileUrl: message.fileUrl,
         sender: {
           id: message.sender.id,
-          name: message.sender.userProfile?.name || message.sender.nurseProfile?.name || 'Unknown',
+          name: message.sender.userProfile?.name || message.sender.caretakerProfile?.name || 'Unknown',
           role: message.sender.role,
         },
         receiver: {
           id: message.receiver.id,
-          name: message.receiver.userProfile?.name || message.receiver.nurseProfile?.name || 'Unknown',
+          name: message.receiver.userProfile?.name || message.receiver.caretakerProfile?.name || 'Unknown',
           role: message.receiver.role,
         },
       })),
       otherUser: {
         id: otherUser.id,
-        name: otherUser.userProfile?.name || otherUser.nurseProfile?.name || 'Unknown',
+        name: otherUser.userProfile?.name || otherUser.caretakerProfile?.name || 'Unknown',
         role: otherUser.role,
         email: otherUser.email,
       },
