@@ -4,7 +4,7 @@ export const baseRegisterSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   confirmPassword: z.string().min(6),
-  role: z.enum(['MOTHER', 'NURSE', 'ADMIN']),
+  role: z.enum(['MOTHER', 'CARETAKER', 'ADMIN']),
   name: z.string().min(1),
 })
 

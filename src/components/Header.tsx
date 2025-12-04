@@ -75,7 +75,7 @@ export default function Header() {
             {isLoggedIn ? (
               <>
                 <Link 
-                  href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'NURSE' ? '/nurse/dashboard' : '/mother/dashboard'}
+                  href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CARETAKER' ? '/caretaker/dashboard' : '/mother/dashboard'}
                   className="text-neutral-600 hover:text-primary-600 transition-colors"
                 >
                   Dashboard
@@ -148,7 +148,7 @@ export default function Header() {
                 {isLoggedIn ? (
                   <>
                     <Link 
-                      href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'NURSE' ? '/nurse/dashboard' : '/mother/dashboard'}
+                      href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CARETAKER' ? '/caretaker/dashboard' : '/mother/dashboard'}
                       className="block text-neutral-600 hover:text-primary-600 transition-colors py-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
