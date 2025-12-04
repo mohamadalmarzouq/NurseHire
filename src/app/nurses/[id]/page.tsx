@@ -875,13 +875,13 @@ export default function CareTakerProfilePage() {
             className="bg-white rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header with nurse info */}
+            {/* Header with care taker info */}
             <div className="flex items-center justify-between mb-6 pb-6 border-b border-neutral-200">
               <div className="flex items-center space-x-4">
-                {nurse?.profileImageUrl ? (
+                {caretaker?.profileImageUrl ? (
                   <img
                     src={caretaker.profileImageUrl}
-                    alt={nurse?.name}
+                    alt={caretaker?.name}
                     className="w-16 h-16 rounded-full object-cover"
                   />
                 ) : (
@@ -890,7 +890,7 @@ export default function CareTakerProfilePage() {
                   </div>
                 )}
                 <div>
-                  <h3 className="text-2xl font-semibold text-neutral-900">Review {nurse?.name}</h3>
+                  <h3 className="text-2xl font-semibold text-neutral-900">Review {caretaker?.name}</h3>
                   <p className="text-sm text-neutral-600 mt-1">
                     Share your experience • Pending admin approval
                   </p>
