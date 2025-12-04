@@ -30,7 +30,7 @@ export default function AdminCaretakersPage() {
   }, [])
 
   useEffect(() => {
-    const loadNurses = async () => {
+    const loadCaretakers = async () => {
       try {
         const res = await fetch('/api/admin/caretakers', { cache: 'no-store' })
         if (res.ok) {
@@ -43,7 +43,7 @@ export default function AdminCaretakersPage() {
         setIsLoading(false)
       }
     }
-    loadNurses()
+    loadCaretakers()
   }, [])
 
   const filteredCaretakers = caretakers.filter(caretaker => {
@@ -99,7 +99,7 @@ export default function AdminCaretakersPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading nurses...</p>
+          <p className="mt-4 text-gray-600">Loading care takers...</p>
         </div>
       </div>
     )
@@ -141,8 +141,8 @@ export default function AdminCaretakersPage() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Manage Nurses</h1>
-          <p className="text-gray-600 mt-2">View and manage all nurse profiles</p>
+          <h1 className="text-3xl font-bold text-gray-900">Manage Care Takers</h1>
+          <p className="text-gray-600 mt-2">View and manage all care taker profiles</p>
         </div>
 
         {/* Search and Filters */}
@@ -153,7 +153,7 @@ export default function AdminCaretakersPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
-                  placeholder="Search nurses by name or email..."
+                  placeholder="Search care takers by name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -176,12 +176,12 @@ export default function AdminCaretakersPage() {
           </div>
         </div>
 
-        {/* Nurses List */}
+        {/* Care Takers List */}
         <div className="bg-white rounded-lg shadow-sm">
-          {filteredNurses.length === 0 ? (
+          {filteredCaretakers.length === 0 ? (
             <div className="text-center py-12">
               <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No nurses found</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No care takers found</h3>
               <p className="text-gray-600">Try adjusting your search or filter criteria</p>
             </div>
           ) : (
@@ -190,7 +190,7 @@ export default function AdminCaretakersPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Nurse
+                      Care Taker
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Experience
@@ -210,17 +210,17 @@ export default function AdminCaretakersPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredNurses.map((nurse) => {
-                    const nurseName = nurse.name || 'Unknown'
-                    const initials = nurseName
+                  {filteredCaretakers.map((caretaker) => {
+                    const caretakerName = caretaker.name || 'Unknown'
+                    const initials = caretakerName
                       .split(' ')
                       .filter(Boolean)
                       .map((n: string) => n[0])
                       .join('')
-                      .toUpperCase() || 'N'
+                      .toUpperCase() || 'C'
 
                     return (
-                    <tr key={nurse.id} className="hover:bg-gray-50">
+                    <tr key={caretaker.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
@@ -229,39 +229,39 @@ export default function AdminCaretakersPage() {
                             </span>
                           </div>
                           <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{nurseName}</div>
-                            <div className="text-sm text-gray-500">{nurse.email}</div>
+                            <div className="text-sm font-medium text-gray-900">{caretakerName}</div>
+                            <div className="text-sm text-gray-500">{caretaker.email}</div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <div>{nurse.totalExperience} years total</div>
-                        <div className="text-gray-500">{nurse.kuwaitExperience} years in Kuwait</div>
+                        <div>{caretaker.totalExperience} years total</div>
+                        <div className="text-gray-500">{caretaker.kuwaitExperience} years in Kuwait</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <div>KD {nurse.partTimeSalary}/hour part-time</div>
-                        <div className="text-gray-500">KD {nurse.fullTimeSalary}/hour full-time</div>
+                        <div>KD {caretaker.partTimeSalary}/hour part-time</div>
+                        <div className="text-gray-500">KD {caretaker.fullTimeSalary}/hour full-time</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(nurse.status)}`}>
-                          {getStatusIcon(nurse.status)}
-                          <span className="ml-1">{nurse.status}</span>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(caretaker.status)}`}>
+                          {getStatusIcon(caretaker.status)}
+                          <span className="ml-1">{caretaker.status}</span>
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(nurse.submittedAt).toLocaleDateString()}
+                        {new Date(caretaker.submittedAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex items-center gap-3">
                           <Link
-                            href={`/admin/nurses/${nurse.id}`}
+                            href={`/admin/caretakers/${caretaker.id}`}
                             className="text-primary-600 hover:text-primary-900"
                           >
                             <Eye className="w-4 h-4 inline mr-1" />
                             View Details
                           </Link>
                           <button
-                            onClick={() => handleDeleteNurse(nurse.id)}
+                            onClick={() => handleDeleteCaretaker(caretaker.id)}
                             className="text-red-600 hover:text-red-800 inline-flex items-center"
                           >
                             <Trash2 className="w-4 h-4 mr-1" />
