@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyToken } from '@/lib/auth'
 
-const protectedRoutes: Record<string, Array<'USER' | 'NURSE' | 'ADMIN'>> = {
+const protectedRoutes: Record<string, Array<'USER' | 'CARETAKER' | 'ADMIN'>> = {
   '/user': ['USER'],
-  '/nurse': ['NURSE'],
+  '/caretaker': ['CARETAKER'],
   '/admin': ['ADMIN'],
 }
 
@@ -56,7 +56,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/user/:path*', '/nurse/:path*', '/admin/:path*'],
+  matcher: ['/user/:path*', '/caretaker/:path*', '/admin/:path*'],
 }
 
 
