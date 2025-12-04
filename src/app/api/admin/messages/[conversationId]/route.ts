@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
 function formatUser(user: any) {
-  const name = user?.userProfile?.name || user?.nurseProfile?.name || user?.adminProfile?.name || user?.name || user?.email || 'Unknown'
+  const name = user?.userProfile?.name || user?.caretakerProfile?.name || user?.adminProfile?.name || user?.name || user?.email || 'Unknown'
 
   return {
     id: user?.id,
@@ -55,14 +55,14 @@ export async function GET(
         sender: {
           include: {
             userProfile: true,
-            nurseProfile: true,
+            caretakerProfile: true,
             adminProfile: true,
           },
         },
         receiver: {
           include: {
             userProfile: true,
-            nurseProfile: true,
+            caretakerProfile: true,
             adminProfile: true,
           },
         },
