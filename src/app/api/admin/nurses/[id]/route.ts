@@ -42,7 +42,7 @@ export async function PUT(
     // Update care taker status
     const newStatus = action === 'approve' ? 'APPROVED' : 'REJECTED'
     
-    await prisma.caretakerProfile.update({
+    await prisma.careTakerProfile.update({
       where: { userId: caretakerId },
       data: { status: newStatus }
     })

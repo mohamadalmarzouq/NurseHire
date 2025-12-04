@@ -64,7 +64,7 @@ export async function PUT(request: NextRequest) {
 
     console.log('Updating care taker profile with data:', updateData)
 
-    const updatedProfile = await prisma.caretakerProfile.update({
+    const updatedProfile = await prisma.careTakerProfile.update({
       where: { userId: payload.id },
       data: updateData,
     })

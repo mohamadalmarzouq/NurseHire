@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
         certifications: certificationsArray
       })
 
-      profile = await prisma.caretakerProfile.create({
+      profile = await prisma.careTakerProfile.create({
         data: {
           userId: user.id,
           name,
