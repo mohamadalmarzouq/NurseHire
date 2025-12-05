@@ -54,8 +54,7 @@ export default function HomePage() {
         <div className="nh-container">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="nh-h1 mb-4 text-balance">
-              Trusted Newborn Care Takers in{' '}
-              <span className="text-gradient">Kuwait</span>
+              Communicate with Qualified care takers
             </h1>
             <p className="nh-sub mb-8 max-w-2xl mx-auto">
               Connect with qualified, vetted care takers for your newborn&apos;s care. Safe, professional, and caring service you can trust.
