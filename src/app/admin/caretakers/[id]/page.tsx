@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft, Eye, Download, Image as ImageIcon, FileText, Award, User, Mail, Phone, MapPin, Calendar } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 
-interface NurseProfile {
+interface CareTakerProfile {
   id: string
   name: string
   age: number
@@ -26,10 +26,10 @@ interface NurseProfile {
   createdAt: string
 }
 
-export default function AdminNurseDetailPage() {
+export default function AdminCaretakerDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const [nurse, setNurse] = useState<NurseProfile | null>(null)
+  const [caretaker, setCaretaker] = useState<CareTakerProfile | null>(null)
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [viewer, setViewer] = useState<{ url: string; type: 'image' | 'pdf' } | null>(null)
@@ -72,12 +72,12 @@ export default function AdminNurseDetailPage() {
 
   const loadNurse = async () => {
     try {
-      const res = await fetch(`/api/nurses/${params.id}`, { cache: 'no-store' })
+      const res = await fetch(`/api/caretakers/${params.id}`, { cache: 'no-store' })
       if (res.ok) {
         const data = await res.json()
-        if (data.nurse) {
+        if (data.caretaker) {
           // Also fetch full profile data including email
-          const adminRes = await fetch(`/api/admin/nurses`, { cache: 'no-store' })
+          const adminRes = await fetch(`/api/admin/caretakers`, { cache: 'no-store' })
           if (adminRes.ok) {
             const adminData = await adminRes.json()
             const fullNurse = adminData.nurses?.find((n: any) => n.id === params.id)

@@ -45,10 +45,10 @@ export default function MotherDashboard() {
   useEffect(() => {
     const loadRecentNurses = async () => {
       try {
-        const res = await fetch('/api/nurses?limit=3', { cache: 'no-store' })
+        const res = await fetch('/api/caretakers?limit=3', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
-          setRecentNurses(data.nurses || [])
+          setRecentNurses(data.caretakers || [])
         }
       } catch (e) {
         console.error('Error loading recent nurses:', e)

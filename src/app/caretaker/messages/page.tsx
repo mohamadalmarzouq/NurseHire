@@ -117,7 +117,7 @@ export default function NurseMessagesPage() {
               ENFAS
             </Link>
             <div className="flex items-center space-x-4">
-              <Link href="/nurse/dashboard" className="text-gray-600 hover:text-gray-900">
+              <Link href="/caretaker/dashboard" className="text-gray-600 hover:text-gray-900">
                 Dashboard
               </Link>
               <button 
@@ -136,7 +136,7 @@ export default function NurseMessagesPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <Link href="/nurse/dashboard" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
+          <Link href="/caretaker/dashboard" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
