@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "prisma generate && next build --turbopack",
-    "postbuild": "node scripts/pre-migrate-data.js && (node scripts/check-migration-status.js || prisma db push --accept-data-loss || true)",
+    "postbuild": "node scripts/pre-migrate-data.js && (node scripts/check-migration-status.js && echo '✓ Migration already complete, skipping db push' || (echo 'Running prisma db push...' && prisma db push --accept-data-loss || echo '⚠️  db push had errors, but pre-migration completed. Schema may need manual adjustment.'))",
     "premigrate": "node scripts/pre-migrate-data.js",
     "start": "next start",
     "lint": "eslint",
