@@ -29,23 +29,50 @@ async function preMigrate() {
       }
     }
 
-    // Step 2: Update all users with NURSE role to CARETAKER using raw SQL
-    // This bypasses Prisma's type checking since the enum hasn't been fully updated yet
-    const result = await prisma.$executeRawUnsafe(`
-      UPDATE users 
-      SET role = 'CARETAKER'::"UserRole"
-      WHERE role = 'NURSE'::"UserRole"
+    // Step 2: Check if NURSE enum value still exists before trying to update
+    const nurseEnumExists = await prisma.$queryRawUnsafe(`
+      SELECT EXISTS (
+        SELECT 1 FROM pg_enum 
+        WHERE enumlabel = 'NURSE' 
+        AND enumtypid = (SELECT oid FROM pg_type WHERE typname = 'UserRole')
+      )
     `)
-    console.log(`✓ Updated ${result} users from NURSE to CARETAKER`)
 
-    // Step 2: Verify no NURSE roles remain
-    const remaining = await prisma.$queryRawUnsafe(`
-      SELECT COUNT(*) as count FROM users WHERE role = 'NURSE'
-    `)
-    console.log(`✓ Remaining NURSE roles: ${remaining[0].count}`)
+    if (nurseEnumExists[0].exists) {
+      // Step 3: Update all users with NURSE role to CARETAKER using raw SQL
+      // This bypasses Prisma's type checking since the enum hasn't been fully updated yet
+      const result = await prisma.$executeRawUnsafe(`
+        UPDATE users 
+        SET role = 'CARETAKER'::"UserRole"
+        WHERE role = 'NURSE'::"UserRole"
+      `)
+      console.log(`✓ Updated ${result} users from NURSE to CARETAKER`)
 
-    if (remaining[0].count > 0) {
-      console.warn('⚠️  Warning: Some NURSE roles still exist!')
+      // Step 4: Verify no NURSE roles remain (using text comparison to avoid enum issues)
+      const remaining = await prisma.$queryRawUnsafe(`
+        SELECT COUNT(*) as count 
+        FROM users 
+        WHERE role::text = 'NURSE'
+      `)
+      console.log(`✓ Remaining NURSE roles: ${remaining[0].count}`)
+
+      if (remaining[0].count > 0) {
+        console.warn('⚠️  Warning: Some NURSE roles still exist!')
+      }
+    } else {
+      console.log('ℹ️  NURSE enum value does not exist - checking if any users need updating...')
+      // Check using text comparison to see if any users have NURSE as text
+      const remaining = await prisma.$queryRawUnsafe(`
+        SELECT COUNT(*) as count 
+        FROM users 
+        WHERE role::text = 'NURSE'
+      `)
+      if (remaining[0].count > 0) {
+        console.warn(`⚠️  Warning: ${remaining[0].count} users have NURSE role but enum value doesn't exist!`)
+        console.warn('   This may require manual database intervention.')
+      } else {
+        console.log('✓ No NURSE roles found in database')
+      }
     }
 
     // Step 3: Rename table if it exists (using raw SQL)
