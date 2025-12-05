@@ -45,7 +45,7 @@ export default function AdminCaretakerDetailPage() {
         const data = await res.json()
         if (data?.authenticated && data.user?.role === 'ADMIN') {
           setUser(data.user)
-          loadNurse()
+          loadCaretaker()
         } else {
           router.push('/auth/login')
         }
@@ -70,7 +70,7 @@ export default function AdminCaretakerDetailPage() {
     }
   }, [viewer])
 
-  const loadNurse = async () => {
+  const loadCaretaker = async () => {
     try {
       const res = await fetch(`/api/caretakers/${params.id}`, { cache: 'no-store' })
       if (res.ok) {
@@ -80,25 +80,25 @@ export default function AdminCaretakerDetailPage() {
           const adminRes = await fetch(`/api/admin/caretakers`, { cache: 'no-store' })
           if (adminRes.ok) {
             const adminData = await adminRes.json()
-            const fullNurse = adminData.nurses?.find((n: any) => n.id === params.id)
-            if (fullNurse) {
-              setNurse({
-                ...data.nurse,
-                email: fullNurse.email,
-                phone: fullNurse.phone,
-                location: fullNurse.location,
-                createdAt: fullNurse.createdAt || fullNurse.submittedAt,
+            const fullCaretaker = adminData.caretakers?.find((c: any) => c.id === params.id)
+            if (fullCaretaker) {
+              setCaretaker({
+                ...data.caretaker,
+                email: fullCaretaker.email,
+                phone: fullCaretaker.phone,
+                location: fullCaretaker.location,
+                createdAt: fullCaretaker.createdAt || fullCaretaker.submittedAt,
               })
             } else {
-              setNurse(data.nurse)
+              setCaretaker(data.caretaker)
             }
           } else {
-            setNurse(data.nurse)
+            setCaretaker(data.caretaker)
           }
         }
       }
     } catch (e) {
-      console.error('Error loading nurse:', e)
+      console.error('Error loading care taker:', e)
     } finally {
       setIsLoading(false)
     }
@@ -141,19 +141,19 @@ export default function AdminCaretakerDetailPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading nurse details...</p>
+          <p className="mt-4 text-gray-600">Loading care taker details...</p>
         </div>
       </div>
     )
   }
 
-  if (!nurse) {
+  if (!caretaker) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Nurse not found</p>
-          <Link href="/admin/nurses" className="text-primary-600 hover:text-primary-900 mt-4 inline-block">
-            ← Back to Nurses
+          <p className="text-gray-600">Care taker not found</p>
+          <Link href="/admin/caretakers" className="text-primary-600 hover:text-primary-900 mt-4 inline-block">
+            ← Back to Care Takers
           </Link>
         </div>
       </div>
@@ -167,21 +167,21 @@ export default function AdminCaretakerDetailPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/admin/nurses" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
+          <Link href="/admin/caretakers" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Nurses
+            Back to Care Takers
           </Link>
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{nurse.name}</h1>
-              <p className="text-gray-600 mt-1">Nurse Profile Details</p>
+              <h1 className="text-3xl font-bold text-gray-900">{caretaker.name}</h1>
+              <p className="text-gray-600 mt-1">Care Taker Profile Details</p>
             </div>
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-              nurse.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
-              nurse.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+              caretaker.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
+              caretaker.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
               'bg-red-100 text-red-800'
             }`}>
-              {nurse.status}
+              {caretaker.status}
             </span>
           </div>
         </div>
@@ -195,15 +195,15 @@ export default function AdminCaretakerDetailPage() {
                 <ImageIcon className="w-5 h-5 mr-2 text-primary-600" />
                 Profile Picture
               </h2>
-              {nurse.profileImageUrl ? (
+              {caretaker.profileImageUrl ? (
                 <div className="flex items-center space-x-4">
                   <div 
                     className="relative flex-shrink-0 w-20 h-20 overflow-hidden"
                     style={{ width: '80px', height: '80px', borderRadius: '50%', border: '2px solid #e5e7eb' }}
                   >
                     <img
-                      src={nurse.profileImageUrl}
-                      alt={nurse.name}
+                      src={caretaker.profileImageUrl}
+                      alt={caretaker.name}
                       className="w-full h-full object-cover"
                       style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                       onError={(e) => {
@@ -223,14 +223,14 @@ export default function AdminCaretakerDetailPage() {
                     <p className="text-sm text-gray-600 mb-2">Profile Image</p>
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => handleView(nurse.profileImageUrl!)}
+                        onClick={() => handleView(caretaker.profileImageUrl!)}
                         className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                       >
                         <Eye className="w-4 h-4 mr-1" />
                         View
                       </button>
                       <button
-                        onClick={() => handleDownload(nurse.profileImageUrl!, `profile-${nurse.name}-${getFileName(nurse.profileImageUrl!)}`)}
+                        onClick={() => handleDownload(caretaker.profileImageUrl!, `profile-${caretaker.name}-${getFileName(caretaker.profileImageUrl!)}`)}
                         className="inline-flex items-center px-3 py-1.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
                       >
                         <Download className="w-4 h-4 mr-1" />
@@ -254,13 +254,13 @@ export default function AdminCaretakerDetailPage() {
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                 <Award className="w-5 h-5 mr-2 text-primary-600" />
                 Certifications & Credentials
-                {nurse.certifications && nurse.certifications.length > 0 && (
-                  <span className="ml-2 text-sm text-gray-500">({nurse.certifications.length})</span>
+                {caretaker.certifications && caretaker.certifications.length > 0 && (
+                  <span className="ml-2 text-sm text-gray-500">({caretaker.certifications.length})</span>
                 )}
               </h2>
-              {nurse.certifications && nurse.certifications.length > 0 ? (
+              {caretaker.certifications && caretaker.certifications.length > 0 ? (
                 <div className="space-y-3">
-                  {nurse.certifications.map((certUrl, index) => {
+                  {caretaker.certifications.map((certUrl, index) => {
                     const fileName = getFileName(certUrl)
                     const isImage = /\.(jpg|jpeg|png|webp)$/i.test(fileName)
                     const isPDF = /\.pdf$/i.test(fileName)
@@ -323,10 +323,10 @@ export default function AdminCaretakerDetailPage() {
             </div>
 
             {/* About Section */}
-            {nurse.aboutMe && (
+            {caretaker.aboutMe && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">About {nurse.name}</h2>
-                <p className="text-gray-600 leading-relaxed">{nurse.aboutMe}</p>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">About {caretaker.name}</h2>
+                <p className="text-gray-600 leading-relaxed">{caretaker.aboutMe}</p>
               </div>
             )}
 
@@ -339,19 +339,19 @@ export default function AdminCaretakerDetailPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Total Experience</span>
-                      <span className="font-medium">{nurse.totalExperience} years</span>
+                      <span className="font-medium">{caretaker.totalExperience} years</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Kuwait Experience</span>
-                      <span className="font-medium">{nurse.kuwaitExperience} years</span>
+                      <span className="font-medium">{caretaker.kuwaitExperience} years</span>
                     </div>
                   </div>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-3">Languages</h3>
                   <div className="flex flex-wrap gap-2">
-                    {nurse.languages && nurse.languages.length > 0 ? (
-                      nurse.languages.map((language) => (
+                    {caretaker.languages && caretaker.languages.length > 0 ? (
+                      caretaker.languages.map((language) => (
                         <span
                           key={language}
                           className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
@@ -377,24 +377,24 @@ export default function AdminCaretakerDetailPage() {
                   <Mail className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="text-xs text-gray-500">Email</p>
-                    <p className="text-sm font-medium text-gray-900">{nurse.email}</p>
+                    <p className="text-sm font-medium text-gray-900">{caretaker.email}</p>
                   </div>
                 </div>
-                {nurse.phone && (
+                {caretaker.phone && (
                   <div className="flex items-center space-x-3">
                     <Phone className="w-5 h-5 text-gray-400" />
                     <div>
                       <p className="text-xs text-gray-500">Phone</p>
-                      <p className="text-sm font-medium text-gray-900">{nurse.phone}</p>
+                      <p className="text-sm font-medium text-gray-900">{caretaker.phone}</p>
                     </div>
                   </div>
                 )}
-                {nurse.location && (
+                {caretaker.location && (
                   <div className="flex items-center space-x-3">
                     <MapPin className="w-5 h-5 text-gray-400" />
                     <div>
                       <p className="text-xs text-gray-500">Location</p>
-                      <p className="text-sm font-medium text-gray-900">{nurse.location}</p>
+                      <p className="text-sm font-medium text-gray-900">{caretaker.location}</p>
                     </div>
                   </div>
                 )}
@@ -403,7 +403,7 @@ export default function AdminCaretakerDetailPage() {
                   <div>
                     <p className="text-xs text-gray-500">Joined</p>
                     <p className="text-sm font-medium text-gray-900">
-                      {new Date(nurse.createdAt).toLocaleDateString()}
+                      {new Date(caretaker.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -415,11 +415,11 @@ export default function AdminCaretakerDetailPage() {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Part-time Rate</span>
-                  <span className="font-medium">KD {nurse.partTimeSalary}/hour</span>
+                  <span className="font-medium">KD {caretaker.partTimeSalary}/hour</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Full-time Rate</span>
-                  <span className="font-medium">KD {nurse.fullTimeSalary}/hour</span>
+                  <span className="font-medium">KD {caretaker.fullTimeSalary}/hour</span>
                 </div>
               </div>
             </div>
