@@ -98,7 +98,32 @@ async function preMigrate() {
       console.log('ℹ️  nurse_profiles table does not exist (may already be renamed)')
     }
 
-    // Step 4: Rename column if it exists
+    // Step 4: Rename NurseStatus enum to CareTakerStatus if it exists
+    const nurseStatusEnumExists = await prisma.$queryRawUnsafe(`
+      SELECT EXISTS (
+        SELECT 1 FROM pg_type 
+        WHERE typname = 'NurseStatus'
+      )
+    `)
+    
+    if (nurseStatusEnumExists[0].exists) {
+      try {
+        await prisma.$executeRawUnsafe(`
+          ALTER TYPE "NurseStatus" RENAME TO "CareTakerStatus"
+        `)
+        console.log('✓ Renamed NurseStatus enum to CareTakerStatus')
+      } catch (error) {
+        if (error.message.includes('already exists') || error.message.includes('does not exist')) {
+          console.log('ℹ️  CareTakerStatus enum may already exist or NurseStatus does not exist')
+        } else {
+          throw error
+        }
+      }
+    } else {
+      console.log('ℹ️  NurseStatus enum does not exist (may already be renamed)')
+    }
+
+    // Step 5: Rename column if it exists
     const columnExists = await prisma.$queryRawUnsafe(`
       SELECT EXISTS (
         SELECT FROM information_schema.columns 

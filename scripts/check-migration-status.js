@@ -42,21 +42,33 @@ async function checkStatus() {
       )
     `)
 
+    // Check if NurseStatus enum still exists (should be false)
+    const nurseStatusEnumExists = await prisma.$queryRawUnsafe(`
+      SELECT EXISTS (
+        SELECT 1 FROM pg_type 
+        WHERE typname = 'NurseStatus'
+      )
+    `)
+
     // Check if no NURSE roles remain
     const nurseCount = await prisma.$queryRawUnsafe(`
-      SELECT COUNT(*) as count FROM users WHERE role = 'NURSE'
+      SELECT COUNT(*) as count FROM users WHERE role::text = 'NURSE'
     `)
 
     const isMigrated = tableExists[0].exists && 
                       columnExists[0].exists && 
                       enumExists[0].exists &&
-                      nurseCount[0].count === 0
+                      statusEnumExists[0].exists &&
+                      !nurseStatusEnumExists[0].exists &&
+                      parseInt(nurseCount[0].count) === 0
 
     if (isMigrated) {
       console.log('✓ Migration already completed - all changes applied')
       console.log('  - caretaker_profiles table exists')
       console.log('  - caretakerId column exists')
       console.log('  - CARETAKER enum value exists')
+      console.log('  - CareTakerStatus enum exists')
+      console.log('  - NurseStatus enum removed')
       console.log('  - No NURSE roles remaining')
       console.log('Skipping prisma db push to avoid conflicts')
       process.exit(0) // Success - skip db push
@@ -65,6 +77,8 @@ async function checkStatus() {
       console.log(`  - caretaker_profiles table: ${tableExists[0].exists ? '✓' : '✗'}`)
       console.log(`  - caretakerId column: ${columnExists[0].exists ? '✓' : '✗'}`)
       console.log(`  - CARETAKER enum: ${enumExists[0].exists ? '✓' : '✗'}`)
+      console.log(`  - CareTakerStatus enum: ${statusEnumExists[0].exists ? '✓' : '✗'}`)
+      console.log(`  - NurseStatus enum removed: ${!nurseStatusEnumExists[0].exists ? '✓' : '✗'}`)
       console.log(`  - NURSE roles remaining: ${nurseCount[0].count}`)
       console.log('Running prisma db push...')
       process.exit(1) // Need to run db push
