@@ -92,14 +92,18 @@ model CareTakerProfile {
   location              String?
   totalExperience       Int
   kuwaitExperience      Int
+  gccExperience         Int             @default(0)
   partTimeSalary        Int
   fullTimeSalary        Int             @default(0)
+  expectedSalary        Int?
+  maritalStatus         String?
   aboutMe               String?
   cvUrl                 String?
   profileImageUrl       String?
   certifications        String[]        @default([])
   status                CareTakerStatus @default(PENDING)
   languages             String[]        @default([])
+  skills                String[]        @default([])
   availability          String[]        @default([])
   createdAt             DateTime        @default(now())
   updatedAt             DateTime        @updatedAt

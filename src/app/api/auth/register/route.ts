@@ -89,13 +89,17 @@ export async function POST(request: NextRequest) {
           age: parseInt(otherData.age) || 25,
           totalExperience: parseInt(otherData.totalExperience) || 0,
           kuwaitExperience: parseInt(otherData.kuwaitExperience) || 0,
+          gccExperience: parseInt(otherData.gccExperience) || 0,
           partTimeSalary: parseInt(otherData.partTimeSalary) || 0,
           fullTimeSalary: parseInt(otherData.fullTimeSalary) || 0,
+          expectedSalary: otherData.expectedSalary ? parseInt(otherData.expectedSalary) : null,
+          maritalStatus: otherData.maritalStatus || null,
           aboutMe: otherData.aboutMe || null,
           cvUrl: otherData.cvUrl || null,
           profileImageUrl: otherData.profileImageUrl, // Required for care takers
           certifications: certificationsArray,
           languages: otherData.languages || [],
+          skills: otherData.skills || [],
           availability: otherData.availability || [],
         },
       })

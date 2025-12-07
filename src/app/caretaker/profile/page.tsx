@@ -13,18 +13,23 @@ export default function CareTakerProfilePage() {
     age: '',
     totalExperience: '',
     kuwaitExperience: '',
+    gccExperience: '',
     partTimeSalary: '',
     fullTimeSalary: '',
+    expectedSalary: '',
+    maritalStatus: '',
     aboutMe: '',
     phone: '',
     location: '',
     languages: [] as string[],
+    skills: [] as string[],
     availability: [] as string[],
   })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
   const languageOptions = ['English', 'Arabic', 'Hindi', 'Urdu', 'Filipino', 'Bengali', 'Malayalam', 'Tamil']
+  const skillOptions = ['Driver', 'Baby Care', 'Elder Care', 'Trained Nurse', 'Housekeeper', 'Pet care', 'Trained Nanny']
   const availabilityOptions = ['Part-time', 'Night Shift', 'Emergency', 'Weekends', 'Full-time']
 
   useEffect(() => {
@@ -47,12 +52,16 @@ export default function CareTakerProfilePage() {
               age: profile.age !== undefined && profile.age !== null ? String(profile.age) : '',
               totalExperience: profile.totalExperience !== undefined && profile.totalExperience !== null ? String(profile.totalExperience) : '',
               kuwaitExperience: profile.kuwaitExperience !== undefined && profile.kuwaitExperience !== null ? String(profile.kuwaitExperience) : '',
+              gccExperience: profile.gccExperience !== undefined && profile.gccExperience !== null ? String(profile.gccExperience) : '',
               partTimeSalary: profile.partTimeSalary !== undefined && profile.partTimeSalary !== null ? String(profile.partTimeSalary) : '',
               fullTimeSalary: profile.fullTimeSalary !== undefined && profile.fullTimeSalary !== null ? String(profile.fullTimeSalary) : '',
+              expectedSalary: profile.expectedSalary !== undefined && profile.expectedSalary !== null ? String(profile.expectedSalary) : '',
+              maritalStatus: profile.maritalStatus || '',
               aboutMe: profile.aboutMe || '',
               phone: profile.phone || '',
               location: profile.location || '',
               languages: profile.languages || [],
+              skills: profile.skills || [],
               availability: profile.availability || [],
             })
           }
@@ -115,7 +124,7 @@ export default function CareTakerProfilePage() {
         console.log('Reloaded user data after update:', userData)
         if (userData?.authenticated) {
           setUser(userData.user)
-          const profile = userData.user.nurseProfile || userData.user.profile
+          const profile = userData.user.caretakerProfile || userData.user.profile
           console.log('Profile data after reload:', profile)
           if (profile) {
             setFormData({
@@ -123,12 +132,16 @@ export default function CareTakerProfilePage() {
               age: profile.age !== undefined && profile.age !== null ? String(profile.age) : '',
               totalExperience: profile.totalExperience !== undefined && profile.totalExperience !== null ? String(profile.totalExperience) : '',
               kuwaitExperience: profile.kuwaitExperience !== undefined && profile.kuwaitExperience !== null ? String(profile.kuwaitExperience) : '',
+              gccExperience: profile.gccExperience !== undefined && profile.gccExperience !== null ? String(profile.gccExperience) : '',
               partTimeSalary: profile.partTimeSalary !== undefined && profile.partTimeSalary !== null ? String(profile.partTimeSalary) : '',
               fullTimeSalary: profile.fullTimeSalary !== undefined && profile.fullTimeSalary !== null ? String(profile.fullTimeSalary) : '',
+              expectedSalary: profile.expectedSalary !== undefined && profile.expectedSalary !== null ? String(profile.expectedSalary) : '',
+              maritalStatus: profile.maritalStatus || '',
               aboutMe: profile.aboutMe || '',
               phone: profile.phone || '',
               location: profile.location || '',
               languages: profile.languages || [],
+              skills: profile.skills || [],
               availability: profile.availability || [],
             })
           }
@@ -365,6 +378,20 @@ export default function CareTakerProfilePage() {
                     <p className="mt-1 text-gray-900">{profile?.kuwaitExperience || 'Not set'}</p>
                   )}
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">GCC Experience (years)</label>
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      name="gccExperience"
+                      value={formData.gccExperience}
+                      onChange={handleChange}
+                      className="mt-1 block w-full nh-input"
+                    />
+                  ) : (
+                    <p className="mt-1 text-gray-900">{profile?.gccExperience || 'Not set'}</p>
+                  )}
+                </div>
               </div>
             </div>
             <div>
@@ -398,6 +425,39 @@ export default function CareTakerProfilePage() {
                     <p className="mt-1 text-gray-900">KD {profile?.fullTimeSalary || 'Not set'}</p>
                   )}
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Expected Salary</label>
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      name="expectedSalary"
+                      value={formData.expectedSalary}
+                      onChange={handleChange}
+                      className="mt-1 block w-full nh-input"
+                    />
+                  ) : (
+                    <p className="mt-1 text-gray-900">KD {profile?.expectedSalary || 'Not set'}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Marital Status</label>
+                  {isEditing ? (
+                    <select
+                      name="maritalStatus"
+                      value={formData.maritalStatus}
+                      onChange={handleChange}
+                      className="mt-1 block w-full nh-input"
+                    >
+                      <option value="">Select status</option>
+                      <option value="Single">Single</option>
+                      <option value="Married">Married</option>
+                      <option value="Divorced">Divorced</option>
+                      <option value="Widowed">Widowed</option>
+                    </select>
+                  ) : (
+                    <p className="mt-1 text-gray-900">{profile?.maritalStatus || 'Not set'}</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -424,6 +484,31 @@ export default function CareTakerProfilePage() {
               </div>
             ) : (
               <p className="mt-1 text-gray-900">{profile?.languages?.join(', ') || 'Not set'}</p>
+            )}
+          </div>
+
+          {/* Skills */}
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Skills</h2>
+            {isEditing ? (
+              <div className="flex flex-wrap gap-2">
+                {skillOptions.map(skill => (
+                  <button
+                    key={skill}
+                    type="button"
+                    onClick={() => handleMultiSelectChange('skills', skill)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      formData.skills.includes(skill)
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {skill}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-1 text-gray-900">{profile?.skills?.join(', ') || 'Not set'}</p>
             )}
           </div>
 

@@ -22,12 +22,16 @@ export async function PUT(request: NextRequest) {
       age,
       totalExperience,
       kuwaitExperience,
+      gccExperience,
       partTimeSalary,
       fullTimeSalary,
+      expectedSalary,
+      maritalStatus,
       aboutMe,
       phone,
       location,
       languages,
+      skills,
       availability,
     } = body
 
@@ -38,6 +42,7 @@ export async function PUT(request: NextRequest) {
       phone: phone || null,
       location: location || null,
       languages: Array.isArray(languages) ? languages : [],
+      skills: Array.isArray(skills) ? skills : [],
       availability: Array.isArray(availability) ? availability : [],
     }
 
@@ -56,11 +61,25 @@ export async function PUT(request: NextRequest) {
       return parsed
     }
     
+    const parseToIntOrNull = (value: any, fieldName: string): number | null => {
+      if (value === undefined || value === null || value === '') {
+        return null
+      }
+      const parsed = parseInt(value.toString(), 10)
+      if (isNaN(parsed)) {
+        return null
+      }
+      return parsed
+    }
+    
     updateData.age = parseToInt(age, 'age')
     updateData.totalExperience = parseToInt(totalExperience, 'totalExperience')
     updateData.kuwaitExperience = parseToInt(kuwaitExperience, 'kuwaitExperience')
+    updateData.gccExperience = parseToInt(gccExperience, 'gccExperience')
     updateData.partTimeSalary = parseToInt(partTimeSalary, 'partTimeSalary')
     updateData.fullTimeSalary = parseToInt(fullTimeSalary, 'fullTimeSalary')
+    updateData.expectedSalary = parseToIntOrNull(expectedSalary, 'expectedSalary')
+    updateData.maritalStatus = maritalStatus || null
 
     console.log('Updating care taker profile with data:', updateData)
 
