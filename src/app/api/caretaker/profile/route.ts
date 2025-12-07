@@ -83,9 +83,22 @@ export async function PUT(request: NextRequest) {
 
     console.log('Updating care taker profile with data:', updateData)
 
-    const updatedProfile = await prisma.careTakerProfile.update({
+    // Use upsert to create profile if it doesn't exist, or update if it does
+    const updatedProfile = await prisma.careTakerProfile.upsert({
       where: { userId: payload.id },
-      data: updateData,
+      update: updateData,
+      create: {
+        userId: payload.id,
+        ...updateData,
+        // Set required fields with defaults if not provided
+        age: updateData.age || 25,
+        totalExperience: updateData.totalExperience || 0,
+        kuwaitExperience: updateData.kuwaitExperience || 0,
+        gccExperience: updateData.gccExperience || 0,
+        partTimeSalary: updateData.partTimeSalary || 0,
+        fullTimeSalary: updateData.fullTimeSalary || 0,
+        profileImageUrl: updateData.profileImageUrl || null,
+      },
     })
 
     console.log('Care taker profile updated successfully:', updatedProfile)
