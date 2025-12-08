@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Star, MapPin, Clock, Heart, User, MessageCircle, Calendar, Shield, Award, CheckCircle, X, Phone } from 'lucide-react'
+import SubscriptionPrompt from '@/components/SubscriptionPrompt'
 
 interface CareTaker {
   id: string
@@ -26,6 +27,7 @@ interface CareTaker {
   skills?: string[]
   availability: string[]
   certifications?: string[]
+  hasActiveSubscription?: boolean
 }
 
 interface Review {
@@ -258,11 +260,14 @@ export default function CareTakerProfilePage() {
 
       if (res.ok) {
         // Redirect to messages page
-        window.location.href = '/mother/messages'
+        window.location.href = '/user/messages'
       } else {
         const error = await res.json()
         if (res.status === 401) {
           alert('Please sign in to message a care taker.')
+        } else if (res.status === 403 && error.requiresSubscription) {
+          alert('Subscription required: ' + (error.message || 'You need an active subscription to message care takers.'))
+          window.location.href = '/user/subscription'
         } else if (res.status === 403) {
           alert('Only mothers can message care takers. Please sign in with a mother account.')
         } else {
@@ -427,10 +432,20 @@ export default function CareTakerProfilePage() {
                   )}
                 </>
               )}
-              <button className="btn-secondary">
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Message
-              </button>
+              {isAuthenticated && user?.role === 'USER' && !caretaker.hasActiveSubscription ? (
+                <Link href="/user/subscription" className="btn-secondary">
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Subscribe to Message
+                </Link>
+              ) : (
+                <Link 
+                  href={isAuthenticated ? `/user/messages?userId=${caretaker.id}` : '/auth/login'}
+                  className="btn-secondary"
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Message
+                </Link>
+              )}
               <button 
                 onClick={() => setShowRequestModal(true)}
                 className="btn-primary"
@@ -735,7 +750,12 @@ export default function CareTakerProfilePage() {
                       <span className="font-medium text-neutral-900">{caretaker.maritalStatus}</span>
                     </div>
                   )}
-                  {caretaker.phone && (
+                  {/* Phone - show subscription prompt if no subscription */}
+                  {isAuthenticated && user?.role === 'USER' && !caretaker.hasActiveSubscription ? (
+                    <div className="mt-4">
+                      <SubscriptionPrompt type="phone" />
+                    </div>
+                  ) : caretaker.phone ? (
                     <div className="flex items-center text-neutral-600">
                       <Phone className="w-4 h-4 mr-2 text-gray-500" />
                       <span className="text-neutral-600">Phone:</span>
@@ -743,7 +763,7 @@ export default function CareTakerProfilePage() {
                         {caretaker.phone}
                       </a>
                     </div>
-                  )}
+                  ) : null}
                   {caretaker.location && (
                     <div className="flex items-center text-neutral-600">
                       <MapPin className="w-4 h-4 mr-2 text-gray-500" />
@@ -802,6 +822,10 @@ export default function CareTakerProfilePage() {
                     <MessageCircle className="w-4 h-4 mr-2" />
                     Only Mothers Can Message
                   </button>
+                </div>
+              ) : !caretaker.hasActiveSubscription ? (
+                <div className="space-y-3">
+                  <SubscriptionPrompt type="message" className="mb-4" />
                 </div>
               ) : (
                 <div className="space-y-3">

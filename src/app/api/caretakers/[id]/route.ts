@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { verifyToken } from '@/lib/auth'
+import { hasActiveSubscription } from '@/lib/subscription'
 
 export async function GET(
   request: NextRequest,
@@ -7,6 +9,16 @@ export async function GET(
 ) {
   try {
     const { id: caretakerId } = await params
+
+    // Check if requesting user has active subscription
+    let hasSubscription = false
+    const token = request.cookies.get('auth-token')?.value
+    if (token) {
+      const payload = await verifyToken(token)
+      if (payload && payload.role === 'USER') {
+        hasSubscription = await hasActiveSubscription(payload.id)
+      }
+    }
 
     // Find user with care taker profile
     const user = await prisma.user.findUnique({
@@ -66,7 +78,8 @@ export async function GET(
       id: user.id,
       name: user.caretakerProfile.name,
       age: user.caretakerProfile.age,
-      phone: user.caretakerProfile.phone,
+      // Only include phone if user has active subscription
+      phone: hasSubscription ? user.caretakerProfile.phone : null,
       location: user.caretakerProfile.location,
       totalExperience: user.caretakerProfile.totalExperience,
       kuwaitExperience: user.caretakerProfile.kuwaitExperience,
@@ -84,6 +97,8 @@ export async function GET(
       availability: user.caretakerProfile.availability || [],
       status: user.caretakerProfile.status,
       certifications: user.caretakerProfile.certifications || [],
+      // Include subscription status for frontend to show prompts
+      hasActiveSubscription: hasSubscription,
     }
 
     return NextResponse.json({

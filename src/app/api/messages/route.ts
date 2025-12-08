@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
+import { hasActiveSubscription } from '@/lib/subscription'
 
 export async function GET(request: NextRequest) {
   try {
@@ -120,6 +121,21 @@ export async function POST(request: NextRequest) {
 
     if (!receiver) {
       return NextResponse.json({ error: 'Receiver not found' }, { status: 404 })
+    }
+
+    // Check subscription for USER role sending messages to CARETAKER
+    if (payload.role === 'USER' && receiver.role === 'CARETAKER') {
+      const hasSubscription = await hasActiveSubscription(payload.id)
+      if (!hasSubscription) {
+        return NextResponse.json(
+          { 
+            error: 'Subscription required',
+            message: 'You need an active subscription to message care takers. Please subscribe to continue.',
+            requiresSubscription: true
+          },
+          { status: 403 }
+        )
+      }
     }
 
     // Create message

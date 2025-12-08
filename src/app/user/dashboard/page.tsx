@@ -10,6 +10,7 @@ export default function UserDashboard() {
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [recentNurses, setRecentNurses] = useState<any[]>([])
+  const [subscription, setSubscription] = useState<any>(null)
 
   useEffect(() => {
     const loadUser = async () => {
@@ -29,6 +30,8 @@ export default function UserDashboard() {
         
         if (data?.authenticated) {
           setUser(data.user)
+          // Load subscription status
+          loadSubscription()
         } else {
           console.log('Not authenticated, redirecting to login')
           window.location.href = '/auth/login'
@@ -42,6 +45,18 @@ export default function UserDashboard() {
     }
     loadUser()
   }, [])
+
+  const loadSubscription = async () => {
+    try {
+      const res = await fetch('/api/user/subscription', { cache: 'no-store' })
+      if (res.ok) {
+        const data = await res.json()
+        setSubscription(data.subscription)
+      }
+    } catch (e) {
+      console.error('Error loading subscription:', e)
+    }
+  }
 
   useEffect(() => {
     const loadRecentNurses = async () => {
@@ -89,10 +104,24 @@ export default function UserDashboard() {
 
         {/* Welcome Section */}
         <div className="nh-card mb-8">
-          <div className="mb-2">
-            <h1 className="nh-h2">Welcome, {user?.profile?.name || 'User'}</h1>
+          <div className="mb-2 flex items-center justify-between">
+            <div>
+              <h1 className="nh-h2">Welcome, {user?.profile?.name || 'User'}</h1>
+              <p className="nh-sub">Find trusted care takers for your newborn care needs in Kuwait.</p>
+            </div>
+            {subscription && (
+              <Link
+                href="/user/subscription"
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  subscription.isActive
+                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                }`}
+              >
+                {subscription.isActive ? '✓ Active Subscription' : 'View Subscription'}
+              </Link>
+            )}
           </div>
-          <p className="nh-sub">Find trusted care takers for your newborn care needs in Kuwait.</p>
         </div>
 
         {/* Quick Actions */}
