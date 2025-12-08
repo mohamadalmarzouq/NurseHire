@@ -4,19 +4,23 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Star, User } from 'lucide-react'
 
-interface Nurse {
+interface CareTaker {
   id: string
   name: string
   age: number
   totalExperience: number
   kuwaitExperience: number
+  gccExperience?: number
   partTimeSalary: number
   fullTimeSalary: number
+  expectedSalary?: number | null
+  maritalStatus?: string | null
   aboutMe: string
   profileImageUrl?: string
   averageRating: number
   reviewCount: number
   languages: string[]
+  skills?: string[]
   availability: string[]
 }
 
@@ -37,15 +41,15 @@ interface Review {
   averageRating: number
 }
 
-export default function NursePublicProfilePage() {
-  const [nurse, setNurse] = useState<Nurse | null>(null)
+export default function CareTakerPublicProfilePage() {
+  const [caretaker, setCaretaker] = useState<CareTaker | null>(null)
   const [reviews, setReviews] = useState<Review[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const loadNurseProfile = async () => {
+    const loadCaretakerProfile = async () => {
       try {
-        // Get current user's nurse profile
+        // Get current user's care taker profile
         const res = await fetch('/api/auth/me', { cache: 'no-store' })
         if (!res.ok) {
           window.location.href = '/auth/login'
@@ -53,38 +57,42 @@ export default function NursePublicProfilePage() {
         }
         const data = await res.json()
         console.log('Auth data:', data) // Debug log
-        if (data?.authenticated && data.user?.profile) {
-          const profile = data.user.profile
+        if (data?.authenticated && data.user?.caretakerProfile) {
+          const profile = data.user.caretakerProfile
           console.log('Profile data:', profile) // Debug log
-          setNurse({
+          setCaretaker({
             id: data.user.id,
             name: profile.name,
             age: profile.age,
             totalExperience: profile.totalExperience,
             kuwaitExperience: profile.kuwaitExperience,
+            gccExperience: profile.gccExperience,
             partTimeSalary: profile.partTimeSalary,
             fullTimeSalary: profile.fullTimeSalary,
+            expectedSalary: profile.expectedSalary,
+            maritalStatus: profile.maritalStatus,
             aboutMe: profile.aboutMe || 'No description provided',
             profileImageUrl: profile.profileImageUrl,
             averageRating: 0, // Will be calculated from reviews later
             reviewCount: 0, // Will be calculated from reviews later
             languages: profile.languages || [],
+            skills: profile.skills || [],
             availability: profile.availability || [],
           })
           
-          // Load reviews for this nurse
+          // Load reviews for this care taker
           const reviewsRes = await fetch('/api/reviews?type=received', { cache: 'no-store' })
           if (reviewsRes.ok) {
             const reviewsData = await reviewsRes.json()
             setReviews(reviewsData.reviews || [])
             
-            // Update nurse with actual review data
+            // Update care taker with actual review data
             const reviewCount = reviewsData.reviews?.length || 0
             const averageRating = reviewCount > 0 
               ? reviewsData.reviews.reduce((sum: number, review: Review) => sum + review.averageRating, 0) / reviewCount
               : 0
             
-            setNurse(prev => prev ? {
+            setCaretaker(prev => prev ? {
               ...prev,
               reviewCount,
               averageRating
@@ -94,16 +102,16 @@ export default function NursePublicProfilePage() {
           console.log('No profile found or not authenticated')
           console.log('Authenticated:', data?.authenticated)
           console.log('User:', data?.user)
-          console.log('Profile:', data?.user?.profile)
+          console.log('Profile:', data?.user?.caretakerProfile)
         }
       } catch (e) {
-        console.error('Error loading nurse profile:', e)
+        console.error('Error loading care taker profile:', e)
         window.location.href = '/auth/login'
       } finally {
         setIsLoading(false)
       }
     }
-    loadNurseProfile()
+    loadCaretakerProfile()
   }, [])
 
   const renderStars = (rating: number) => {
@@ -128,7 +136,7 @@ export default function NursePublicProfilePage() {
     )
   }
 
-  if (!nurse) {
+  if (!caretaker) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
@@ -177,10 +185,10 @@ export default function NursePublicProfilePage() {
             <div className="nh-card">
               <div className="flex items-start space-x-6">
                 <div className="w-24 h-24 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
-                  {nurse.profileImageUrl ? (
+                  {caretaker.profileImageUrl ? (
                     <img
-                      src={nurse.profileImageUrl}
-                      alt={nurse.name}
+                      src={caretaker.profileImageUrl}
+                      alt={caretaker.name}
                       className="w-24 h-24 rounded-full object-cover"
                     />
                   ) : (
@@ -188,16 +196,16 @@ export default function NursePublicProfilePage() {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h1 className="nh-h2 mb-2">{nurse.name}</h1>
+                  <h1 className="nh-h2 mb-2">{caretaker.name}</h1>
                   <p className="text-lg text-neutral-600 mb-4">
-                    {nurse.age} years old • {nurse.totalExperience} years experience
+                    {caretaker.age} years old • {caretaker.totalExperience} years experience
                   </p>
                   <div className="flex items-center space-x-1 mb-4">
-                    {renderStars(nurse.averageRating)}
-                    <span className="nh-badge nh-badge--info ml-2">{nurse.averageRating}/5 • {nurse.reviewCount} reviews</span>
+                    {renderStars(caretaker.averageRating)}
+                    <span className="nh-badge nh-badge--info ml-2">{caretaker.averageRating}/5 • {caretaker.reviewCount} reviews</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {nurse.availability.map((avail) => (
+                    {caretaker.availability.map((avail) => (
                       <span
                         key={avail}
                         className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium"
@@ -212,8 +220,8 @@ export default function NursePublicProfilePage() {
 
             {/* About Section */}
             <div className="nh-card">
-              <h2 className="text-xl font-semibold text-neutral-900 mb-4">About {nurse.name}</h2>
-              <p className="text-neutral-600 leading-relaxed">{nurse.aboutMe}</p>
+              <h2 className="text-xl font-semibold text-neutral-900 mb-4">About {caretaker.name}</h2>
+              <p className="text-neutral-600 leading-relaxed">{caretaker.aboutMe}</p>
             </div>
 
             {/* Experience & Skills */}
@@ -225,19 +233,25 @@ export default function NursePublicProfilePage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-neutral-600">Total Experience</span>
-                      <span className="font-medium">{nurse.totalExperience} years</span>
+                      <span className="font-medium">{caretaker.totalExperience} years</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-neutral-600">Kuwait Experience</span>
-                      <span className="font-medium">{nurse.kuwaitExperience} years</span>
+                      <span className="font-medium">{caretaker.kuwaitExperience} years</span>
                     </div>
+                    {caretaker.gccExperience !== undefined && caretaker.gccExperience > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-neutral-600">GCC Experience</span>
+                        <span className="font-medium">{caretaker.gccExperience} years</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div>
                   <h3 className="font-semibold text-neutral-900 mb-3">Languages</h3>
                   <div className="flex flex-wrap gap-2">
-                    {nurse.languages.length > 0 ? (
-                      nurse.languages.map((language) => (
+                    {caretaker.languages.length > 0 ? (
+                      caretaker.languages.map((language) => (
                         <span
                           key={language}
                           className="px-3 py-1 bg-secondary-100 text-secondary-700 rounded-full text-sm"
@@ -253,9 +267,26 @@ export default function NursePublicProfilePage() {
               </div>
             </div>
 
+            {/* Skills Section */}
+            {caretaker.skills && caretaker.skills.length > 0 && (
+              <div className="nh-card">
+                <h2 className="text-xl font-semibold text-neutral-900 mb-4">Skills</h2>
+                <div className="flex flex-wrap gap-2">
+                  {caretaker.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Reviews Section */}
             <div className="nh-card">
-              <h2 className="text-xl font-semibold text-neutral-900 mb-6">Reviews ({nurse.reviewCount})</h2>
+              <h2 className="text-xl font-semibold text-neutral-900 mb-6">Reviews ({caretaker.reviewCount})</h2>
               {reviews.length === 0 ? (
                 <p className="text-neutral-500 text-center py-8">No reviews yet</p>
               ) : (
@@ -347,16 +378,43 @@ export default function NursePublicProfilePage() {
                 <div className="flex justify-between items-center">
                   <span className="text-neutral-600">Part-time Rate</span>
                   <span className="text-xl font-bold text-primary-600">
-                    {nurse.partTimeSalary} KD/hour
+                    {caretaker.partTimeSalary} KD/hour
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-neutral-600">Full-time Rate</span>
                   <span className="text-xl font-bold text-primary-600">
-                    {nurse.fullTimeSalary} KD/hour
+                    {caretaker.fullTimeSalary} KD/hour
                   </span>
                 </div>
+                {caretaker.expectedSalary && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-neutral-600">Expected Salary</span>
+                    <span className="text-xl font-bold text-primary-600">
+                      {caretaker.expectedSalary} KD/hour
+                    </span>
+                  </div>
+                )}
               </div>
+
+              {/* Personal Information */}
+              {(caretaker.maritalStatus || caretaker.age) && (
+                <div className="space-y-4 mb-6 pt-6 border-t border-neutral-200">
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">Personal Information</h3>
+                  {caretaker.age && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-neutral-600">Age</span>
+                      <span className="font-medium text-neutral-900">{caretaker.age} years</span>
+                    </div>
+                  )}
+                  {caretaker.maritalStatus && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-neutral-600">Marital Status</span>
+                      <span className="font-medium text-neutral-900">{caretaker.maritalStatus}</span>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="space-y-4 mb-6">
                 <div className="flex items-center text-sm text-neutral-600">
@@ -369,7 +427,7 @@ export default function NursePublicProfilePage() {
                 </div>
                 <div className="flex items-center text-sm text-neutral-600">
                   <span className="w-4 h-4 mr-2 text-red-500">♥</span>
-                  {nurse.reviewCount} Reviews
+                  {caretaker.reviewCount} Reviews
                 </div>
               </div>
 
