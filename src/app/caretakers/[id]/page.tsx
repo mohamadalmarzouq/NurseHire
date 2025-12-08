@@ -11,13 +11,17 @@ interface CareTaker {
   age: number
   totalExperience: number
   kuwaitExperience: number
+  gccExperience?: number
   partTimeSalary: number
   fullTimeSalary: number
+  expectedSalary?: number | null
+  maritalStatus?: string | null
   aboutMe: string
   profileImageUrl?: string
   averageRating: number
   reviewCount: number
   languages: string[]
+  skills?: string[]
   availability: string[]
   certifications?: string[]
 }
@@ -532,6 +536,12 @@ export default function CareTakerProfilePage() {
                       <span className="text-neutral-600">Kuwait Experience</span>
                       <span className="font-medium">{caretaker.kuwaitExperience} years</span>
                     </div>
+                    {caretaker.gccExperience !== undefined && caretaker.gccExperience > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-neutral-600">GCC Experience</span>
+                        <span className="font-medium">{caretaker.gccExperience} years</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div>
@@ -553,6 +563,23 @@ export default function CareTakerProfilePage() {
                 </div>
               </div>
             </div>
+
+            {/* Skills Section */}
+            {caretaker.skills && caretaker.skills.length > 0 && (
+              <div className="card">
+                <h2 className="text-xl font-semibold text-neutral-900 mb-4">Skills</h2>
+                <div className="flex flex-wrap gap-2">
+                  {caretaker.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Certifications Section */}
             {caretaker.certifications && caretaker.certifications.length > 0 && (
@@ -680,7 +707,34 @@ export default function CareTakerProfilePage() {
                     {caretaker.fullTimeSalary} KD/hour
                   </span>
                 </div>
+                {caretaker.expectedSalary && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-neutral-600">Expected Salary</span>
+                    <span className="text-xl font-bold text-primary-600">
+                      {caretaker.expectedSalary} KD/hour
+                    </span>
+                  </div>
+                )}
               </div>
+
+              {/* Personal Information */}
+              {(caretaker.maritalStatus || caretaker.age) && (
+                <div className="space-y-4 mb-6 pt-6 border-t border-neutral-200">
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">Personal Information</h3>
+                  {caretaker.age && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-neutral-600">Age</span>
+                      <span className="font-medium text-neutral-900">{caretaker.age} years</span>
+                    </div>
+                  )}
+                  {caretaker.maritalStatus && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-neutral-600">Marital Status</span>
+                      <span className="font-medium text-neutral-900">{caretaker.maritalStatus}</span>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="space-y-4 mb-6">
                 <div className="flex items-center text-sm text-neutral-600">
