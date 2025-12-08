@@ -103,6 +103,7 @@ export async function GET(request: NextRequest) {
         aboutMe: caretaker.caretakerProfile?.aboutMe || '',
         profileImageUrl: caretaker.caretakerProfile?.profileImageUrl,
         languages: caretaker.caretakerProfile?.languages || [],
+        skills: caretaker.caretakerProfile?.skills || [],
         availability: caretaker.caretakerProfile?.availability || [],
         averageRating: ratingData.count > 0 ? ratingData.sum / ratingData.count : 0,
         reviewCount: ratingData.count,

@@ -18,6 +18,7 @@ interface CareTaker {
   averageRating: number
   reviewCount: number
   languages?: string[]
+  skills?: string[]
 }
 
 export default function CareTakersPage() {
@@ -28,6 +29,7 @@ export default function CareTakersPage() {
     minExperience: '',
     maxSalary: '',
     availability: '',
+    skill: '',
   })
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
@@ -96,6 +98,13 @@ export default function CareTakersPage() {
     // Salary filter
     if (filters.maxSalary) {
       filtered = filtered.filter(caretaker => caretaker.partTimeSalary <= parseInt(filters.maxSalary))
+    }
+
+    // Skills filter
+    if (filters.skill) {
+      filtered = filtered.filter(caretaker => 
+        caretaker.skills && caretaker.skills.includes(filters.skill)
+      )
     }
 
     setFilteredCaretakers(filtered)
@@ -216,11 +225,30 @@ export default function CareTakersPage() {
                 </select>
               </div>
 
+              {/* Skills Filter */}
+              <div className="mb-6">
+                <label className="label">Skills</label>
+                <select
+                  value={filters.skill}
+                  onChange={(e) => setFilters({ ...filters, skill: e.target.value })}
+                  className="nh-input"
+                >
+                  <option value="">Any</option>
+                  <option value="Driver">Driver</option>
+                  <option value="Baby Care">Baby Care</option>
+                  <option value="Elder Care">Elder Care</option>
+                  <option value="Trained Nurse">Trained Nurse</option>
+                  <option value="Housekeeper">Housekeeper</option>
+                  <option value="Pet care">Pet care</option>
+                  <option value="Trained Nanny">Trained Nanny</option>
+                </select>
+              </div>
+
               {/* Clear Filters */}
               <button
                 onClick={() => {
                   setSearchTerm('')
-                  setFilters({ minExperience: '', maxSalary: '', availability: '' })
+                  setFilters({ minExperience: '', maxSalary: '', availability: '', skill: '' })
                 }}
                 className="w-full nh-btn nh-btn--ghost"
               >
