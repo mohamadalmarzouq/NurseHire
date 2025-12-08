@@ -66,6 +66,8 @@ export async function GET(
       id: user.id,
       name: user.caretakerProfile.name,
       age: user.caretakerProfile.age,
+      phone: user.caretakerProfile.phone,
+      location: user.caretakerProfile.location,
       totalExperience: user.caretakerProfile.totalExperience,
       kuwaitExperience: user.caretakerProfile.kuwaitExperience,
       gccExperience: user.caretakerProfile.gccExperience || 0,

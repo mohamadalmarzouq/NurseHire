@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Star, MapPin, Clock, Heart, User, MessageCircle, Calendar, Shield, Award, CheckCircle, X } from 'lucide-react'
+import { ArrowLeft, Star, MapPin, Clock, Heart, User, MessageCircle, Calendar, Shield, Award, CheckCircle, X, Phone } from 'lucide-react'
 
 interface CareTaker {
   id: string
   name: string
   age: number
+  phone?: string | null
+  location?: string | null
   totalExperience: number
   kuwaitExperience: number
   gccExperience?: number
@@ -718,7 +720,7 @@ export default function CareTakerProfilePage() {
               </div>
 
               {/* Personal Information */}
-              {(caretaker.maritalStatus || caretaker.age) && (
+              {(caretaker.maritalStatus || caretaker.age || caretaker.phone || caretaker.location) && (
                 <div className="space-y-4 mb-6 pt-6 border-t border-neutral-200">
                   <h3 className="text-lg font-semibold text-neutral-900 mb-4">Personal Information</h3>
                   {caretaker.age && (
@@ -731,6 +733,22 @@ export default function CareTakerProfilePage() {
                     <div className="flex justify-between items-center">
                       <span className="text-neutral-600">Marital Status</span>
                       <span className="font-medium text-neutral-900">{caretaker.maritalStatus}</span>
+                    </div>
+                  )}
+                  {caretaker.phone && (
+                    <div className="flex items-center text-neutral-600">
+                      <Phone className="w-4 h-4 mr-2 text-gray-500" />
+                      <span className="text-neutral-600">Phone:</span>
+                      <a href={`tel:${caretaker.phone}`} className="ml-2 font-medium text-primary-600 hover:text-primary-700">
+                        {caretaker.phone}
+                      </a>
+                    </div>
+                  )}
+                  {caretaker.location && (
+                    <div className="flex items-center text-neutral-600">
+                      <MapPin className="w-4 h-4 mr-2 text-gray-500" />
+                      <span className="text-neutral-600">Location:</span>
+                      <span className="ml-2 font-medium text-neutral-900">{caretaker.location}</span>
                     </div>
                   )}
                 </div>
