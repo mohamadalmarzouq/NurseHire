@@ -275,7 +275,7 @@ export default function CareTakersPage() {
                 <button
                   onClick={() => {
                     setSearchTerm('')
-                    setFilters({ minExperience: '', maxSalary: '', availability: '' })
+                    setFilters({ minExperience: '', maxSalary: '', availability: '', skill: '' })
                   }}
                   className="btn-primary"
                 >
