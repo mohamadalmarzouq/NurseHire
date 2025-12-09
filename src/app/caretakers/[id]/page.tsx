@@ -862,18 +862,11 @@ export default function CareTakerProfilePage() {
               {!isAuthenticated ? (
                 <div className="space-y-3">
                   <Link 
-                    href="/auth/login"
-                    className="w-full btn-primary mb-4 block text-center"
-                  >
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Sign In to Book
-                  </Link>
-                  <Link 
-                    href="/auth/login"
+                    href="/auth/register"
                     className="w-full btn-secondary block text-center"
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    Sign In to Message
+                    Sign Up to Message
                   </Link>
                 </div>
               ) : user?.role !== 'USER' ? (
