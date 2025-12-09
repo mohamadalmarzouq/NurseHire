@@ -103,26 +103,26 @@ export default function UserDashboard() {
         </div>
 
         {/* Welcome Section */}
-        <div className="nh-card mb-8">
-          <div className="mb-2 flex items-center justify-between">
-            <div>
-              <h1 className="nh-h2">Welcome, {user?.profile?.name || 'User'}</h1>
-              <p className="nh-sub">Find trusted caretakers in Kuwait for newborn, child, elderly, and home care.</p>
-            </div>
-            {subscription && (
-              <Link
-                href="/user/subscription"
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  subscription.isActive
-                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                }`}
-              >
-                {subscription.isActive ? '✓ Active Subscription' : 'View Subscription'}
-              </Link>
-            )}
-          </div>
-        </div>
+                <div className="nh-card mb-8">
+                  <div className="mb-2 flex items-center justify-between">
+                    <div>
+                      <h1 className="nh-h2">{t('user.dashboard.welcome')}, {user?.profile?.name || 'User'}</h1>
+                      <p className="nh-sub">{t('user.dashboard.subtitle')}</p>
+                    </div>
+                    {subscription && (
+                      <Link
+                        href="/user/subscription"
+                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                          subscription.isActive
+                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                            : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                        }`}
+                      >
+                        {subscription.isActive ? `✓ ${t('user.dashboard.activeSubscription')}` : t('user.dashboard.viewSubscription')}
+                      </Link>
+                    )}
+                  </div>
+                </div>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

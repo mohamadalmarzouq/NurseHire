@@ -4,8 +4,11 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Menu, X, User, Heart, Shield, LogOut } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import { useLanguage } from '@/lib/language'
+import LanguageToggle from './LanguageToggle'
 
 export default function Header() {
+  const { t } = useLanguage()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userRole, setUserRole] = useState<string | null>(null)
@@ -56,29 +59,30 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/nurses" className="text-neutral-600 hover:text-primary-600 transition-colors">
-              Find Nurses
+            <Link href="/caretakers" className="text-neutral-600 hover:text-primary-600 transition-colors">
+              {t('common.findCareTakers')}
             </Link>
             <Link href="/how-it-works" className="text-neutral-600 hover:text-primary-600 transition-colors">
-              How It Works
+              {t('common.howItWorks')}
             </Link>
             <Link href="/safety" className="text-neutral-600 hover:text-primary-600 transition-colors">
-              Safety
+              {t('common.safety')}
             </Link>
             <Link href="/about" className="text-neutral-600 hover:text-primary-600 transition-colors">
-              About
+              {t('common.about')}
             </Link>
           </nav>
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
+            <LanguageToggle />
             {isLoggedIn ? (
               <>
                 <Link 
-                  href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CARETAKER' ? '/caretaker/dashboard' : '/mother/dashboard'}
+                  href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CARETAKER' ? '/caretaker/dashboard' : '/user/dashboard'}
                   className="text-neutral-600 hover:text-primary-600 transition-colors"
                 >
-                  Dashboard
+                  {t('common.dashboard')}
                 </Link>
                 <button
                   onClick={() => {
@@ -88,16 +92,16 @@ export default function Header() {
                   className="text-red-500 hover:text-red-700 transition-colors flex items-center"
                 >
                   <LogOut className="w-4 h-4 mr-1" />
-                  Sign Out
+                  {t('common.signOut')}
                 </button>
               </>
             ) : (
               <>
                 <Link href="/auth/login" className="text-neutral-600 hover:text-primary-600 transition-colors">
-                  Sign In
+                  {t('common.signIn')}
                 </Link>
                 <Link href="/auth/register" className="btn-primary">
-                  Get Started
+                  {t('common.getStarted')}
                 </Link>
               </>
             )}
@@ -117,42 +121,45 @@ export default function Header() {
           <div className="md:hidden py-4 border-t border-neutral-200">
             <nav className="flex flex-col space-y-4">
               <Link 
-                href="/nurses" 
+                href="/caretakers" 
                 className="text-neutral-600 hover:text-primary-600 transition-colors px-4 py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Find Nurses
+                {t('common.findCareTakers')}
               </Link>
               <Link 
                 href="/how-it-works" 
                 className="text-neutral-600 hover:text-primary-600 transition-colors px-4 py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                How It Works
+                {t('common.howItWorks')}
               </Link>
               <Link 
                 href="/safety" 
                 className="text-neutral-600 hover:text-primary-600 transition-colors px-4 py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Safety
+                {t('common.safety')}
               </Link>
               <Link 
                 href="/about" 
                 className="text-neutral-600 hover:text-primary-600 transition-colors px-4 py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                About
+                {t('common.about')}
               </Link>
               <div className="border-t border-neutral-200 pt-4 px-4 space-y-2">
+                <div className="px-4 py-2">
+                  <LanguageToggle />
+                </div>
                 {isLoggedIn ? (
                   <>
                     <Link 
-                      href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CARETAKER' ? '/caretaker/dashboard' : '/mother/dashboard'}
+                      href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CARETAKER' ? '/caretaker/dashboard' : '/user/dashboard'}
                       className="block text-neutral-600 hover:text-primary-600 transition-colors py-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Dashboard
+                      {t('common.dashboard')}
                     </Link>
                     <button
                       onClick={() => {
@@ -162,7 +169,7 @@ export default function Header() {
                       }}
                       className="block w-full text-left text-red-500 hover:text-red-700 transition-colors py-2"
                     >
-                      Sign Out
+                      {t('common.signOut')}
                     </button>
                   </>
                 ) : (
@@ -172,14 +179,14 @@ export default function Header() {
                       className="block text-neutral-600 hover:text-primary-600 transition-colors py-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Sign In
+                      {t('common.signIn')}
                     </Link>
                     <Link 
                       href="/auth/register" 
                       className="block btn-primary text-center"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Get Started
+                      {t('common.getStarted')}
                     </Link>
                   </>
                 )}

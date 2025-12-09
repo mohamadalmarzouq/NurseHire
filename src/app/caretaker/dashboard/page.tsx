@@ -7,6 +7,7 @@ import DashboardHeader from '@/components/DashboardHeader'
 import BannerAd from '@/components/BannerAd'
 
 export default function CareTakerDashboard() {
+  const { t } = useLanguage()
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
 

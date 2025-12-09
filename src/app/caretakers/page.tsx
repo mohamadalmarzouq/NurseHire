@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Search, Filter, Star, User, ArrowLeft, CheckCircle } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
+import { useLanguage } from '@/lib/language'
 
 interface CareTaker {
   id: string
@@ -22,6 +23,7 @@ interface CareTaker {
 }
 
 export default function CareTakersPage() {
+  const { t } = useLanguage()
   const [caretakers, setCaretakers] = useState<CareTaker[]>([])
   const [filteredCaretakers, setFilteredCaretakers] = useState<CareTaker[]>([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -143,17 +145,17 @@ export default function CareTakersPage() {
                 className="inline-flex items-center text-primary-600 hover:text-primary-700 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to User Dashboard
+                {t('caretakers.backToDashboard')}
               </Link>
             </div>
           )}
           
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-              Find Your Perfect Care Taker
+              {t('caretakers.title')}
             </h1>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Browse our verified caretakers and find the perfect match for your care needs
+              {t('caretakers.subtitle')}
             </p>
           </div>
         </div>
@@ -165,11 +167,11 @@ export default function CareTakersPage() {
           <div className="nh-card mb-6" style={{background:'linear-gradient(135deg,#0F73EE,#10B981)'}}>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white mb-1">Sign up to contact caretakers</h3>
-                <p className="text-white/90 text-sm">Create a free account to view contact information, send messages, and access reviews</p>
+                <h3 className="text-lg font-semibold text-white mb-1">{t('caretakers.profile.signUpToContact')}</h3>
+                <p className="text-white/90 text-sm">{t('caretakers.profile.signUpToContactDesc')}</p>
               </div>
               <Link href="/auth/register" className="px-6 py-2 bg-white text-primary-600 rounded-lg font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">
-                Sign Up Free
+                {t('caretakers.profile.signUpFree')}
               </Link>
             </div>
           </div>
@@ -188,17 +190,17 @@ export default function CareTakersPage() {
             <div className="nh-card sticky top-24">
               <h3 className="text-lg font-semibold mb-6 flex items-center">
                 <Filter className="w-5 h-5 mr-2" />
-                Filters
+                {t('caretakers.filters.title')}
               </h3>
 
               {/* Search */}
               <div className="mb-6">
-                <label className="label">Search</label>
+                <label className="label">{t('caretakers.filters.search')}</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
                   <input
                     type="text"
-                    placeholder="Search by name or description..."
+                    placeholder={t('caretakers.filters.searchPlaceholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="nh-input pl-10"
@@ -281,9 +283,9 @@ export default function CareTakersPage() {
             {filteredCaretakers.length === 0 ? (
               <div className="text-center py-12">
                 <User className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-neutral-900 mb-2">No care takers found</h3>
+                <h3 className="text-xl font-semibold text-neutral-900 mb-2">{t('caretakers.noResults')}</h3>
                 <p className="text-neutral-600 mb-6">
-                  Try adjusting your search criteria or filters
+                  {t('caretakers.noResultsDesc')}
                 </p>
                 <button
                   onClick={() => {
@@ -292,7 +294,7 @@ export default function CareTakersPage() {
                   }}
                   className="btn-primary"
                 >
-                  Clear All Filters
+                  {t('caretakers.clearFilters')}
                 </button>
               </div>
             ) : (
@@ -330,10 +332,10 @@ export default function CareTakersPage() {
                             </span>
                           </div>
                           <p className="text-xs text-neutral-600">
-                            {caretaker.age} years old • {caretaker.totalExperience} years experience
+                            {caretaker.age} {t('caretakers.profile.yearsOld')} • {caretaker.totalExperience} {t('caretakers.profile.yearsExperience')}
                           </p>
                           <p className="text-xs text-neutral-500 line-clamp-2">
-                            Languages: {caretaker.languages?.length ? caretaker.languages.join(', ') : 'Not specified'}
+                            {t('caretakers.profile.languages')}: {caretaker.languages?.length ? caretaker.languages.join(', ') : t('caretaker.profile.notSet')}
                           </p>
                         </div>
                       </div>
@@ -353,11 +355,11 @@ export default function CareTakersPage() {
                     {/* Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-neutral-600">
                       <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
-                        <p className="uppercase tracking-wide text-neutral-400 mb-1">Part-time</p>
+                        <p className="uppercase tracking-wide text-neutral-400 mb-1">{t('caretakers.profile.partTimeRate')}</p>
                         <p className="text-base font-semibold text-primary-600">{caretaker.partTimeSalary} KD/hr</p>
                       </div>
                       <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
-                        <p className="uppercase tracking-wide text-neutral-400 mb-1">Full-time</p>
+                        <p className="uppercase tracking-wide text-neutral-400 mb-1">{t('caretakers.profile.fullTimeRate')}</p>
                         <p className="text-base font-semibold text-primary-600">{caretaker.fullTimeSalary} KD/hr</p>
                       </div>
                       <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
