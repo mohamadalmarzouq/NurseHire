@@ -10,13 +10,20 @@ export async function GET(
   try {
     const { id: caretakerId } = await params
 
-    // Check if requesting user has active subscription
+    // Check if requesting user is authenticated
+    let isAuthenticated = false
     let hasSubscription = false
     const token = request.cookies.get('auth-token')?.value
     if (token) {
       const payload = await verifyToken(token)
-      if (payload && payload.role === 'USER') {
-        hasSubscription = await hasActiveSubscription(payload.id)
+      if (payload) {
+        isAuthenticated = true
+        if (payload.role === 'USER') {
+          hasSubscription = await hasActiveSubscription(payload.id)
+        } else {
+          // Non-USER roles (CARETAKER, ADMIN) can see reviews
+          hasSubscription = true
+        }
       }
     }
 
@@ -35,44 +42,51 @@ export async function GET(
       )
     }
 
-    // Get approved reviews for this care taker
-    const reviewsData = await prisma.review.findMany({
-      where: {
-        receiverId: caretakerId,
-        status: 'APPROVED',
-      },
-      include: {
-        giver: {
-          include: {
-            userProfile: true,
+    // Only fetch reviews if user is authenticated
+    let reviews: any[] = []
+    let reviewCount = 0
+    let averageRating = 0
+
+    if (isAuthenticated) {
+      // Authenticated users or non-users can see reviews
+      const reviewsData = await prisma.review.findMany({
+        where: {
+          receiverId: caretakerId,
+          status: 'APPROVED',
+        },
+        include: {
+          giver: {
+            include: {
+              userProfile: true,
+            },
           },
         },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    })
+        orderBy: {
+          createdAt: 'desc',
+        },
+      })
 
-    const reviews = reviewsData.map(review => ({
-      id: review.id,
-      giverName: review.giver.userProfile?.name || 'Anonymous',
-      appearance: review.appearance,
-      attitude: review.attitude,
-      knowledge: review.knowledge,
-      hygiene: review.hygiene,
-      salary: review.salary,
-      comment: review.comment,
-      createdAt: review.createdAt,
-    }))
+      reviews = reviewsData.map(review => ({
+        id: review.id,
+        giverName: review.giver.userProfile?.name || 'Anonymous',
+        appearance: review.appearance,
+        attitude: review.attitude,
+        knowledge: review.knowledge,
+        hygiene: review.hygiene,
+        salary: review.salary,
+        comment: review.comment,
+        createdAt: review.createdAt,
+      }))
 
-    // Calculate average rating from approved reviews
-    const reviewCount = reviews.length
-    const averageRating = reviewCount > 0
-      ? reviews.reduce((sum, review) => {
-          const avg = (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5
-          return sum + avg
-        }, 0) / reviewCount
-      : 0
+      // Calculate average rating from approved reviews
+      reviewCount = reviews.length
+      averageRating = reviewCount > 0
+        ? reviews.reduce((sum, review) => {
+            const avg = (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5
+            return sum + avg
+          }, 0) / reviewCount
+        : 0
+    }
 
     const caretaker = {
       id: user.id,

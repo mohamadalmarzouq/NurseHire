@@ -70,6 +70,25 @@ export default function CareTakerProfilePage() {
   const [showSuccess, setShowSuccess] = useState(false)
 
   useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          if (data?.authenticated) {
+            setUser(data.user)
+            setIsAuthenticated(true)
+          }
+        }
+      } catch (e) {
+        console.error('Error loading user:', e)
+        // Don't redirect - allow public browsing
+      }
+    }
+    loadUser()
+  }, [])
+
+  useEffect(() => {
     const loadCaretakerProfile = async () => {
       try {
         const res = await fetch(`/api/caretakers/${params.id}`, { cache: 'no-store' })
@@ -80,7 +99,10 @@ export default function CareTakerProfilePage() {
         const data = await res.json()
         if (data.caretaker) {
           setCaretaker(data.caretaker)
-          setReviews(data.reviews || [])
+          // Only set reviews if authenticated
+          if (isAuthenticated) {
+            setReviews(data.reviews || [])
+          }
         }
       } catch (e) {
         console.error('Error loading care taker profile:', e)
@@ -89,28 +111,21 @@ export default function CareTakerProfilePage() {
       }
     }
     loadCaretakerProfile()
-  }, [params.id])
+  }, [params.id, isAuthenticated])
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        console.log('Checking authentication...')
         const res = await fetch('/api/auth/me', { cache: 'no-store' })
-        console.log('Auth response status:', res.status)
         if (res.ok) {
           const data = await res.json()
-          console.log('Auth data:', data) // Debug log
           if (data?.authenticated) {
             setUser(data.user)
             setIsAuthenticated(true)
-            console.log('User authenticated:', data.user) // Debug log
-            console.log('User role:', data.user?.role)
           } else {
-            console.log('User not authenticated')
             setIsAuthenticated(false)
           }
         } else {
-          console.log('Auth request failed with status:', res.status)
           setIsAuthenticated(false)
         }
       } catch (error) {
@@ -432,7 +447,12 @@ export default function CareTakerProfilePage() {
                   )}
                 </>
               )}
-              {isAuthenticated && user?.role === 'USER' && !caretaker.hasActiveSubscription ? (
+              {!isAuthenticated ? (
+                <Link href="/auth/register" className="btn-secondary">
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Sign Up to Message
+                </Link>
+              ) : isAuthenticated && user?.role === 'USER' && !caretaker.hasActiveSubscription ? (
                 <Link href="/user/subscription" className="btn-secondary">
                   <MessageCircle className="w-4 h-4 mr-2" />
                   Subscribe to Message
@@ -446,13 +466,20 @@ export default function CareTakerProfilePage() {
                   Message
                 </Link>
               )}
-              <button 
-                onClick={() => setShowRequestModal(true)}
-                className="btn-primary"
-              >
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Request Information
-              </button>
+              {!isAuthenticated ? (
+                <Link href="/auth/register" className="btn-primary">
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Sign Up to Request Info
+                </Link>
+              ) : (
+                <button 
+                  onClick={() => setShowRequestModal(true)}
+                  className="btn-primary"
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Request Information
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -480,6 +507,21 @@ export default function CareTakerProfilePage() {
       )}
 
       <div className="container-custom py-8">
+        {/* Sign-up Banner for non-authenticated users */}
+        {!isAuthenticated && (
+          <div className="nh-card mb-6" style={{background:'linear-gradient(135deg,#0F73EE,#10B981)'}}>
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white mb-1">Sign up to contact this caretaker</h3>
+                <p className="text-white/90 text-sm">Create a free account to view contact information, send messages, and read reviews</p>
+              </div>
+              <Link href="/auth/register" className="px-6 py-2 bg-white text-primary-600 rounded-lg font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">
+                Sign Up Free
+              </Link>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
@@ -509,15 +551,24 @@ export default function CareTakerProfilePage() {
                   <p className="text-lg text-neutral-600 mb-4">
                     {caretaker.age} years old • {caretaker.totalExperience} years experience
                   </p>
-                  <div className="flex items-center space-x-1 mb-4">
-                    {renderStars(caretaker.averageRating)}
-                    <span className="text-lg font-semibold text-neutral-900 ml-2">
-                      {caretaker.averageRating}
-                    </span>
-                    <span className="text-neutral-600 ml-2">
-                      ({caretaker.reviewCount} reviews)
-                    </span>
-                  </div>
+                  {isAuthenticated && caretaker.averageRating !== null && caretaker.averageRating > 0 && (
+                    <div className="flex items-center space-x-1 mb-4">
+                      {renderStars(caretaker.averageRating)}
+                      <span className="text-lg font-semibold text-neutral-900 ml-2">
+                        {caretaker.averageRating}
+                      </span>
+                      <span className="text-neutral-600 ml-2">
+                        ({caretaker.reviewCount} reviews)
+                      </span>
+                    </div>
+                  )}
+                  {!isAuthenticated && (
+                    <div className="mb-4">
+                      <Link href="/auth/register" className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium">
+                        Sign up to see ratings and reviews
+                      </Link>
+                    </div>
+                  )}
                   <div className="flex flex-wrap gap-2">
                     {caretaker.availability.map((avail) => (
                       <span
@@ -649,10 +700,14 @@ export default function CareTakerProfilePage() {
             )}
 
             {/* Reviews Section */}
-            <div className="card">
-              <h2 className="text-xl font-semibold text-neutral-900 mb-6">Reviews ({caretaker.reviewCount})</h2>
-              <div className="space-y-6">
-                {reviews.map((review) => (
+            {isAuthenticated ? (
+              <div className="card">
+                <h2 className="text-xl font-semibold text-neutral-900 mb-6">Reviews ({caretaker.reviewCount || 0})</h2>
+                {reviews.length === 0 ? (
+                  <p className="text-neutral-500 text-center py-8">No reviews yet</p>
+                ) : (
+                  <div className="space-y-6">
+                    {reviews.map((review) => (
                   <div key={review.id} className="border-b border-neutral-100 pb-6 last:border-b-0 last:pb-0">
                     <div className="flex items-start justify-between mb-3">
                       <div>

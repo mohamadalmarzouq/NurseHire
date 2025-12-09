@@ -1,14 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { verifyToken } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
   try {
+    // Check if user is authenticated (optional)
+    let isAuthenticated = false
+    const token = request.cookies.get('auth-token')?.value
+    if (token) {
+      const payload = await verifyToken(token)
+      if (payload) {
+        isAuthenticated = true
+      }
+    }
+
     const { searchParams } = new URL(request.url)
     const search = searchParams.get('search') || ''
     const experience = searchParams.get('experience')
     const salary = searchParams.get('salary')
     const availability = searchParams.get('availability')
     const language = searchParams.get('language')
+    const skills = searchParams.get('skills')
 
     // Build where clause for filtering
     const whereClause: any = {
@@ -59,6 +71,14 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Add skills filter
+    if (skills) {
+      whereClause.caretakerProfile = {
+        ...whereClause.caretakerProfile,
+        skills: { has: skills },
+      }
+    }
+
     const caretakers = await prisma.user.findMany({
       where: whereClause,
       include: {
@@ -69,25 +89,27 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    // Get approved reviews for all care takers
-    const caretakerIds = caretakers.map(c => c.id)
-    const reviews = await prisma.review.findMany({
-      where: {
-        receiverId: { in: caretakerIds },
-        status: 'APPROVED',
-      },
-    })
+    // Only fetch reviews if user is authenticated
+    let ratingsByCaretaker: Record<string, { sum: number; count: number }> = {}
+    if (isAuthenticated) {
+      const caretakerIds = caretakers.map(c => c.id)
+      const reviews = await prisma.review.findMany({
+        where: {
+          receiverId: { in: caretakerIds },
+          status: 'APPROVED',
+        },
+      })
 
-    // Calculate ratings per care taker
-    const ratingsByCaretaker: Record<string, { sum: number; count: number }> = {}
-    reviews.forEach(review => {
-      if (!ratingsByCaretaker[review.receiverId]) {
-        ratingsByCaretaker[review.receiverId] = { sum: 0, count: 0 }
-      }
-      const avg = (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5
-      ratingsByCaretaker[review.receiverId].sum += avg
-      ratingsByCaretaker[review.receiverId].count += 1
-    })
+      // Calculate ratings per care taker
+      reviews.forEach(review => {
+        if (!ratingsByCaretaker[review.receiverId]) {
+          ratingsByCaretaker[review.receiverId] = { sum: 0, count: 0 }
+        }
+        const avg = (review.appearance + review.attitude + review.knowledge + review.hygiene + review.salary) / 5
+        ratingsByCaretaker[review.receiverId].sum += avg
+        ratingsByCaretaker[review.receiverId].count += 1
+      })
+    }
 
     // Format the response
     const formattedCaretakers = caretakers.map(caretaker => {
@@ -105,8 +127,9 @@ export async function GET(request: NextRequest) {
         languages: caretaker.caretakerProfile?.languages || [],
         skills: caretaker.caretakerProfile?.skills || [],
         availability: caretaker.caretakerProfile?.availability || [],
-        averageRating: ratingData.count > 0 ? ratingData.sum / ratingData.count : 0,
-        reviewCount: ratingData.count,
+        // Only include ratings/reviews if authenticated
+        averageRating: isAuthenticated && ratingData.count > 0 ? ratingData.sum / ratingData.count : null,
+        reviewCount: isAuthenticated ? ratingData.count : null,
       }
     })
 

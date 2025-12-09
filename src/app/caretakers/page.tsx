@@ -44,15 +44,11 @@ export default function CareTakersPage() {
           if (data?.authenticated) {
             setUser(data.user)
             setIsAuthenticated(true)
-          } else {
-            window.location.href = '/auth/login'
           }
-        } else {
-          window.location.href = '/auth/login'
         }
       } catch (e) {
         console.error('Error loading user:', e)
-        window.location.href = '/auth/login'
+        // Don't redirect - allow public browsing
       }
     }
     loadUser()
@@ -61,6 +57,7 @@ export default function CareTakersPage() {
   useEffect(() => {
     const loadCaretakers = async () => {
       try {
+        setIsLoading(true)
         const res = await fetch('/api/caretakers', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
@@ -73,10 +70,9 @@ export default function CareTakersPage() {
         setIsLoading(false)
       }
     }
-    if (isAuthenticated) {
-      loadCaretakers()
-    }
-  }, [isAuthenticated])
+    // Load caretakers regardless of authentication status
+    loadCaretakers()
+  }, [])
 
   // Filter care takers based on search and filters
   useEffect(() => {
@@ -140,15 +136,17 @@ export default function CareTakersPage() {
       <div className="bg-white shadow-soft">
         <div className="container-custom py-8">
           {/* Back Button */}
-          <div className="mb-6">
-            <Link 
-              href="/user/dashboard" 
-              className="inline-flex items-center text-primary-600 hover:text-primary-700 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to User Dashboard
-            </Link>
-          </div>
+          {isAuthenticated && (
+            <div className="mb-6">
+              <Link 
+                href="/user/dashboard" 
+                className="inline-flex items-center text-primary-600 hover:text-primary-700 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to User Dashboard
+              </Link>
+            </div>
+          )}
           
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
@@ -162,6 +160,21 @@ export default function CareTakersPage() {
       </div>
 
       <div className="container-custom py-8">
+        {/* Sign-up Banner for non-authenticated users */}
+        {!isAuthenticated && (
+          <div className="nh-card mb-6" style={{background:'linear-gradient(135deg,#0F73EE,#10B981)'}}>
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white mb-1">Sign up to contact caretakers</h3>
+                <p className="text-white/90 text-sm">Create a free account to view contact information, send messages, and access reviews</p>
+              </div>
+              <Link href="/auth/register" className="px-6 py-2 bg-white text-primary-600 rounded-lg font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">
+                Sign Up Free
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Trust strip */}
         <div className="nh-card mb-6" style={{background:'linear-gradient(90deg,#F0F9FF,#ECFDF5)'}}>
           <div className="flex flex-wrap items-center gap-2">
@@ -324,15 +337,17 @@ export default function CareTakersPage() {
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-neutral-600">
-                        <span className="flex items-center gap-1 text-primary-500">
-                          {renderStars(caretaker.averageRating)}
-                        </span>
-                        <span className="font-medium text-neutral-800">
-                          {caretaker.averageRating}/5
-                        </span>
-                        <span>• {caretaker.reviewCount} review{caretaker.reviewCount === 1 ? '' : 's'}</span>
-                      </div>
+                      {isAuthenticated && caretaker.averageRating !== null && (
+                        <div className="flex items-center gap-2 text-xs text-neutral-600">
+                          <span className="flex items-center gap-1 text-primary-500">
+                            {renderStars(caretaker.averageRating)}
+                          </span>
+                          <span className="font-medium text-neutral-800">
+                            {caretaker.averageRating}/5
+                          </span>
+                          <span>• {caretaker.reviewCount} review{caretaker.reviewCount === 1 ? '' : 's'}</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Stats */}
