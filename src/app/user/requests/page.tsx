@@ -101,7 +101,7 @@ export default function UserRequestsPage() {
             Back to Dashboard
           </Link>
           <h1 className="nh-h1">My Information Requests</h1>
-          <p className="nh-sub">Track your requests for more information about nurses</p>
+          <p className="nh-sub">Track your requests for more information about caretakers</p>
         </div>
 
         {/* Trust Strip */}
@@ -128,13 +128,13 @@ export default function UserRequestsPage() {
             <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No Requests Yet</h3>
             <p className="text-gray-600 mb-6">
-              You haven't made any information requests yet. Browse nurses and request more information about them.
+              You haven't made any information requests yet. Browse caretakers and request more details about them.
             </p>
             <Link 
-              href="/nurses" 
+              href="/caretakers" 
               className="nh-btn nh-btn--primary"
             >
-              Browse Nurses
+              Browse Care Takers
             </Link>
           </div>
         ) : (

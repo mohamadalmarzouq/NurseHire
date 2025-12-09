@@ -155,7 +155,7 @@ export default function CareTakersPage() {
               Find Your Perfect Care Taker
             </h1>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Browse through our verified care takers and find the perfect match for your newborn's care
+              Browse our verified caretakers and find the perfect match for your care needs
             </p>
           </div>
         </div>

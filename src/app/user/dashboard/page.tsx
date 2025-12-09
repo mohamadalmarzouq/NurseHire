@@ -107,7 +107,7 @@ export default function UserDashboard() {
           <div className="mb-2 flex items-center justify-between">
             <div>
               <h1 className="nh-h2">Welcome, {user?.profile?.name || 'User'}</h1>
-              <p className="nh-sub">Find trusted care takers for your newborn care needs in Kuwait.</p>
+              <p className="nh-sub">Find trusted caretakers in Kuwait for newborn, child, elderly, and home care.</p>
             </div>
             {subscription && (
               <Link
