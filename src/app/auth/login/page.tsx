@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/language'
 
 export default function LoginPage() {
+  const { t } = useLanguage()
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -55,8 +57,8 @@ export default function LoginPage() {
         <div className="nh-grid nh-grid-2" style={{alignItems:'stretch',gap:'24px',maxWidth:1120,margin:'0 auto'}}>
           <div className="nh-card" style={{minHeight:'460px',width:'100%',justifySelf:'stretch'}}>
           <div className="text-center mb-4">
-            <h1 className="nh-h2">Sign In</h1>
-            <p className="nh-sub">Welcome back — access your dashboard</p>
+            <h1 className="nh-h2">{t('auth.login.title')}</h1>
+            <p className="nh-sub">{t('auth.login.welcome')}</p>
           </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -68,7 +70,7 @@ export default function LoginPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              {t('common.email')}
             </label>
             <input
               type="email"
@@ -81,7 +83,7 @@ export default function LoginPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+              {t('common.password')}
             </label>
             <input
               type="password"
@@ -97,15 +99,15 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full nh-btn nh-btn--primary disabled:opacity-50"
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? t('auth.login.signingIn') : t('auth.login.title')}
           </button>
         </form>
 
             <p className="mt-4 text-center text-sm nh-muted">
-              Don't have an account?{' '}<Link href="/auth/register" className="text-primary-600">Sign up</Link>
+              {t('auth.login.dontHaveAccount')}{' '}<Link href="/auth/register" className="text-primary-600">{t('common.signUp')}</Link>
             </p>
 
-            <Link href="/" className="block mt-2 text-center text-sm nh-muted">← Back to home</Link>
+            <Link href="/" className="block mt-2 text-center text-sm nh-muted">{t('common.backToHome')}</Link>
           </div>
 
           {/* Benefits panel */}
@@ -116,11 +118,11 @@ export default function LoginPage() {
                   <path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.65-7 10-7 10z" stroke="#0F73EE" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <h2 className="text-center nh-h2" style={{fontSize:'22px',marginBottom:'8px'}}>Why ENFAS?</h2>
+              <h2 className="text-center nh-h2" style={{fontSize:'22px',marginBottom:'8px'}}>{t('auth.login.whyEnfas')}</h2>
               <ul className="nh-muted" style={{listStyle:'none',padding:0,margin:0,display:'grid',gap:'12px'}}>
-                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--ok">Trust</span><span className="nh-right nh-muted">All care takers verified</span></li>
-                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--info">Private & Secure</span><span className="nh-right nh-muted">Your data stays safe</span></li>
-                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--warn">Fast Onboarding</span><span className="nh-right nh-muted">Create an account in minutes</span></li>
+                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--ok">{t('common.verified')}</span><span className="nh-right nh-muted">{t('auth.login.allCareTakersVerified')}</span></li>
+                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--info">{t('common.privateSecure')}</span><span className="nh-right nh-muted">{t('auth.login.dataStaysSafe')}</span></li>
+                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--warn">Fast Onboarding</span><span className="nh-right nh-muted">{t('auth.login.createAccountMinutes')}</span></li>
               </ul>
             </div>
           </div>

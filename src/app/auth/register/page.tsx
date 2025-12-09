@@ -4,8 +4,10 @@ import { useState } from 'react'
 import Link from 'next/link'
 import FileUpload from '@/components/FileUpload'
 import MultipleFileUpload from '@/components/MultipleFileUpload'
+import { useLanguage } from '@/lib/language'
 
 export default function RegisterPage() {
+  const { t } = useLanguage()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -81,8 +83,8 @@ export default function RegisterPage() {
         <div className="nh-grid nh-grid-2" style={{alignItems:'stretch',gap:'24px',maxWidth:1120,margin:'0 auto'}}>
           <div className="nh-card" style={{minHeight:'520px',width:'100%',justifySelf:'stretch'}}>
           <div className="text-center mb-4">
-            <h1 className="nh-h2">Create Account</h1>
-            <p className="nh-sub">Join ENFAS and get started in minutes</p>
+            <h1 className="nh-h2">{t('auth.register.title')}</h1>
+            <p className="nh-sub">{t('auth.register.subtitle')}</p>
           </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -94,7 +96,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              I am a *
+              {t('auth.register.iamA')} *
             </label>
             <select
               required
@@ -102,9 +104,9 @@ export default function RegisterPage() {
               onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               className="nh-input"
             >
-              <option value="">Select role</option>
-              <option value="USER">User</option>
-              <option value="CARETAKER">Care Taker</option>
+              <option value="">{t('auth.register.selectRole')}</option>
+              <option value="USER">{t('auth.register.user')}</option>
+              <option value="CARETAKER">{t('auth.register.careTaker')}</option>
             </select>
           </div>
 
@@ -112,7 +114,7 @@ export default function RegisterPage() {
           {formData.role === 'CARETAKER' && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Profile Picture <span className="text-red-500">*</span>
+                {t('auth.register.profilePicture')} <span className="text-red-500">*</span>
               </label>
               <FileUpload
                 onFileSelect={handleFileUpload}
@@ -122,7 +124,7 @@ export default function RegisterPage() {
               />
               {profileImageName && (
                 <p className="mt-2 text-sm text-green-600">
-                  ✓ Profile picture uploaded: {profileImageName}
+                  ✓ {t('auth.register.profilePicture')} uploaded: {profileImageName}
                 </p>
               )}
             </div>
@@ -135,25 +137,25 @@ export default function RegisterPage() {
                 onFilesChange={setCertifications}
                 accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp"
                 maxSize={5 * 1024 * 1024} // 5MB per file
-                label="Certifications"
+                label={t('auth.register.certifications')}
                 maxFiles={10}
                 required={false}
                 folder="certifications"
               />
               {certifications.length > 0 && (
                 <p className="mt-2 text-sm text-green-600">
-                  ✓ {certifications.length} certification{certifications.length !== 1 ? 's' : ''} uploaded successfully
+                  ✓ {certifications.length} {t('auth.register.certificationsUploaded')}
                 </p>
               )}
               <p className="mt-1 text-xs text-gray-500">
-                Upload your professional certifications, licenses, and credentials (PDF, DOC, DOCX, or images)
+                {t('auth.register.certificationsHint')}
               </p>
             </div>
           )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name *
+              {t('common.fullName')} *
             </label>
             <input
               type="text"
@@ -166,7 +168,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email *
+              {t('common.email')} *
             </label>
             <input
               type="email"
@@ -179,7 +181,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password *
+              {t('common.password')} *
             </label>
             <input
               type="password"
@@ -192,7 +194,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password *
+              {t('common.confirmPassword')} *
             </label>
             <input
               type="password"
@@ -207,7 +209,7 @@ export default function RegisterPage() {
             <>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Phone (Optional)
+                  {t('common.phone')} ({t('common.optional')})
                 </label>
                   <input
                   type="tel"
@@ -218,7 +220,7 @@ export default function RegisterPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Location (Optional)
+                  {t('common.location')} ({t('common.optional')})
                 </label>
                   <input
                   type="text"
@@ -235,12 +237,12 @@ export default function RegisterPage() {
             disabled={loading}
             className="w-full nh-btn nh-btn--primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Creating account...' : 'Create Account'}
+            {loading ? t('auth.register.creatingAccount') : t('auth.register.title')}
           </button>
         </form>
 
-            <p className="mt-4 text-center text-sm nh-muted">Already have an account?{' '}<Link href="/auth/login" className="text-primary-600">Sign in</Link></p>
-            <Link href="/" className="block mt-2 text-center text-sm nh-muted">← Back to home</Link>
+            <p className="mt-4 text-center text-sm nh-muted">{t('auth.register.alreadyHaveAccount')}{' '}<Link href="/auth/login" className="text-primary-600">{t('common.signIn')}</Link></p>
+            <Link href="/" className="block mt-2 text-center text-sm nh-muted">{t('common.backToHome')}</Link>
           </div>
 
           {/* Benefits panel */}
@@ -251,11 +253,11 @@ export default function RegisterPage() {
                   <path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.65-7 10-7 10z" stroke="#0F73EE" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <h2 className="text-center nh-h2" style={{fontSize:'22px',marginBottom:'8px'}}>Benefits</h2>
+              <h2 className="text-center nh-h2" style={{fontSize:'22px',marginBottom:'8px'}}>{t('auth.register.benefits')}</h2>
               <ul className="nh-muted" style={{listStyle:'none',padding:0,margin:0,display:'grid',gap:'12px'}}>
-                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--ok">Trust</span><span className="nh-right nh-muted">All nurses verified</span></li>
-                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--info">Messaging</span><span className="nh-right nh-muted">Private 1:1 chat</span></li>
-                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--warn">Booking</span><span className="nh-right nh-muted">Quick request & response</span></li>
+                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--ok">{t('common.verified')}</span><span className="nh-right nh-muted">{t('auth.register.allNursesVerified')}</span></li>
+                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--info">Messaging</span><span className="nh-right nh-muted">{t('auth.register.privateChat')}</span></li>
+                <li className="nh-row" style={{gap:'12px'}}><span className="nh-badge nh-badge--warn">Booking</span><span className="nh-right nh-muted">{t('auth.register.quickRequest')}</span></li>
               </ul>
             </div>
           </div>

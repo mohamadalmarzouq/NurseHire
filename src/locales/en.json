@@ -10,6 +10,7 @@
     "dashboard": "Dashboard",
     "signOut": "Sign Out",
     "back": "Back",
+    "backToHome": "Back to home",
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
@@ -21,7 +22,15 @@
     "filter": "Filter",
     "clear": "Clear",
     "verified": "Verified",
-    "privateSecure": "Private & Secure"
+    "privateSecure": "Private & Secure",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "confirmPassword": "Confirm Password",
+    "phone": "Phone",
+    "location": "Location",
+    "optional": "Optional",
+    "required": "Required"
   },
   "homepage": {
     "headline": "Communicate with Qualified care takers",
@@ -86,6 +95,43 @@
     "cta": {
       "title": "Ready to Get Started?",
       "subtitle": "Join hundreds of families and care takers who trust ENFAS for newborn care in Kuwait."
+    },
+    "caringProfessional": {
+      "title": "Caring & Professional",
+      "description": "Our care takers provide gentle, expert care for your newborn with the warmth and professionalism you can trust.",
+      "happyFamilies": "Happy Families",
+      "expertCareTakers": "Expert Care Takers",
+      "satisfaction": "Satisfaction"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "welcome": "Welcome back — access your dashboard",
+      "signingIn": "Signing in...",
+      "dontHaveAccount": "Don't have an account?",
+      "whyEnfas": "Why ENFAS?",
+      "allCareTakersVerified": "All care takers verified",
+      "dataStaysSafe": "Your data stays safe",
+      "createAccountMinutes": "Create an account in minutes"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join ENFAS and get started in minutes",
+      "iamA": "I am a",
+      "selectRole": "Select role",
+      "user": "User",
+      "careTaker": "Care Taker",
+      "profilePicture": "Profile Picture",
+      "certifications": "Certifications",
+      "certificationsUploaded": "certification(s) uploaded successfully",
+      "certificationsHint": "Upload your professional certifications, licenses, and credentials (PDF, DOC, DOCX, or images)",
+      "creatingAccount": "Creating account...",
+      "alreadyHaveAccount": "Already have an account?",
+      "benefits": "Benefits",
+      "allNursesVerified": "All nurses verified",
+      "privateChat": "Private 1:1 chat",
+      "quickRequest": "Quick request & response"
     }
   },
   "caretakers": {

@@ -196,24 +196,24 @@ export default function HomePage() {
                 {/* Main Content */}
                 <div className="relative z-10 text-center">
                   {/* Text Content */}
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Caring & Professional</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">{t('homepage.caringProfessional.title')}</h3>
                   <p className="text-lg md:text-xl text-gray-700 leading-relaxed mb-8 max-w-2xl mx-auto">
-                    Our care takers provide gentle, expert care for your newborn with the warmth and professionalism you can trust.
+                    {t('homepage.caringProfessional.description')}
                   </p>
                   
                   {/* Stats */}
                   <div className="grid grid-cols-3 gap-6 max-w-lg mx-auto">
                     <div className="text-center">
                       <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">500+</div>
-                      <div className="text-sm md:text-base text-gray-600">Happy Families</div>
+                      <div className="text-sm md:text-base text-gray-600">{t('homepage.caringProfessional.happyFamilies')}</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">50+</div>
-                      <div className="text-sm md:text-base text-gray-600">Expert Care Takers</div>
+                      <div className="text-sm md:text-base text-gray-600">{t('homepage.caringProfessional.expertCareTakers')}</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">99%</div>
-                      <div className="text-sm md:text-base text-gray-600">Satisfaction</div>
+                      <div className="text-sm md:text-base text-gray-600">{t('homepage.caringProfessional.satisfaction')}</div>
                     </div>
                   </div>
                 </div>
@@ -240,7 +240,7 @@ export default function HomePage() {
             </div>
             <div className="order-1 lg:order-2">
               <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-6">
-                For Care Takers
+                {t('homepage.forCareTakers.title')}
               </h2>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">

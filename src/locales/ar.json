@@ -10,6 +10,7 @@
     "dashboard": "لوحة التحكم",
     "signOut": "تسجيل الخروج",
     "back": "رجوع",
+    "backToHome": "← رجوع إلى الصفحة الرئيسية",
     "loading": "جاري التحميل...",
     "save": "حفظ",
     "cancel": "إلغاء",
@@ -21,7 +22,15 @@
     "filter": "تصفية",
     "clear": "مسح",
     "verified": "موثق",
-    "privateSecure": "خاص وآمن"
+    "privateSecure": "خاص وآمن",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "fullName": "الاسم الكامل",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "phone": "الهاتف",
+    "location": "الموقع",
+    "optional": "اختياري",
+    "required": "مطلوب"
   },
   "homepage": {
     "headline": "تواصل مع مقدمي رعاية مؤهلين",
@@ -86,6 +95,43 @@
     "cta": {
       "title": "هل أنت مستعد للبدء؟",
       "subtitle": "انضم إلى مئات العائلات ومقدمي الرعاية الذين يثقون بـ ENFAS لرعاية الرضع في الكويت."
+    },
+    "caringProfessional": {
+      "title": "رعاية ومهنية",
+      "description": "يوفر مقدمي الرعاية لدينا رعاية لطيفة ومحترفة لطفلك مع الدفء والمهنية التي يمكنك الوثوق بها.",
+      "happyFamilies": "عائلات سعيدة",
+      "expertCareTakers": "مقدمو رعاية خبراء",
+      "satisfaction": "رضا"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "تسجيل الدخول",
+      "welcome": "مرحبًا بعودتك — الوصول إلى لوحة التحكم",
+      "signingIn": "جاري تسجيل الدخول...",
+      "dontHaveAccount": "ليس لديك حساب؟",
+      "whyEnfas": "لماذا ENFAS؟",
+      "allCareTakersVerified": "جميع مقدمي الرعاية موثقون",
+      "dataStaysSafe": "بياناتك تبقى آمنة",
+      "createAccountMinutes": "أنشئ حسابًا في دقائق"
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "subtitle": "انضم إلى ENFAS وابدأ في دقائق",
+      "iamA": "أنا",
+      "selectRole": "اختر الدور",
+      "user": "مستخدم",
+      "careTaker": "مقدم رعاية",
+      "profilePicture": "صورة الملف الشخصي",
+      "certifications": "الشهادات",
+      "certificationsUploaded": "تم رفع الشهادة/الشهادات بنجاح",
+      "certificationsHint": "قم برفع شهاداتك المهنية والتراخيص والأوراق الاعتمادية (PDF، DOC، DOCX، أو صور)",
+      "creatingAccount": "جاري إنشاء الحساب...",
+      "alreadyHaveAccount": "لديك حساب بالفعل؟",
+      "benefits": "الفوائد",
+      "allNursesVerified": "جميع الممرضات موثقات",
+      "privateChat": "دردشة خاصة 1:1",
+      "quickRequest": "طلب واستجابة سريعة"
     }
   },
   "caretakers": {
