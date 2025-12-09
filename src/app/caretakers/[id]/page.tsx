@@ -757,9 +757,24 @@ export default function CareTakerProfilePage() {
                       </div>
                     </div>
                   </div>
-                ))}
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
+            ) : (
+              <div className="card">
+                <div className="text-center py-12">
+                  <Star className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
+                  <h2 className="text-xl font-semibold text-neutral-900 mb-2">Sign up to see reviews</h2>
+                  <p className="text-neutral-600 mb-6">
+                    Create a free account to read reviews from other users who have worked with this caretaker.
+                  </p>
+                  <Link href="/auth/register" className="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium">
+                    Sign Up Free
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
