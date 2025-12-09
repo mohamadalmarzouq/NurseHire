@@ -5,8 +5,10 @@ import Link from 'next/link'
 import { Search, Heart, MessageCircle, Star, Calendar, User, Settings, LogOut } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 import BannerAd from '@/components/BannerAd'
+import { useLanguage } from '@/lib/language'
 
 export default function UserDashboard() {
+  const { t } = useLanguage()
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [recentNurses, setRecentNurses] = useState<any[]>([])

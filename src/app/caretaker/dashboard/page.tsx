@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Calendar, MessageCircle, Star, User, Settings, LogOut, Eye, Edit, Clock } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 import BannerAd from '@/components/BannerAd'
+import { useLanguage } from '@/lib/language'
 
 export default function CareTakerDashboard() {
   const { t } = useLanguage()
