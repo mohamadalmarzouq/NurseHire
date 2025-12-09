@@ -1160,7 +1160,8 @@ nav a:hover {
   margin-right: auto;
 }
 
-[dir="rtl"] .flex {
+/* Only reverse flex for specific navigation/header elements */
+[dir="rtl"] header .flex.items-center.justify-between {
   flex-direction: row-reverse;
 }
 
