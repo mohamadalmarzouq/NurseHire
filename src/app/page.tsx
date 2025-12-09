@@ -57,7 +57,7 @@ export default function HomePage() {
               Communicate with Qualified care takers
             </h1>
             <p className="nh-sub mb-8 max-w-2xl mx-auto">
-              Connect with qualified, vetted care takers for your newborn&apos;s care. Safe, professional, and caring service you can trust.
+              Find vetted caretakers for newborn, child, elderly, and home care—safe and professional support you can trust.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/auth/login" className="nh-btn nh-btn--primary">
