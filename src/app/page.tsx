@@ -60,7 +60,7 @@ export default function HomePage() {
               Find vetted caretakers for newborn, child, elderly, and home care—safe and professional support you can trust.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth/login" className="nh-btn nh-btn--primary">
+              <Link href="/caretakers" className="nh-btn nh-btn--primary">
                 Find a Care Taker
                 <ArrowRight className="w-5 h-5" />
               </Link>
