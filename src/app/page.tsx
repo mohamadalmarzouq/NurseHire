@@ -248,8 +248,8 @@ export default function HomePage() {
                     <Users className="w-4 h-4 text-secondary-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2">Find Clients Easily</h3>
-                    <p className="text-neutral-600">Connect with families looking for newborn care services in Kuwait.</p>
+                    <h3 className="font-semibold text-lg mb-2">{t('homepage.forCareTakers.findClients.title')}</h3>
+                    <p className="text-neutral-600">{t('homepage.forCareTakers.findClients.desc')}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -257,8 +257,8 @@ export default function HomePage() {
                     <Shield className="w-4 h-4 text-secondary-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2">Secure Platform</h3>
-                    <p className="text-neutral-600">Work with verified families in a safe, professional environment.</p>
+                    <h3 className="font-semibold text-lg mb-2">{t('homepage.forCareTakers.securePlatform.title')}</h3>
+                    <p className="text-neutral-600">{t('homepage.forCareTakers.securePlatform.desc')}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -266,8 +266,8 @@ export default function HomePage() {
                     <Star className="w-4 h-4 text-secondary-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2">Build Your Reputation</h3>
-                    <p className="text-neutral-600">Earn reviews and ratings to showcase your expertise and reliability.</p>
+                    <h3 className="font-semibold text-lg mb-2">{t('homepage.forCareTakers.buildReputation.title')}</h3>
+                    <p className="text-neutral-600">{t('homepage.forCareTakers.buildReputation.desc')}</p>
                   </div>
                 </div>
               </div>

@@ -260,6 +260,20 @@
       "availability": "التوفر",
       "notSet": "غير محدد"
     }
+  },
+  "footer": {
+    "description": "ربط الأمهات في الكويت مع مقدمي رعاية مؤهلين وموثقين لرعاية الرضع. خدمة آمنة ومهنية ورعاية لصغارك.",
+    "quickLinks": "روابط سريعة",
+    "safetySecurity": "الأمان والأمن",
+    "aboutUs": "حولنا",
+    "joinAsCareTaker": "انضم كمقدم رعاية",
+    "benefits": "الفوائد",
+    "requirements": "المتطلبات",
+    "support": "الدعم",
+    "contactUs": "اتصل بنا",
+    "copyright": "© 2024 ENFAS. جميع الحقوق محفوظة.",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfService": "شروط الخدمة"
   }
 }
 

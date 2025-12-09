@@ -260,6 +260,20 @@
       "availability": "Availability",
       "notSet": "Not set"
     }
+  },
+  "footer": {
+    "description": "Connecting mothers in Kuwait with qualified, vetted care takers for newborn care. Safe, professional, and caring service for your little ones.",
+    "quickLinks": "Quick Links",
+    "safetySecurity": "Safety & Security",
+    "aboutUs": "About Us",
+    "joinAsCareTaker": "Join as Care Taker",
+    "benefits": "Benefits",
+    "requirements": "Requirements",
+    "support": "Support",
+    "contactUs": "Contact Us",
+    "copyright": "© 2024 ENFAS. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
   }
 }
 
