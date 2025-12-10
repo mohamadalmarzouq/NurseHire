@@ -141,10 +141,10 @@ export default function UserDashboard() {
                 <Search className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#1E40AF'}}>Find Care Takers</h3>
-                <p className="text-sm mb-3" style={{color: '#1E40AF', opacity: 0.8}}>Browse available care takers</p>
+                <h3 className="text-xl font-bold mb-2" style={{color: '#1E40AF'}}>{t('user.dashboard.findCareTakers')}</h3>
+                <p className="text-sm mb-3" style={{color: '#1E40AF', opacity: 0.8}}>{t('user.dashboard.findCareTakersDesc')}</p>
                 <div className="text-xs font-medium" style={{color: '#1E40AF', opacity: 0.7}}>
-                  Discover trusted care →
+                  {t('user.dashboard.discoverTrustedCare')} →
                 </div>
               </div>
             </div>
@@ -163,10 +163,10 @@ export default function UserDashboard() {
                 <MessageCircle className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#047857'}}>My Requests</h3>
-                <p className="text-sm mb-3" style={{color: '#047857', opacity: 0.8}}>View information requests</p>
+                <h3 className="text-xl font-bold mb-2" style={{color: '#047857'}}>{t('user.dashboard.myRequests')}</h3>
+                <p className="text-sm mb-3" style={{color: '#047857', opacity: 0.8}}>{t('user.dashboard.myRequestsDesc')}</p>
                 <div className="text-xs font-medium" style={{color: '#047857', opacity: 0.7}}>
-                  Track your requests →
+                  {t('user.dashboard.trackRequests')} →
                 </div>
               </div>
             </div>
@@ -185,10 +185,10 @@ export default function UserDashboard() {
                 <MessageCircle className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#6B21A8'}}>Messages</h3>
-                <p className="text-sm mb-3" style={{color: '#6B21A8', opacity: 0.8}}>Chat with care takers</p>
+                <h3 className="text-xl font-bold mb-2" style={{color: '#6B21A8'}}>{t('user.dashboard.myMessages')}</h3>
+                <p className="text-sm mb-3" style={{color: '#6B21A8', opacity: 0.8}}>{t('user.dashboard.myMessagesDesc')}</p>
                 <div className="text-xs font-medium" style={{color: '#6B21A8', opacity: 0.7}}>
-                  Connect & communicate →
+                  {t('user.dashboard.connectCommunicate')} →
                 </div>
               </div>
             </div>
@@ -207,10 +207,10 @@ export default function UserDashboard() {
                 <Star className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#92400E'}}>Reviews</h3>
-                <p className="text-sm mb-3" style={{color: '#92400E', opacity: 0.8}}>Rate your care takers</p>
+                <h3 className="text-xl font-bold mb-2" style={{color: '#92400E'}}>{t('user.dashboard.myReviews')}</h3>
+                <p className="text-sm mb-3" style={{color: '#92400E', opacity: 0.8}}>{t('user.dashboard.myReviewsDesc')}</p>
                 <div className="text-xs font-medium" style={{color: '#92400E', opacity: 0.7}}>
-                  Share your experience →
+                  {t('user.dashboard.shareExperience')} →
                 </div>
               </div>
             </div>
@@ -223,23 +223,23 @@ export default function UserDashboard() {
           <div className="nh-card">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>Recent Care Takers</h2>
-                <p className="text-xs text-gray-500">Latest approved care takers ready to assist your family</p>
+                <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>{t('user.dashboard.recentCareTakers')}</h2>
+                <p className="text-xs text-gray-500">{t('user.dashboard.recentCareTakersDesc')}</p>
               </div>
               <Link
                 href="/caretakers"
                 className="inline-flex items-center text-xs font-medium text-primary-600 hover:text-primary-700"
               >
-                View all
+                {t('user.dashboard.viewAll')}
                 <Search className="w-4 h-4 ml-1" />
               </Link>
             </div>
 
             {recentNurses.length === 0 ? (
               <div className="rounded-xl border border-dashed border-yellow-300 bg-yellow-50/60 p-6 text-center">
-                <p className="text-sm font-medium text-yellow-800 mb-1">No care takers available yet</p>
+                <p className="text-sm font-medium text-yellow-800 mb-1">{t('user.dashboard.noCareTakersAvailable')}</p>
                 <p className="text-xs text-yellow-700">
-                  We&apos;re reviewing new applications daily. Please check back soon.
+                  {t('user.dashboard.checkBackSoon')}
                 </p>
               </div>
             ) : (
@@ -267,9 +267,9 @@ export default function UserDashboard() {
                         <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white" />
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-gray-900">{caretaker.name || 'Care Taker'}</p>
+                        <p className="text-sm font-semibold text-gray-900">{caretaker.name || t('user.dashboard.careTaker')}</p>
                         <p className="text-xs text-gray-500">
-                          {caretaker.totalExperience} yrs experience · KD {caretaker.partTimeSalary}/hr
+                          {caretaker.totalExperience} {t('user.dashboard.yrsExperience')} · KD {caretaker.partTimeSalary}/hr
                         </p>
                       </div>
                     </div>
@@ -277,7 +277,7 @@ export default function UserDashboard() {
                       href={`/caretakers/${caretaker.id}`}
                       className="inline-flex items-center text-xs font-medium text-primary-600 hover:text-primary-700"
                     >
-                      View Profile
+                      {t('user.dashboard.viewProfile')}
                       <span className="ml-1 text-lg leading-none">→</span>
                     </Link>
                   </div>
