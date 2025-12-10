@@ -80,7 +80,7 @@ export default function UserDashboard() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+          <p className="mt-4 text-gray-600">{t('user.dashboard.loading')}</p>
         </div>
       </div>
     )
@@ -290,28 +290,28 @@ export default function UserDashboard() {
           <div className="nh-card">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>Favorite Care Takers</h2>
+                <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>{t('user.dashboard.favoriteCareTakers')}</h2>
                 <p className="text-xs text-gray-500">
-                  Keep your top care takers handy for quick booking when you need them most
+                  {t('user.dashboard.favoriteCareTakersDesc')}
                 </p>
               </div>
               <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-500 bg-red-50 px-3 py-1 rounded-full border border-red-100">
                 <Heart className="w-3 h-3" />
-                Favorites
+                {t('user.dashboard.favorites')}
               </span>
             </div>
 
             <div className="rounded-xl border border-dashed border-red-300 bg-red-50/60 p-6 text-center">
               <Heart className="w-8 h-8 text-red-400 mx-auto mb-3" />
-              <p className="text-sm font-semibold text-red-700 mb-1">No favorites yet</p>
+              <p className="text-sm font-semibold text-red-700 mb-1">{t('user.dashboard.noFavoritesYet')}</p>
               <p className="text-xs text-red-600 mb-4">
-                Tap the heart icon on any care taker profile to add them to this list and access them faster next time.
+                {t('user.dashboard.favoritesInstruction')}
               </p>
               <Link
                 href="/caretakers"
                 className="inline-flex items-center gap-2 rounded-full bg-red-500 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-red-600 transition-colors"
               >
-                Browse care takers
+                {t('user.dashboard.browseCareTakers')}
                 <Heart className="w-4 h-4" />
               </Link>
             </div>
@@ -322,35 +322,35 @@ export default function UserDashboard() {
         <div className="mt-8 nh-card">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
             <div>
-              <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>Profile Information</h2>
+              <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>{t('user.dashboard.profileInformation')}</h2>
               <p className="text-xs text-gray-500">
-                Keep your details up to date so care takers can learn more about your family&apos;s needs
+                {t('user.dashboard.profileInformationDesc')}
               </p>
             </div>
             <Link
               href="/user/profile"
               className="inline-flex items-center gap-2 rounded-full bg-primary-600 px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-primary-700 transition-colors"
             >
-              <span>Edit Profile</span>
+              <span>{t('user.dashboard.editProfile')}</span>
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
-              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Name</p>
-              <p className="text-sm font-semibold text-gray-900">{user?.profile?.name || 'Not set'}</p>
+              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">{t('common.fullName')}</p>
+              <p className="text-sm font-semibold text-gray-900">{user?.profile?.name || t('user.dashboard.notSet')}</p>
             </div>
             <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
-              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Email</p>
-              <p className="text-sm font-semibold text-gray-900 break-words">{user?.email || 'Not set'}</p>
+              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">{t('common.email')}</p>
+              <p className="text-sm font-semibold text-gray-900 break-words">{user?.email || t('user.dashboard.notSet')}</p>
             </div>
             <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
-              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Phone</p>
-              <p className="text-sm font-semibold text-gray-900">{user?.profile?.phone || 'Not set'}</p>
+              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">{t('common.phone')}</p>
+              <p className="text-sm font-semibold text-gray-900">{user?.profile?.phone || t('user.dashboard.notSet')}</p>
             </div>
             <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
-              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Location</p>
-              <p className="text-sm font-semibold text-gray-900">{user?.profile?.location || 'Not set'}</p>
+              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">{t('common.location')}</p>
+              <p className="text-sm font-semibold text-gray-900">{user?.profile?.location || t('user.dashboard.notSet')}</p>
             </div>
           </div>
         </div>
