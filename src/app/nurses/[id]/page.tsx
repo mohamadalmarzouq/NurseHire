@@ -50,7 +50,6 @@ export default function CareTakerProfilePage() {
   const [callDateTime, setCallDateTime] = useState('')
   const [callDuration, setCallDuration] = useState(30)
   const [callTimezone, setCallTimezone] = useState('UTC')
-  const [callRequest, setCallRequest] = useState<any>(null)
   const [existingCall, setExistingCall] = useState<any>(null)
   const [isCallSubmitting, setIsCallSubmitting] = useState(false)
   const [user, setUser] = useState<any>(null)
@@ -130,30 +129,13 @@ export default function CareTakerProfilePage() {
   }, [])
 
   useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'USER' || !caretaker) return
-    const loadCallRequest = async () => {
-      try {
-        const res = await fetch('/api/requests', { cache: 'no-store' })
-        if (res.ok) {
-          const data = await res.json()
-          const matchingRequest = data.requests?.find((request: any) => request.caretakerId === caretaker.id)
-          setCallRequest(matchingRequest || null)
-        }
-      } catch (e) {
-        console.error('Error loading call request:', e)
-      }
-    }
-    loadCallRequest()
-  }, [isAuthenticated, user, caretaker])
-
-  useEffect(() => {
-    if (!callRequest) {
+    if (!caretaker || !isAuthenticated || user?.role !== 'USER') {
       setExistingCall(null)
       return
     }
     const loadExistingCall = async () => {
       try {
-        const res = await fetch(`/api/calls?requestId=${callRequest.id}`, { cache: 'no-store' })
+        const res = await fetch(`/api/calls?caretakerId=${caretaker.id}`, { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
           setExistingCall(data.calls?.[0] || null)
@@ -163,7 +145,7 @@ export default function CareTakerProfilePage() {
       }
     }
     loadExistingCall()
-  }, [callRequest])
+  }, [caretaker, isAuthenticated, user])
 
   useEffect(() => {
     const checkIfReviewed = async () => {
@@ -285,10 +267,6 @@ export default function CareTakerProfilePage() {
       alert('Please subscribe to schedule a call.')
       return
     }
-    if (!callRequest) {
-      alert('Please request information first before scheduling a call.')
-      return
-    }
     if (!callDateTime) {
       alert('Please select a date and time for the call.')
       return
@@ -306,7 +284,7 @@ export default function CareTakerProfilePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          requestId: callRequest.id,
+          caretakerId: caretaker.id,
           scheduledAt: scheduledAt.toISOString(),
           durationMinutes: callDuration,
           timezone: callTimezone,
@@ -478,15 +456,13 @@ export default function CareTakerProfilePage() {
 
   const hasActiveCall = existingCall && ['REQUESTED', 'ACCEPTED'].includes(existingCall.status)
   const isSubscribed = !!caretaker?.hasActiveSubscription
-  const scheduleDisabled = !isSubscribed || !callRequest || hasActiveCall || user?.role !== 'USER'
+  const scheduleDisabled = !isSubscribed || hasActiveCall || user?.role !== 'USER'
   const scheduleLabel = hasActiveCall ? 'Call Request Pending' : 'Schedule a Call'
   const scheduleTitle = !isSubscribed
     ? 'Subscribe to schedule a call'
-    : !callRequest
-      ? 'Submit an information request first'
-      : hasActiveCall
-        ? 'You already have a pending call request'
-        : 'Schedule a video call'
+    : hasActiveCall
+      ? 'You already have a pending call request'
+      : 'Schedule a video call'
 
   if (!caretaker) {
     return (
@@ -1006,11 +982,6 @@ export default function CareTakerProfilePage() {
                 You need an active subscription to schedule a call.
               </div>
             )}
-            {!callRequest && (
-              <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg text-sm mb-4">
-                You need to submit an information request before scheduling a call.
-              </div>
-            )}
             <div className="space-y-4">
               <div>
                 <label className="label">Date & Time</label>
@@ -1019,7 +990,7 @@ export default function CareTakerProfilePage() {
                   className="input-field"
                   value={callDateTime}
                   onChange={(e) => setCallDateTime(e.target.value)}
-                  disabled={!callRequest || !caretaker.hasActiveSubscription}
+                  disabled={!caretaker.hasActiveSubscription}
                 />
               </div>
               <div>
@@ -1028,7 +999,7 @@ export default function CareTakerProfilePage() {
                   className="input-field"
                   value={callDuration}
                   onChange={(e) => setCallDuration(Number(e.target.value))}
-                  disabled={!callRequest || !caretaker.hasActiveSubscription}
+                  disabled={!caretaker.hasActiveSubscription}
                 >
                   <option value={15}>15 minutes</option>
                   <option value={30}>30 minutes</option>
@@ -1043,7 +1014,7 @@ export default function CareTakerProfilePage() {
                   className="input-field"
                   value={callTimezone}
                   onChange={(e) => setCallTimezone(e.target.value)}
-                  disabled={!callRequest || !caretaker.hasActiveSubscription}
+                  disabled={!caretaker.hasActiveSubscription}
                 />
               </div>
               <div className="flex space-x-4">
@@ -1056,7 +1027,7 @@ export default function CareTakerProfilePage() {
                 <button
                   onClick={handleScheduleCall}
                   className="flex-1 btn-primary"
-                  disabled={!callRequest || !caretaker.hasActiveSubscription || isCallSubmitting}
+                  disabled={!caretaker.hasActiveSubscription || isCallSubmitting}
                 >
                   {isCallSubmitting ? 'Sending...' : 'Send Call Request'}
                 </button>

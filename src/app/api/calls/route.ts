@@ -66,11 +66,11 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { requestId, scheduledAt, durationMinutes, timezone } = body
+    const { requestId, caretakerId, scheduledAt, durationMinutes, timezone } = body
 
-    if (!requestId || !scheduledAt || !durationMinutes || !timezone) {
+    if (!scheduledAt || !durationMinutes || !timezone || (!requestId && !caretakerId)) {
       return NextResponse.json(
-        { error: 'requestId, scheduledAt, durationMinutes, and timezone are required' },
+        { error: 'caretakerId or requestId, scheduledAt, durationMinutes, and timezone are required' },
         { status: 400 }
       )
     }
@@ -89,22 +89,43 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid durationMinutes value' }, { status: 400 })
     }
 
-    const infoRequest = await prisma.informationRequest.findFirst({
-      where: {
-        id: requestId,
-        requesterId: payload.id,
-      },
-    })
+    let resolvedCaretakerId = caretakerId
+    let resolvedRequestId = requestId || null
 
-    if (!infoRequest) {
-      return NextResponse.json({ error: 'Request not found' }, { status: 404 })
+    if (requestId) {
+      const infoRequest = await prisma.informationRequest.findFirst({
+        where: {
+          id: requestId,
+          requesterId: payload.id,
+        },
+      })
+
+      if (!infoRequest) {
+        return NextResponse.json({ error: 'Request not found' }, { status: 404 })
+      }
+
+      if (infoRequest.status === 'CANCELLED') {
+        return NextResponse.json(
+          { error: 'Cannot schedule a call for a cancelled request' },
+          { status: 400 }
+        )
+      }
+
+      resolvedCaretakerId = infoRequest.caretakerId
+      resolvedRequestId = infoRequest.id
     }
 
-    if (infoRequest.status === 'CANCELLED') {
-      return NextResponse.json(
-        { error: 'Cannot schedule a call for a cancelled request' },
-        { status: 400 }
-      )
+    if (!resolvedCaretakerId) {
+      return NextResponse.json({ error: 'Caretaker not found' }, { status: 404 })
+    }
+
+    const caretaker = await prisma.user.findFirst({
+      where: { id: resolvedCaretakerId, role: 'CARETAKER' },
+      include: { caretakerProfile: true },
+    })
+
+    if (!caretaker || !caretaker.caretakerProfile || caretaker.caretakerProfile.status !== 'APPROVED') {
+      return NextResponse.json({ error: 'Care taker not found or not approved' }, { status: 404 })
     }
 
     const existingCall = await prisma.callSession.findFirst({
@@ -124,9 +145,9 @@ export async function POST(request: NextRequest) {
 
     const call = await prisma.callSession.create({
       data: {
-        requestId: infoRequest.id,
+        requestId: resolvedRequestId,
         userId: payload.id,
-        caretakerId: infoRequest.caretakerId,
+        caretakerId: resolvedCaretakerId,
         scheduledAt: scheduledDate,
         durationMinutes: durationValue,
         timezone,

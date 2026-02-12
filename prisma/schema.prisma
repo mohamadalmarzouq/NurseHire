@@ -186,7 +186,7 @@ model InformationRequest {
 
 model CallSession {
   id              String     @id @default(cuid())
-  requestId       String
+  requestId       String?
   userId          String
   caretakerId     String
   scheduledAt     DateTime
@@ -196,7 +196,7 @@ model CallSession {
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 
-  request   InformationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  request   InformationRequest? @relation(fields: [requestId], references: [id], onDelete: Cascade)
   user      User               @relation("CallRequester", fields: [userId], references: [id], onDelete: Cascade)
   caretaker User               @relation("CallCaretaker", fields: [caretakerId], references: [id], onDelete: Cascade)
 
