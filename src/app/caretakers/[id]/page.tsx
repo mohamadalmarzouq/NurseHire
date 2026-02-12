@@ -303,6 +303,10 @@ export default function CareTakerProfilePage() {
   }
 
   const handleScheduleCall = async () => {
+    if (!caretaker?.hasActiveSubscription) {
+      alert('Please subscribe to schedule a call.')
+      return
+    }
     if (!callRequest) {
       alert('Please request information first before scheduling a call.')
       return
@@ -498,17 +502,16 @@ export default function CareTakerProfilePage() {
   }
 
   const hasActiveCall = existingCall && ['REQUESTED', 'ACCEPTED'].includes(existingCall.status)
-  const scheduleDisabled = !callRequest || hasActiveCall || user?.role !== 'USER'
-  const scheduleLabel = !callRequest
-    ? 'Request Info First'
-    : hasActiveCall
-      ? 'Call Request Pending'
-      : 'Schedule Video Call'
-  const scheduleTitle = !callRequest
-    ? 'Submit an information request first'
-    : hasActiveCall
-      ? 'You already have a pending call request'
-      : 'Schedule a video call'
+  const isSubscribed = !!caretaker?.hasActiveSubscription
+  const scheduleDisabled = !isSubscribed || !callRequest || hasActiveCall || user?.role !== 'USER'
+  const scheduleLabel = hasActiveCall ? 'Call Request Pending' : 'Schedule a Call'
+  const scheduleTitle = !isSubscribed
+    ? 'Subscribe to schedule a call'
+    : !callRequest
+      ? 'Submit an information request first'
+      : hasActiveCall
+        ? 'You already have a pending call request'
+        : 'Schedule a video call'
 
   if (!caretaker) {
     return (
@@ -1156,6 +1159,11 @@ export default function CareTakerProfilePage() {
             <h3 className="text-xl font-semibold text-neutral-900 mb-4">
               Schedule a Video Call with {caretaker.name}
             </h3>
+            {!caretaker.hasActiveSubscription && (
+              <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg text-sm mb-4">
+                You need an active subscription to schedule a call.
+              </div>
+            )}
             {!callRequest && (
               <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg text-sm mb-4">
                 You need to submit an information request before scheduling a call.
@@ -1169,7 +1177,7 @@ export default function CareTakerProfilePage() {
                   className="input-field"
                   value={callDateTime}
                   onChange={(e) => setCallDateTime(e.target.value)}
-                  disabled={!callRequest}
+                  disabled={!callRequest || !caretaker.hasActiveSubscription}
                 />
               </div>
               <div>
@@ -1178,7 +1186,7 @@ export default function CareTakerProfilePage() {
                   className="input-field"
                   value={callDuration}
                   onChange={(e) => setCallDuration(Number(e.target.value))}
-                  disabled={!callRequest}
+                  disabled={!callRequest || !caretaker.hasActiveSubscription}
                 >
                   <option value={15}>15 minutes</option>
                   <option value={30}>30 minutes</option>
@@ -1193,7 +1201,7 @@ export default function CareTakerProfilePage() {
                   className="input-field"
                   value={callTimezone}
                   onChange={(e) => setCallTimezone(e.target.value)}
-                  disabled={!callRequest}
+                  disabled={!callRequest || !caretaker.hasActiveSubscription}
                 />
               </div>
               <div className="flex space-x-4">
@@ -1206,7 +1214,7 @@ export default function CareTakerProfilePage() {
                 <button
                   onClick={handleScheduleCall}
                   className="flex-1 btn-primary"
-                  disabled={!callRequest || isCallSubmitting}
+                  disabled={!callRequest || !caretaker.hasActiveSubscription || isCallSubmitting}
                 >
                   {isCallSubmitting ? 'Sending...' : 'Send Call Request'}
                 </button>
