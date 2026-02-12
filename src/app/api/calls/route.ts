@@ -130,15 +130,17 @@ export async function POST(request: NextRequest) {
 
     const existingCall = await prisma.callSession.findFirst({
       where: {
-        requestId: infoRequest.id,
         status: { in: ['REQUESTED', 'ACCEPTED'] },
+        ...(resolvedRequestId
+          ? { requestId: resolvedRequestId }
+          : { userId: payload.id, caretakerId: resolvedCaretakerId }),
       },
       orderBy: { scheduledAt: 'desc' },
     })
 
     if (existingCall) {
       return NextResponse.json(
-        { error: 'There is already a pending or accepted call for this request' },
+        { error: 'There is already a pending or accepted call for this caretaker' },
         { status: 400 }
       )
     }
