@@ -88,6 +88,23 @@ export async function POST(
       })
     }
 
+    const joinData: { userJoinedAt?: Date; caretakerJoinedAt?: Date; startedAt?: Date } = {}
+    if (payload.role === 'CARETAKER' && !callSession.caretakerJoinedAt) {
+      joinData.caretakerJoinedAt = new Date()
+    }
+    if (payload.role !== 'CARETAKER' && !callSession.userJoinedAt) {
+      joinData.userJoinedAt = new Date()
+    }
+    if (!callSession.startedAt) {
+      joinData.startedAt = new Date()
+    }
+    if (Object.keys(joinData).length > 0) {
+      await prisma.callSession.update({
+        where: { id: callSession.id },
+        data: joinData,
+      })
+    }
+
     const displayName =
       callSession.userId === payload.id
         ? callSession.user.userProfile?.name || 'User'

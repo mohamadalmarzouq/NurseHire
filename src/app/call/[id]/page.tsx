@@ -10,6 +10,7 @@ export default function CallPage() {
   const [error, setError] = useState<string | null>(null)
   const [isJoining, setIsJoining] = useState(true)
   const [returnPath, setReturnPath] = useState('/user/calls')
+  const [hasRemote, setHasRemote] = useState(false)
   const localVideoRef = useRef<HTMLVideoElement | null>(null)
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null)
   const callObjectRef = useRef<any>(null)
@@ -58,12 +59,20 @@ export default function CallPage() {
             localVideoRef.current.srcObject = mediaStream
           } else if (!participant.local && remoteVideoRef.current) {
             remoteVideoRef.current.srcObject = mediaStream
+            setHasRemote(true)
           }
         })
 
-        callObject.on('track-stopped', () => {
-          if (remoteVideoRef.current) {
+        callObject.on('track-stopped', (event: any) => {
+          if (!event?.participant?.local && remoteVideoRef.current) {
             remoteVideoRef.current.srcObject = null
+            setHasRemote(false)
+          }
+        })
+
+        callObject.on('participant-left', (event: any) => {
+          if (!event?.participant?.local) {
+            setHasRemote(false)
           }
         })
 
@@ -138,7 +147,14 @@ export default function CallPage() {
           <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
         </div>
         <div className="bg-black rounded-lg overflow-hidden aspect-video">
-          <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
+          <div className="relative w-full h-full">
+            <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
+            {!hasRemote && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-sm text-gray-200">
+                Waiting for the other participant to join...
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

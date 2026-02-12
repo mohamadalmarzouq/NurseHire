@@ -29,6 +29,12 @@ export async function POST(
       return NextResponse.json({ error: 'Call not found' }, { status: 404 })
     }
 
+    const bothJoined = !!callSession.userJoinedAt && !!callSession.caretakerJoinedAt
+
+    if (!bothJoined) {
+      return NextResponse.json({ call: callSession })
+    }
+
     const updatedCall = await prisma.callSession.update({
       where: { id: callSession.id },
       data: {
