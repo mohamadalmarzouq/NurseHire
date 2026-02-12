@@ -156,14 +156,24 @@ export default function UserCallsPage() {
 
                 <div className="flex items-center justify-between text-sm text-gray-500">
                   <span>Requested on {new Date(call.createdAt).toLocaleDateString()}</span>
-                  {['REQUESTED', 'ACCEPTED'].includes(call.status) && (
-                    <button
-                      onClick={() => handleCancel(call.id)}
-                      className="px-3 py-2 text-sm font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {call.status === 'ACCEPTED' && (
+                      <Link
+                        href={`/call/${call.id}`}
+                        className="px-3 py-2 text-sm font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors"
+                      >
+                        Join Call
+                      </Link>
+                    )}
+                    {['REQUESTED', 'ACCEPTED'].includes(call.status) && (
+                      <button
+                        onClick={() => handleCancel(call.id)}
+                        className="px-3 py-2 text-sm font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

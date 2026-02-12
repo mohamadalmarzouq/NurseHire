@@ -193,6 +193,10 @@ model CallSession {
   durationMinutes Int
   timezone        String
   status          CallStatus @default(REQUESTED)
+  dailyRoomName   String?
+  dailyRoomUrl    String?
+  startedAt       DateTime?
+  endedAt         DateTime?
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 

@@ -173,6 +173,14 @@ export default function CaretakerCallsPage() {
                 <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-gray-500">
                   <span>Requested on {new Date(call.createdAt).toLocaleDateString()}</span>
                   <div className="flex flex-wrap gap-2">
+                    {call.status === 'ACCEPTED' && (
+                      <Link
+                        href={`/call/${call.id}`}
+                        className="px-3 py-2 text-sm font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors"
+                      >
+                        Join Call
+                      </Link>
+                    )}
                     {call.status === 'REQUESTED' && (
                       <>
                         <button
