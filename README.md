@@ -99,6 +99,9 @@ In your web service settings, add these environment variables:
 DATABASE_URL=<your-postgresql-external-url>
 JWT_SECRET=<generate-a-strong-random-string>
 NODE_ENV=production
+BASE_URL=<your-public-domain>
+DAILY_API_KEY=<daily-api-key>
+DAILY_DOMAIN=https://your-team.daily.co
 ```
 
 **Important**: 
@@ -146,6 +149,9 @@ To create an admin user, you can either:
 | `DATABASE_URL` | PostgreSQL connection string | Yes | `postgresql://user:pass@host:5432/db` |
 | `JWT_SECRET` | Secret key for JWT tokens | Yes | `your-super-secret-key` |
 | `NODE_ENV` | Environment mode | Yes | `production` |
+| `BASE_URL` | Public site URL (used for callbacks) | Yes | `https://enfas.co` |
+| `DAILY_API_KEY` | Daily API key for video calls | Yes | `your-daily-api-key` |
+| `DAILY_DOMAIN` | Daily team domain | Yes | `https://your-team.daily.co` |
 | `UPLOAD_DIR` | File upload directory | No | `./uploads` |
 | `MAX_FILE_SIZE` | Maximum file size in bytes | No | `5242880` |
 

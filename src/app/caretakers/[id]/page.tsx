@@ -53,6 +53,13 @@ export default function CareTakerProfilePage() {
   const [preferredContactTime, setPreferredContactTime] = useState('')
   const [urgency, setUrgency] = useState('MEDIUM')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showCallModal, setShowCallModal] = useState(false)
+  const [callDateTime, setCallDateTime] = useState('')
+  const [callDuration, setCallDuration] = useState(30)
+  const [callTimezone, setCallTimezone] = useState('UTC')
+  const [callRequest, setCallRequest] = useState<any>(null)
+  const [existingCall, setExistingCall] = useState<any>(null)
+  const [isCallSubmitting, setIsCallSubmitting] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [viewer, setViewer] = useState<{ url: string; type: 'image' | 'pdf' } | null>(null)
@@ -135,6 +142,50 @@ export default function CareTakerProfilePage() {
     }
     checkAuth()
   }, [])
+
+  useEffect(() => {
+    if (typeof Intl === 'undefined') return
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    if (timezone) {
+      setCallTimezone(timezone)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isAuthenticated || user?.role !== 'USER' || !caretaker) return
+    const loadCallRequest = async () => {
+      try {
+        const res = await fetch('/api/requests', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          const matchingRequest = data.requests?.find((request: any) => request.caretakerId === caretaker.id)
+          setCallRequest(matchingRequest || null)
+        }
+      } catch (e) {
+        console.error('Error loading call request:', e)
+      }
+    }
+    loadCallRequest()
+  }, [isAuthenticated, user, caretaker])
+
+  useEffect(() => {
+    if (!callRequest) {
+      setExistingCall(null)
+      return
+    }
+    const loadExistingCall = async () => {
+      try {
+        const res = await fetch(`/api/calls?requestId=${callRequest.id}`, { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setExistingCall(data.calls?.[0] || null)
+        }
+      } catch (e) {
+        console.error('Error loading existing call:', e)
+      }
+    }
+    loadExistingCall()
+  }, [callRequest])
 
   useEffect(() => {
     const checkIfReviewed = async () => {
@@ -248,6 +299,52 @@ export default function CareTakerProfilePage() {
       alert('Failed to send information request. Please check your connection and try again.')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleScheduleCall = async () => {
+    if (!callRequest) {
+      alert('Please request information first before scheduling a call.')
+      return
+    }
+    if (!callDateTime) {
+      alert('Please select a date and time for the call.')
+      return
+    }
+
+    const scheduledAt = new Date(callDateTime)
+    if (Number.isNaN(scheduledAt.getTime())) {
+      alert('Please enter a valid date and time.')
+      return
+    }
+
+    setIsCallSubmitting(true)
+    try {
+      const res = await fetch('/api/calls', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          requestId: callRequest.id,
+          scheduledAt: scheduledAt.toISOString(),
+          durationMinutes: callDuration,
+          timezone: callTimezone,
+        }),
+      })
+
+      const data = await res.json()
+      if (res.ok) {
+        setExistingCall(data.call)
+        setShowCallModal(false)
+        setCallDateTime('')
+        alert('Call request sent. The care taker will need to accept it.')
+      } else {
+        alert(data.error || 'Failed to schedule call. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error scheduling call:', error)
+      alert('Failed to schedule call. Please try again.')
+    } finally {
+      setIsCallSubmitting(false)
     }
   }
 
@@ -400,6 +497,19 @@ export default function CareTakerProfilePage() {
     )
   }
 
+  const hasActiveCall = existingCall && ['REQUESTED', 'ACCEPTED'].includes(existingCall.status)
+  const scheduleDisabled = !callRequest || hasActiveCall || user?.role !== 'USER'
+  const scheduleLabel = !callRequest
+    ? 'Request Info First'
+    : hasActiveCall
+      ? 'Call Request Pending'
+      : 'Schedule Video Call'
+  const scheduleTitle = !callRequest
+    ? 'Submit an information request first'
+    : hasActiveCall
+      ? 'You already have a pending call request'
+      : 'Schedule a video call'
+
   if (!caretaker) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
@@ -478,6 +588,23 @@ export default function CareTakerProfilePage() {
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
                   Request Information
+                </button>
+              )}
+              {!isAuthenticated ? (
+                <Link href="/auth/login" className="btn-secondary">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Sign In to Schedule Call
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowCallModal(true)}
+                  className={`btn-secondary ${scheduleDisabled ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  disabled={scheduleDisabled}
+                  title={scheduleTitle}
+                >
+                  <Calendar className="w-4 h-4 mr-2" />
+                  {scheduleLabel}
                 </button>
               )}
             </div>
@@ -903,6 +1030,17 @@ export default function CareTakerProfilePage() {
                     Request Information
                   </button>
                   
+                  <button
+                    type="button"
+                    onClick={() => setShowCallModal(true)}
+                    className={`w-full btn-secondary ${scheduleDisabled ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    disabled={scheduleDisabled}
+                    title={scheduleTitle}
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    {scheduleLabel}
+                  </button>
+                  
                   <button 
                     onClick={() => handleSendMessage()}
                     className="w-full btn-secondary"
@@ -1007,6 +1145,73 @@ export default function CareTakerProfilePage() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Schedule Call Modal */}
+      {showCallModal && caretaker && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 max-w-lg w-full">
+            <h3 className="text-xl font-semibold text-neutral-900 mb-4">
+              Schedule a Video Call with {caretaker.name}
+            </h3>
+            {!callRequest && (
+              <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg text-sm mb-4">
+                You need to submit an information request before scheduling a call.
+              </div>
+            )}
+            <div className="space-y-4">
+              <div>
+                <label className="label">Date & Time</label>
+                <input
+                  type="datetime-local"
+                  className="input-field"
+                  value={callDateTime}
+                  onChange={(e) => setCallDateTime(e.target.value)}
+                  disabled={!callRequest}
+                />
+              </div>
+              <div>
+                <label className="label">Duration (minutes)</label>
+                <select
+                  className="input-field"
+                  value={callDuration}
+                  onChange={(e) => setCallDuration(Number(e.target.value))}
+                  disabled={!callRequest}
+                >
+                  <option value={15}>15 minutes</option>
+                  <option value={30}>30 minutes</option>
+                  <option value={45}>45 minutes</option>
+                  <option value={60}>60 minutes</option>
+                </select>
+              </div>
+              <div>
+                <label className="label">Timezone</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  value={callTimezone}
+                  onChange={(e) => setCallTimezone(e.target.value)}
+                  disabled={!callRequest}
+                />
+              </div>
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => setShowCallModal(false)}
+                  className="flex-1 btn-secondary"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleScheduleCall}
+                  className="flex-1 btn-primary"
+                  disabled={!callRequest || isCallSubmitting}
+                >
+                  {isCallSubmitting ? 'Sending...' : 'Send Call Request'}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

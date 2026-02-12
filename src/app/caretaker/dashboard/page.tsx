@@ -120,6 +120,18 @@ export default function CareTakerDashboard() {
               </div>
             </div>
           </Link>
+
+          <Link href="/caretaker/calls" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center">
+              <div className="bg-cyan-100 p-3 rounded-lg">
+                <Calendar className="w-6 h-6 text-cyan-600" />
+              </div>
+              <div className="ml-4">
+                <h3 className="text-lg font-semibold text-gray-900">Calls</h3>
+                <p className="text-gray-600 text-sm">Manage call requests</p>
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Profile Overview */}

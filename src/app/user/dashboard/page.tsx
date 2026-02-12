@@ -194,6 +194,28 @@ export default function UserDashboard() {
             </div>
           </Link>
 
+          <Link href="/user/calls" className="group nh-card nh-card--lift p-6" style={{
+            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+            border: '1px solid #A5F3FC',
+            transition: 'all 0.3s ease'
+          }}>
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="p-4 rounded-2xl" style={{
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
+              }}>
+                <Calendar className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2" style={{color: '#0E7490'}}>Calls</h3>
+                <p className="text-sm mb-3" style={{color: '#0E7490', opacity: 0.8}}>Schedule and manage calls</p>
+                <div className="text-xs font-medium" style={{color: '#0E7490', opacity: 0.7}}>
+                  View call requests →
+                </div>
+              </div>
+            </div>
+          </Link>
+
           <Link href="/user/reviews" className="group nh-card nh-card--lift p-6" style={{
             background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
             border: '1px solid #FDE68A',

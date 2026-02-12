@@ -40,6 +40,14 @@ enum ReviewStatus {
   REJECTED
 }
 
+enum CallStatus {
+  REQUESTED
+  ACCEPTED
+  REJECTED
+  CANCELED
+  COMPLETED
+}
+
 enum SubscriptionStatus {
   NONE
   ACTIVE
@@ -76,6 +84,10 @@ model User {
   // Review relations
   reviewsGiven   Review[] @relation("ReviewGiver")
   reviewsReceived Review[] @relation("ReviewReceiver")
+
+  // Call session relations
+  callsRequested CallSession[] @relation("CallRequester")
+  callsReceived  CallSession[] @relation("CallCaretaker")
 
   @@map("users")
 }
@@ -167,8 +179,31 @@ model InformationRequest {
 
   requester User @relation("InformationRequester", fields: [requesterId], references: [id], onDelete: Cascade)
   caretaker User @relation("InformationCaretaker", fields: [caretakerId], references: [id], onDelete: Cascade)
+  callSessions CallSession[]
 
   @@map("information_requests")
+}
+
+model CallSession {
+  id              String     @id @default(cuid())
+  requestId       String
+  userId          String
+  caretakerId     String
+  scheduledAt     DateTime
+  durationMinutes Int
+  timezone        String
+  status          CallStatus @default(REQUESTED)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  request   InformationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  user      User               @relation("CallRequester", fields: [userId], references: [id], onDelete: Cascade)
+  caretaker User               @relation("CallCaretaker", fields: [caretakerId], references: [id], onDelete: Cascade)
+
+  @@index([requestId])
+  @@index([userId])
+  @@index([caretakerId])
+  @@map("call_sessions")
 }
 
 model Review {
