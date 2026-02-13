@@ -269,6 +269,9 @@ export default function CallPage() {
 
           <div className="flex-1 flex flex-col">
             <h2 className="text-sm font-semibold text-gray-800 mb-2">Chat</h2>
+            <div className="text-xs text-gray-500 mb-2">
+              Debug: {messages.length} messages
+            </div>
             <div className="flex-1 overflow-y-auto space-y-3 bg-gray-50 rounded-md p-3 min-h-[200px] max-h-[360px] border border-gray-200">
               {messages.length === 0 ? (
                 <p className="text-xs text-gray-500">No messages yet</p>
