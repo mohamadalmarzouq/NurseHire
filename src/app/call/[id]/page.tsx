@@ -10,13 +10,6 @@ type ParticipantInfo = {
   local: boolean
 }
 
-type ChatMessage = {
-  id: string
-  sender: string
-  text: string
-  timestamp: string
-}
-
 export default function CallPage() {
   const params = useParams()
   const router = useRouter()
@@ -25,13 +18,9 @@ export default function CallPage() {
   const [returnPath, setReturnPath] = useState('/user/calls')
   const [hasRemote, setHasRemote] = useState(false)
   const [participants, setParticipants] = useState<ParticipantInfo[]>([])
-  const [isChatOpen, setIsChatOpen] = useState(true)
-  const [chatInput, setChatInput] = useState('')
-  const [messages, setMessages] = useState<ChatMessage[]>([])
   const localVideoRef = useRef<HTMLVideoElement | null>(null)
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null)
   const callObjectRef = useRef<any>(null)
-  const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const loadUser = async () => {
@@ -85,20 +74,6 @@ export default function CallPage() {
           refreshParticipants()
         })
 
-        callObject.on('app-message', (event: any) => {
-          if (!event?.data?.text) return
-          const sender = event?.from?.user_name || 'Participant'
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: `${Date.now()}-${Math.random()}`,
-              sender,
-              text: String(event.data.text),
-              timestamp: new Date().toLocaleTimeString(),
-            },
-          ])
-        })
-
         callObject.on('track-started', (event: any) => {
           const { participant, track } = event
           if (!track || track.kind !== 'video') return
@@ -147,32 +122,6 @@ export default function CallPage() {
     }
   }, [params.id])
 
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [messages])
-
-  const sendMessage = () => {
-    const text = chatInput.trim()
-    if (!text) return
-    const callObject = callObjectRef.current
-    if (callObject) {
-      callObject.sendAppMessage({ text }, '*')
-    }
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: `${Date.now()}-${Math.random()}`,
-        sender: 'You',
-        text,
-        timestamp: new Date().toLocaleTimeString(),
-      },
-    ])
-    setChatInput('')
-    setIsChatOpen(true)
-  }
-
   const handleLeave = async () => {
     try {
       const callObject = callObjectRef.current
@@ -212,20 +161,12 @@ export default function CallPage() {
           <h1 className="text-lg font-semibold">Video Call</h1>
           {isJoining && <p className="text-sm text-gray-400">Joining...</p>}
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setIsChatOpen((prev) => !prev)}
-            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-sm font-medium"
-          >
-            {isChatOpen ? 'Hide Chat' : 'Show Chat'}
-          </button>
-          <button
-            onClick={handleLeave}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium"
-          >
-            End Call
-          </button>
-        </div>
+        <button
+          onClick={handleLeave}
+          className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium"
+        >
+          End Call
+        </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 p-4">
@@ -245,7 +186,7 @@ export default function CallPage() {
           </div>
         </div>
 
-        <div className={`bg-white rounded-lg p-4 flex flex-col gap-4 text-gray-900 max-h-[calc(100vh-140px)] min-h-[360px] ${isChatOpen ? '' : 'hidden lg:block'}`}>
+        <div className="bg-white rounded-lg p-4 flex flex-col gap-4 text-gray-900 max-h-[calc(100vh-140px)] min-h-[360px]">
           <div>
             <h2 className="text-sm font-semibold text-gray-800 mb-2">Participants</h2>
             <div className="space-y-2">
@@ -264,49 +205,6 @@ export default function CallPage() {
                   </div>
                 ))
               )}
-            </div>
-          </div>
-
-          <div className="flex-1 flex flex-col">
-            <h2 className="text-sm font-semibold text-gray-800 mb-2">Chat</h2>
-            <div className="text-xs text-gray-500 mb-2">
-              Debug: {messages.length} messages
-            </div>
-            <div className="flex-1 overflow-y-auto space-y-3 bg-gray-50 rounded-md p-3 min-h-[200px] max-h-[360px] border border-gray-200">
-              {messages.length === 0 ? (
-                <p className="text-xs text-gray-500">No messages yet</p>
-              ) : (
-                messages.map((message) => (
-                  <div key={message.id} className="bg-white border border-gray-200 rounded-md p-2">
-                    <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
-                      <span>{message.sender}</span>
-                      <span>{message.timestamp}</span>
-                    </div>
-                    <p className="text-sm text-gray-900 break-words">{message.text}</p>
-                  </div>
-                ))
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-            <div className="mt-3 flex gap-2">
-              <input
-                className="flex-1 bg-white border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500"
-                placeholder="Type a message..."
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    sendMessage()
-                  }
-                }}
-              />
-              <button
-                onClick={sendMessage}
-                className="px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-medium"
-              >
-                Send
-              </button>
             </div>
           </div>
         </div>
