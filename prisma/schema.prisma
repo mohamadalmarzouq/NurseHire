@@ -199,6 +199,8 @@ model CallSession {
   endedAt         DateTime?
   userJoinedAt    DateTime?
   caretakerJoinedAt DateTime?
+  userLeftAt      DateTime?
+  caretakerLeftAt DateTime?
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 

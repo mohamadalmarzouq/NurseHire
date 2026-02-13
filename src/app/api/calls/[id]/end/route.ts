@@ -29,19 +29,31 @@ export async function POST(
       return NextResponse.json({ error: 'Call not found' }, { status: 404 })
     }
 
-    const bothJoined = !!callSession.userJoinedAt && !!callSession.caretakerJoinedAt
-
-    if (!bothJoined) {
-      return NextResponse.json({ call: callSession })
+    const leftData: { userLeftAt?: Date; caretakerLeftAt?: Date } = {}
+    if (payload.role === 'CARETAKER') {
+      leftData.caretakerLeftAt = new Date()
+    } else {
+      leftData.userLeftAt = new Date()
     }
 
     const updatedCall = await prisma.callSession.update({
       where: { id: callSession.id },
-      data: {
-        status: 'COMPLETED',
-        endedAt: new Date(),
-      },
+      data: leftData,
     })
+
+    const bothJoined = !!updatedCall.userJoinedAt && !!updatedCall.caretakerJoinedAt
+    const bothLeft = !!updatedCall.userLeftAt && !!updatedCall.caretakerLeftAt
+
+    if (bothJoined && bothLeft) {
+      const completedCall = await prisma.callSession.update({
+        where: { id: updatedCall.id },
+        data: {
+          status: 'COMPLETED',
+          endedAt: new Date(),
+        },
+      })
+      return NextResponse.json({ call: completedCall })
+    }
 
     return NextResponse.json({ call: updatedCall })
   } catch (error) {
