@@ -261,24 +261,24 @@ export default function CallPage() {
 
           <div className="flex-1 flex flex-col">
             <h2 className="text-sm font-semibold text-gray-200 mb-2">Chat</h2>
-            <div className="flex-1 overflow-y-auto space-y-3 bg-gray-900 rounded-md p-3">
+            <div className="flex-1 overflow-y-auto space-y-3 bg-gray-700 rounded-md p-3">
               {messages.length === 0 ? (
                 <p className="text-xs text-gray-400">No messages yet</p>
               ) : (
                 messages.map((message) => (
-                  <div key={message.id} className="text-xs text-gray-200">
-                    <div className="flex items-center justify-between text-gray-400 mb-1">
+                  <div key={message.id} className="bg-gray-800 rounded-md p-2">
+                    <div className="flex items-center justify-between text-xs text-gray-300 mb-1">
                       <span>{message.sender}</span>
                       <span>{message.timestamp}</span>
                     </div>
-                    <p className="text-sm text-gray-100">{message.text}</p>
+                    <p className="text-sm text-white break-words">{message.text}</p>
                   </div>
                 ))
               )}
             </div>
             <div className="mt-3 flex gap-2">
               <input
-                className="flex-1 bg-gray-900 border border-gray-700 rounded-md px-3 py-2 text-sm text-white"
+                className="flex-1 bg-white border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500"
                 placeholder="Type a message..."
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
