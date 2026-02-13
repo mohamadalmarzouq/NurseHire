@@ -31,6 +31,7 @@ export default function CallPage() {
   const localVideoRef = useRef<HTMLVideoElement | null>(null)
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null)
   const callObjectRef = useRef<any>(null)
+  const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const loadUser = async () => {
@@ -146,6 +147,12 @@ export default function CallPage() {
     }
   }, [params.id])
 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [messages])
+
   const sendMessage = () => {
     const text = chatInput.trim()
     if (!text) return
@@ -163,6 +170,7 @@ export default function CallPage() {
       },
     ])
     setChatInput('')
+    setIsChatOpen(true)
   }
 
   const handleLeave = async () => {
@@ -261,7 +269,7 @@ export default function CallPage() {
 
           <div className="flex-1 flex flex-col">
             <h2 className="text-sm font-semibold text-gray-800 mb-2">Chat</h2>
-            <div className="flex-1 overflow-y-auto space-y-3 bg-gray-50 rounded-md p-3">
+            <div className="flex-1 overflow-y-auto space-y-3 bg-gray-50 rounded-md p-3 min-h-[140px]">
               {messages.length === 0 ? (
                 <p className="text-xs text-gray-500">No messages yet</p>
               ) : (
@@ -275,6 +283,7 @@ export default function CallPage() {
                   </div>
                 ))
               )}
+              <div ref={messagesEndRef} />
             </div>
             <div className="mt-3 flex gap-2">
               <input
