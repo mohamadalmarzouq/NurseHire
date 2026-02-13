@@ -245,7 +245,7 @@ export default function CallPage() {
           </div>
         </div>
 
-        <div className={`bg-white rounded-lg p-4 flex flex-col gap-4 text-gray-900 h-[calc(100vh-160px)] min-h-[360px] ${isChatOpen ? '' : 'hidden lg:block'}`}>
+        <div className={`bg-white rounded-lg p-4 flex flex-col gap-4 text-gray-900 max-h-[calc(100vh-140px)] min-h-[360px] ${isChatOpen ? '' : 'hidden lg:block'}`}>
           <div>
             <h2 className="text-sm font-semibold text-gray-800 mb-2">Participants</h2>
             <div className="space-y-2">
@@ -269,7 +269,7 @@ export default function CallPage() {
 
           <div className="flex-1 flex flex-col">
             <h2 className="text-sm font-semibold text-gray-800 mb-2">Chat</h2>
-            <div className="flex-1 overflow-y-auto space-y-3 bg-gray-50 rounded-md p-3 min-h-[140px]">
+            <div className="flex-1 overflow-y-auto space-y-3 bg-gray-50 rounded-md p-3 min-h-[200px] max-h-[360px] border border-gray-200">
               {messages.length === 0 ? (
                 <p className="text-xs text-gray-500">No messages yet</p>
               ) : (
