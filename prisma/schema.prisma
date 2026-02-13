@@ -196,6 +196,7 @@ model CallSession {
   dailyRoomName   String?
   dailyRoomUrl    String?
   startedAt       DateTime?
+  callActivatedAt DateTime?
   endedAt         DateTime?
   userJoinedAt    DateTime?
   caretakerJoinedAt DateTime?

@@ -44,7 +44,7 @@ export async function POST(
     const bothJoined = !!updatedCall.userJoinedAt && !!updatedCall.caretakerJoinedAt
     const bothLeft = !!updatedCall.userLeftAt && !!updatedCall.caretakerLeftAt
 
-    if (bothJoined && bothLeft) {
+    if (updatedCall.callActivatedAt && bothJoined && bothLeft) {
       const completedCall = await prisma.callSession.update({
         where: { id: updatedCall.id },
         data: {
