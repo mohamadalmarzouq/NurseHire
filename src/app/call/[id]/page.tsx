@@ -237,21 +237,21 @@ export default function CallPage() {
           </div>
         </div>
 
-        <div className={`bg-gray-800 rounded-lg p-4 flex flex-col gap-4 ${isChatOpen ? '' : 'hidden lg:block'}`}>
+        <div className={`bg-white rounded-lg p-4 flex flex-col gap-4 text-gray-900 ${isChatOpen ? '' : 'hidden lg:block'}`}>
           <div>
-            <h2 className="text-sm font-semibold text-gray-200 mb-2">Participants</h2>
+            <h2 className="text-sm font-semibold text-gray-800 mb-2">Participants</h2>
             <div className="space-y-2">
               {participants.length === 0 ? (
-                <p className="text-xs text-gray-400">No participants yet</p>
+                <p className="text-xs text-gray-500">No participants yet</p>
               ) : (
                 participants.map((participant) => (
                   <div
                     key={participant.id}
-                    className="flex items-center justify-between text-sm text-gray-200"
+                    className="flex items-center justify-between text-sm text-gray-800"
                   >
                     <span>{participant.name}</span>
                     {participant.local && (
-                      <span className="text-xs text-green-400">You</span>
+                      <span className="text-xs text-green-600">You</span>
                     )}
                   </div>
                 ))
@@ -260,18 +260,18 @@ export default function CallPage() {
           </div>
 
           <div className="flex-1 flex flex-col">
-            <h2 className="text-sm font-semibold text-gray-200 mb-2">Chat</h2>
-            <div className="flex-1 overflow-y-auto space-y-3 bg-gray-700 rounded-md p-3">
+            <h2 className="text-sm font-semibold text-gray-800 mb-2">Chat</h2>
+            <div className="flex-1 overflow-y-auto space-y-3 bg-gray-50 rounded-md p-3">
               {messages.length === 0 ? (
-                <p className="text-xs text-gray-400">No messages yet</p>
+                <p className="text-xs text-gray-500">No messages yet</p>
               ) : (
                 messages.map((message) => (
-                  <div key={message.id} className="bg-gray-800 rounded-md p-2">
-                    <div className="flex items-center justify-between text-xs text-gray-300 mb-1">
+                  <div key={message.id} className="bg-white border border-gray-200 rounded-md p-2">
+                    <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
                       <span>{message.sender}</span>
                       <span>{message.timestamp}</span>
                     </div>
-                    <p className="text-sm text-white break-words">{message.text}</p>
+                    <p className="text-sm text-gray-900 break-words">{message.text}</p>
                   </div>
                 ))
               )}
