@@ -237,7 +237,7 @@ export default function CallPage() {
           </div>
         </div>
 
-        <div className={`bg-white rounded-lg p-4 flex flex-col gap-4 text-gray-900 ${isChatOpen ? '' : 'hidden lg:block'}`}>
+        <div className={`bg-white rounded-lg p-4 flex flex-col gap-4 text-gray-900 h-[calc(100vh-160px)] min-h-[360px] ${isChatOpen ? '' : 'hidden lg:block'}`}>
           <div>
             <h2 className="text-sm font-semibold text-gray-800 mb-2">Participants</h2>
             <div className="space-y-2">
