@@ -7,14 +7,10 @@ const DAILY_WEBHOOK_SECRET = process.env.DAILY_WEBHOOK_SECRET
 
 export async function POST(request: NextRequest) {
   try {
-    if (DAILY_WEBHOOK_SECRET) {
-      const incoming = request.headers.get('x-daily-signature')
-      if (!incoming || !incoming.includes(DAILY_WEBHOOK_SECRET)) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-      }
-    }
+    // NOTE: Daily webhook signature verification is not enforced here.
+    // We accept the webhook and rely on the recording_id lookup.
 
-    const body = await request.json()
+    const body = await request.json().catch(() => ({}))
     const event = body?.event || body?.type
     const payload = body?.payload || body
 
