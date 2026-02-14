@@ -18,6 +18,9 @@ export default function CallPage() {
   const [returnPath, setReturnPath] = useState('/user/calls')
   const [hasRemote, setHasRemote] = useState(false)
   const [participants, setParticipants] = useState<ParticipantInfo[]>([])
+  const [recordingStatus, setRecordingStatus] = useState<'NONE' | 'RECORDING' | 'PROCESSING' | 'READY' | 'FAILED'>('NONE')
+  const [recordingUrl, setRecordingUrl] = useState<string | null>(null)
+  const [isRecordingUpdating, setIsRecordingUpdating] = useState(false)
   const localVideoRef = useRef<HTMLVideoElement | null>(null)
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null)
   const callObjectRef = useRef<any>(null)
@@ -103,6 +106,13 @@ export default function CallPage() {
 
         refreshParticipants()
 
+        if (data.recordingStatus) {
+          setRecordingStatus(data.recordingStatus)
+        }
+        if (data.recordingUrl) {
+          setRecordingUrl(data.recordingUrl)
+        }
+
         await callObject.join({ url: data.roomUrl, token: data.token })
         setIsJoining(false)
       } catch (err) {
@@ -137,6 +147,33 @@ export default function CallPage() {
     }
   }
 
+  const handleRecordToggle = async () => {
+    if (isRecordingUpdating) return
+    setIsRecordingUpdating(true)
+    try {
+      if (recordingStatus === 'RECORDING') {
+        const res = await fetch(`/api/calls/${params.id}/record/stop`, { method: 'POST' })
+        const data = await res.json()
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to stop recording')
+        }
+        setRecordingStatus('PROCESSING')
+      } else {
+        const res = await fetch(`/api/calls/${params.id}/record/start`, { method: 'POST' })
+        const data = await res.json()
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to start recording')
+        }
+        setRecordingStatus('RECORDING')
+      }
+    } catch (err) {
+      console.error(err)
+      setRecordingStatus('FAILED')
+    } finally {
+      setIsRecordingUpdating(false)
+    }
+  }
+
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -161,12 +198,40 @@ export default function CallPage() {
           <h1 className="text-lg font-semibold">Video Call</h1>
           {isJoining && <p className="text-sm text-gray-400">Joining...</p>}
         </div>
-        <button
-          onClick={handleLeave}
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium"
-        >
-          End Call
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRecordToggle}
+            className={`px-4 py-2 rounded-md text-sm font-medium ${
+              recordingStatus === 'RECORDING'
+                ? 'bg-red-600 hover:bg-red-700'
+                : 'bg-gray-800 hover:bg-gray-700'
+            }`}
+          >
+            {recordingStatus === 'RECORDING' ? 'Stop Recording' : 'Record'}
+          </button>
+          {recordingStatus === 'RECORDING' && (
+            <span className="text-xs text-red-300">● Recording</span>
+          )}
+          {recordingStatus === 'PROCESSING' && (
+            <span className="text-xs text-yellow-300">Processing...</span>
+          )}
+          {recordingStatus === 'READY' && recordingUrl && (
+            <a
+              href={recordingUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="text-xs text-green-300 underline"
+            >
+              View recording
+            </a>
+          )}
+          <button
+            onClick={handleLeave}
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium"
+          >
+            End Call
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 p-4">

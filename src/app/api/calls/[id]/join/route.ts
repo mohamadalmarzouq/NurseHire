@@ -152,6 +152,8 @@ export async function POST(
       roomUrl,
       token: tokenData.token,
       roomName,
+      recordingStatus: callSession.recordingStatus,
+      recordingUrl: callSession.recordingUrl,
     })
   } catch (error) {
     console.error('Error joining call:', error)

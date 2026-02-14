@@ -167,6 +167,11 @@ export default function CaretakerCallsPage() {
                     <p className="text-sm text-gray-600 mt-2">
                       Duration: {call.durationMinutes} minutes
                     </p>
+                    {call.recordingStatus && call.recordingStatus !== 'NONE' && (
+                      <p className="text-sm text-gray-600 mt-2">
+                        Recording: {call.recordingStatus.toLowerCase()}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -204,6 +209,16 @@ export default function CaretakerCallsPage() {
                       >
                         Cancel
                       </button>
+                    )}
+                    {call.recordingStatus === 'READY' && call.recordingUrl && (
+                      <a
+                        href={call.recordingUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-3 py-2 text-sm font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 transition-colors"
+                      >
+                        View Recording
+                      </a>
                     )}
                   </div>
                 </div>

@@ -68,7 +68,7 @@ export async function uploadToCloudinary(
   file: Buffer | string,
   folder: string,
   fileName: string,
-  resourceType: 'image' | 'raw' = 'image'
+  resourceType: 'image' | 'raw' | 'video' = 'image'
 ): Promise<UploadResult> {
   try {
     // Ensure Cloudinary is configured before uploading
