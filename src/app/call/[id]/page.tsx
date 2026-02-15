@@ -16,6 +16,7 @@ export default function CallPage() {
   const [error, setError] = useState<string | null>(null)
   const [isJoining, setIsJoining] = useState(true)
   const [returnPath, setReturnPath] = useState('/user/calls')
+  const [userRole, setUserRole] = useState<string | null>(null)
   const [hasRemote, setHasRemote] = useState(false)
   const [participants, setParticipants] = useState<ParticipantInfo[]>([])
   const [recordingStatus, setRecordingStatus] = useState<'NONE' | 'RECORDING' | 'PROCESSING' | 'READY' | 'FAILED'>('NONE')
@@ -33,6 +34,7 @@ export default function CallPage() {
           const data = await res.json()
           if (data?.authenticated) {
             const role = data.user?.role
+            setUserRole(role || null)
             if (role === 'CARETAKER') {
               setReturnPath('/caretaker/calls')
             } else {
@@ -199,31 +201,35 @@ export default function CallPage() {
           {isJoining && <p className="text-sm text-gray-400">Joining...</p>}
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleRecordToggle}
-            className={`px-4 py-2 rounded-md text-sm font-medium ${
-              recordingStatus === 'RECORDING'
-                ? 'bg-red-600 hover:bg-red-700'
-                : 'bg-gray-800 hover:bg-gray-700'
-            }`}
-          >
-            {recordingStatus === 'RECORDING' ? 'Stop Recording' : 'Record'}
-          </button>
-          {recordingStatus === 'RECORDING' && (
-            <span className="text-xs text-red-300">● Recording</span>
-          )}
-          {recordingStatus === 'PROCESSING' && (
-            <span className="text-xs text-yellow-300">Processing...</span>
-          )}
-          {recordingStatus === 'READY' && recordingUrl && (
-            <a
-              href={recordingUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs text-green-300 underline"
-            >
-              View recording
-            </a>
+          {userRole === 'USER' && (
+            <>
+              <button
+                onClick={handleRecordToggle}
+                className={`px-4 py-2 rounded-md text-sm font-medium ${
+                  recordingStatus === 'RECORDING'
+                    ? 'bg-red-600 hover:bg-red-700'
+                    : 'bg-gray-800 hover:bg-gray-700'
+                }`}
+              >
+                {recordingStatus === 'RECORDING' ? 'Stop Recording' : 'Record'}
+              </button>
+              {recordingStatus === 'RECORDING' && (
+                <span className="text-xs text-red-300">● Recording</span>
+              )}
+              {recordingStatus === 'PROCESSING' && (
+                <span className="text-xs text-yellow-300">Processing...</span>
+              )}
+              {recordingStatus === 'READY' && recordingUrl && (
+                <a
+                  href={recordingUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-green-300 underline"
+                >
+                  View recording
+                </a>
+              )}
+            </>
           )}
           <button
             onClick={handleLeave}

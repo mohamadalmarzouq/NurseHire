@@ -19,6 +19,10 @@ export async function POST(
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
 
+    if (payload.role !== 'USER') {
+      return NextResponse.json({ error: 'User access required' }, { status: 403 })
+    }
+
     if (!DAILY_API_KEY) {
       return NextResponse.json({ error: 'Daily is not configured' }, { status: 500 })
     }
