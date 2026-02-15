@@ -141,7 +141,8 @@ export default function MotherMessagesPage() {
     <div className="min-h-screen bg-gray-50">
       <DashboardHeader userName={user?.profile?.name} userRole={user?.role} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <section className="nh-section">
+      <div className="nh-container">
         {/* Page Header */}
         <div className="mb-8">
           <Link href="/user/dashboard" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors">
@@ -150,13 +151,13 @@ export default function MotherMessagesPage() {
           </Link>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Messages</h1>
-              <p className="text-gray-600 mt-2">Chat with your nurses and stay connected</p>
+              <h1 className="nh-h1">Messages</h1>
+              <p className="nh-sub">Chat with your nurses and stay connected</p>
             </div>
             {conversations.length > 0 && (
               <Link 
                 href="/nurses" 
-                className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                className="nh-btn nh-btn--primary"
               >
                 <Users className="w-4 h-4 mr-2" />
                 Find Nurses
@@ -165,7 +166,7 @@ export default function MotherMessagesPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="nh-card p-0 overflow-hidden">
           <div className="flex h-[650px]">
             {/* Conversations List */}
             <div className="w-1/3 border-r border-gray-200 flex flex-col bg-gray-50">
@@ -192,10 +193,7 @@ export default function MotherMessagesPage() {
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">No conversations yet</h3>
                     <p className="text-gray-600 text-sm mb-6">Start chatting with nurses by booking one first</p>
-                    <Link 
-                      href="/nurses"
-                      className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-                    >
+                    <Link href="/nurses" className="nh-btn nh-btn--primary">
                       <Users className="w-4 h-4 mr-2" />
                       Browse Nurses
                     </Link>
@@ -403,17 +401,11 @@ export default function MotherMessagesPage() {
                       Select a conversation from the left to start chatting, or browse nurses to begin a new conversation.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                      <Link 
-                        href="/nurses"
-                        className="inline-flex items-center justify-center px-5 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-                      >
+                      <Link href="/nurses" className="nh-btn nh-btn--primary">
                         <Users className="w-5 h-5 mr-2" />
                         Browse Nurses
                       </Link>
-                      <Link 
-                        href="/user/dashboard"
-                        className="inline-flex items-center justify-center px-5 py-3 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                      >
+                      <Link href="/user/dashboard" className="nh-btn nh-btn--ghost">
                         <ArrowLeft className="w-5 h-5 mr-2" />
                         Go to Dashboard
                       </Link>
@@ -425,6 +417,7 @@ export default function MotherMessagesPage() {
           </div>
         </div>
       </div>
+      </section>
     </div>
   )
 }

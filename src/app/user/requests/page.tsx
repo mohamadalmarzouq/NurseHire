@@ -74,14 +74,16 @@ export default function UserRequestsPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         <DashboardHeader />
-        <div className="container mx-auto px-4 py-8">
+        <section className="nh-section">
+          <div className="nh-container">
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
               <p className="text-gray-600">Loading your requests...</p>
             </div>
           </div>
-        </div>
+          </div>
+        </section>
       </div>
     )
   }
@@ -89,8 +91,9 @@ export default function UserRequestsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <DashboardHeader />
-      
-      <div className="container mx-auto px-4 py-8">
+
+      <section className="nh-section">
+      <div className="nh-container">
         {/* Header */}
         <div className="mb-8">
           <Link 
@@ -105,20 +108,11 @@ export default function UserRequestsPage() {
         </div>
 
         {/* Trust Strip */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-8 p-4 bg-white rounded-lg shadow-sm border">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span className="font-medium">Verified</span>
-          </div>
-          <div className="w-px h-4 bg-gray-300"></div>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <span className="font-medium">Private & Secure</span>
-          </div>
-          <div className="w-px h-4 bg-gray-300"></div>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-            <span className="font-medium">No Payments</span>
+        <div className="nh-card mb-8" style={{ background: 'linear-gradient(90deg,#F0F9FF,#ECFDF5)' }}>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="nh-badge nh-badge--ok">Verified</span>
+            <span className="nh-badge nh-badge--info">Private & Secure</span>
+            <span className="nh-badge">No Payments</span>
           </div>
         </div>
 
@@ -192,6 +186,7 @@ export default function UserRequestsPage() {
           </div>
         )}
       </div>
+      </section>
     </div>
   )
 }

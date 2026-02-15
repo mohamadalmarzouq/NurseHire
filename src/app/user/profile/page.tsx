@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, User, Save, Edit, LogOut } from 'lucide-react'
+import { ArrowLeft, Edit } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 
 export default function UserProfilePage() {
@@ -99,7 +99,7 @@ export default function UserProfilePage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-lg text-red-600">Authentication failed. Please log in again.</p>
-          <Link href="/auth/login" className="mt-4 inline-block bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700">
+          <Link href="/auth/login" className="nh-btn nh-btn--primary mt-4">
             Go to Login
           </Link>
         </div>
@@ -111,20 +111,21 @@ export default function UserProfilePage() {
     <div className="min-h-screen bg-gray-50">
       <DashboardHeader userName={user?.profile?.name} userRole={user?.role} />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <section className="nh-section">
+      <div className="nh-container max-w-4xl">
         <div className="flex items-center justify-between mb-6">
           <div>
             <Link href="/user/dashboard" className="flex items-center text-gray-600 hover:text-gray-900 mb-2">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-            <p className="text-gray-600 mt-1">Manage your user profile information</p>
+            <h1 className="nh-h1">My Profile</h1>
+            <p className="nh-sub">Manage your user profile information</p>
           </div>
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center"
+              className="nh-btn nh-btn--primary"
             >
               <Edit className="w-4 h-4 mr-2" /> Edit Profile
             </button>
@@ -142,7 +143,7 @@ export default function UserProfilePage() {
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="nh-card">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Profile Image */}
             <div className="flex flex-col items-center">
@@ -170,7 +171,7 @@ export default function UserProfilePage() {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="mt-1 block w-full input-field"
+                      className="mt-1 block w-full nh-input"
                     />
                   ) : (
                     <p className="mt-1 text-gray-900">{user?.userProfile?.name || 'Not set'}</p>
@@ -189,7 +190,7 @@ export default function UserProfilePage() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="mt-1 block w-full input-field"
+                      className="mt-1 block w-full nh-input"
                     />
                   ) : (
                     <p className="mt-1 text-gray-900">{user?.userProfile?.phone || 'Not set'}</p>
@@ -203,7 +204,7 @@ export default function UserProfilePage() {
                       name="location"
                       value={formData.location}
                       onChange={handleChange}
-                      className="mt-1 block w-full input-field"
+                      className="mt-1 block w-full nh-input"
                     />
                   ) : (
                     <p className="mt-1 text-gray-900">{user?.userProfile?.location || 'Not set'}</p>
@@ -222,7 +223,7 @@ export default function UserProfilePage() {
                 value={formData.aboutMe}
                 onChange={handleChange}
                 rows={4}
-                className="mt-1 block w-full input-field"
+                className="mt-1 block w-full nh-input"
                 placeholder="Tell nurses about yourself and your needs..."
               ></textarea>
             ) : (
@@ -234,13 +235,13 @@ export default function UserProfilePage() {
             <div className="mt-8 flex space-x-4">
               <button
                 onClick={() => setIsEditing(false)}
-                className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-center"
+                className="nh-btn nh-btn--ghost flex-1 justify-center"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="flex-1 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors text-center"
+                className="nh-btn nh-btn--primary flex-1 justify-center"
               >
                 Save Changes
               </button>
@@ -248,6 +249,7 @@ export default function UserProfilePage() {
           )}
         </div>
       </div>
+      </section>
     </div>
   )
 }

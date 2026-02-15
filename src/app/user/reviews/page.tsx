@@ -158,14 +158,15 @@ export default function MotherReviewsPage() {
     <div className="min-h-screen bg-gray-50">
       <DashboardHeader userName={user?.profile?.name} userRole={user?.role} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <section className="nh-section">
+      <div className="nh-container">
         {/* Page Header */}
         <div className="mb-8">
           <Link href="/user/dashboard" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
-          <h1 className="nh-h2">Reviews</h1>
+          <h1 className="nh-h1">Reviews</h1>
           <p className="nh-sub mt-1">Rate and review the care takers you've hired</p>
         </div>
 
@@ -253,13 +254,13 @@ export default function MotherReviewsPage() {
                       <div className="flex justify-end space-x-3 mt-4">
                         <button
                           onClick={() => setShowReviewForm(null)}
-                          className="px-6 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 font-medium"
+                          className="nh-btn nh-btn--ghost"
                         >
                           Cancel
                         </button>
                         <button
                           onClick={() => handleSubmitReview(request.caretaker.id)}
-                          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
+                          className="nh-btn nh-btn--primary"
                         >
                           Submit Review
                         </button>
@@ -279,13 +280,13 @@ export default function MotherReviewsPage() {
               <Star className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No reviews yet</h3>
               <p className="text-gray-600 mb-6">Start by booking and hiring a care taker</p>
-              <Link href="/caretakers" className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors">
+              <Link href="/caretakers" className="nh-btn nh-btn--primary">
                 Find Care Takers
               </Link>
             </div>
           ) : reviews.length > 0 ? (
             reviews.map((review) => (
-              <div key={review.id} className="bg-white rounded-lg shadow-sm border p-6">
+              <div key={review.id} className="nh-card">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
@@ -386,6 +387,7 @@ export default function MotherReviewsPage() {
           ) : null}
         </div>
       </div>
+      </section>
     </div>
   )
 }

@@ -85,14 +85,16 @@ export default function UserCallsPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         <DashboardHeader />
-        <div className="container mx-auto px-4 py-8">
+        <section className="nh-section">
+          <div className="nh-container">
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
               <p className="text-gray-600">Loading your calls...</p>
             </div>
           </div>
-        </div>
+          </div>
+        </section>
       </div>
     )
   }
@@ -100,8 +102,8 @@ export default function UserCallsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <DashboardHeader />
-
-      <div className="container mx-auto px-4 py-8">
+      <section className="nh-section">
+      <div className="nh-container">
         <div className="mb-8">
           <Link
             href="/user/dashboard"
@@ -160,7 +162,7 @@ export default function UserCallsPage() {
                     {call.status === 'ACCEPTED' && (
                       <Link
                         href={`/call/${call.id}`}
-                        className="px-3 py-2 text-sm font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors"
+                        className="nh-btn nh-btn--primary"
                       >
                         Join Call
                       </Link>
@@ -168,7 +170,7 @@ export default function UserCallsPage() {
                     {['REQUESTED', 'ACCEPTED'].includes(call.status) && (
                       <button
                         onClick={() => handleCancel(call.id)}
-                        className="px-3 py-2 text-sm font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 transition-colors"
+                        className="nh-btn nh-btn--ghost text-red-600 border-red-200 hover:bg-red-50"
                       >
                         Cancel
                       </button>
@@ -180,6 +182,7 @@ export default function UserCallsPage() {
           </div>
         )}
       </div>
+      </section>
     </div>
   )
 }

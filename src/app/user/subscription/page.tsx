@@ -62,25 +62,28 @@ export default function UserSubscriptionPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-neutral-50">
+      <div className="min-h-screen bg-gray-50">
         <DashboardHeader />
-        <div className="container-custom py-8">
+        <section className="nh-section">
+          <div className="nh-container">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
               <p className="text-neutral-600">Loading subscription...</p>
             </div>
           </div>
-        </div>
+          </div>
+        </section>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-neutral-50">
+      <div className="min-h-screen bg-gray-50">
         <DashboardHeader />
-        <div className="container-custom py-8">
+        <section className="nh-section">
+          <div className="nh-container">
           <div className="nh-card">
             <div className="text-center py-8">
               <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
@@ -88,13 +91,14 @@ export default function UserSubscriptionPage() {
               <p className="text-neutral-600 mb-6">{error}</p>
               <button
                 onClick={loadSubscription}
-                className="btn-primary"
+                className="nh-btn nh-btn--primary"
               >
                 Try Again
               </button>
             </div>
           </div>
-        </div>
+          </div>
+        </section>
       </div>
     )
   }
@@ -103,9 +107,10 @@ export default function UserSubscriptionPage() {
   const isActive = subscription?.isActive || false
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-gray-50">
       <DashboardHeader />
-      <div className="container-custom py-8">
+      <section className="nh-section">
+      <div className="nh-container">
         <div className="mb-6">
           <Link
             href="/user/dashboard"
@@ -117,7 +122,7 @@ export default function UserSubscriptionPage() {
         </div>
 
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold text-neutral-900 mb-8">My Subscription</h1>
+          <h1 className="nh-h1 mb-8">My Subscription</h1>
 
           {/* Subscription Status Card */}
           <div className="nh-card mb-6">
@@ -222,6 +227,7 @@ export default function UserSubscriptionPage() {
           )}
         </div>
       </div>
+      </section>
     </div>
   )
 }
