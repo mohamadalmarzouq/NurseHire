@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Prisma, RecordingStatus } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { uploadToCloudinary } from '@/lib/cloudinary'
 
@@ -58,8 +59,8 @@ export async function POST(request: NextRequest) {
       'video'
     )
 
-    const updateData = {
-      recordingStatus: 'READY',
+    const updateData: Prisma.CallSessionUpdateManyMutationInput = {
+      recordingStatus: RecordingStatus.READY,
       recordingUrl: upload.secureUrl,
       recordingDurationSeconds: payload?.duration || null,
       dailyRecordingId: recordingId,
