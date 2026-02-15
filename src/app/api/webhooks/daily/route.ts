@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     const recordingId = payload?.recording_id
+    const roomName = payload?.room_name || payload?.room
     if (!recordingId || !DAILY_API_KEY) {
       return NextResponse.json({ error: 'Missing recording info' }, { status: 400 })
     }
@@ -57,14 +58,24 @@ export async function POST(request: NextRequest) {
       'video'
     )
 
-    const updated = await prisma.callSession.updateMany({
+    const updateData = {
+      recordingStatus: 'READY',
+      recordingUrl: upload.secureUrl,
+      recordingDurationSeconds: payload?.duration || null,
+      dailyRecordingId: recordingId,
+    }
+
+    let updated = await prisma.callSession.updateMany({
       where: { dailyRecordingId: recordingId },
-      data: {
-        recordingStatus: 'READY',
-        recordingUrl: upload.secureUrl,
-        recordingDurationSeconds: payload?.duration || null,
-      },
+      data: updateData,
     })
+
+    if (updated.count === 0 && roomName) {
+      updated = await prisma.callSession.updateMany({
+        where: { dailyRoomName: roomName },
+        data: updateData,
+      })
+    }
 
     if (updated.count === 0) {
       return NextResponse.json({ error: 'Call session not found' }, { status: 404 })
