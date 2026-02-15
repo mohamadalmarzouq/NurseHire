@@ -41,12 +41,40 @@ export async function POST(
       return NextResponse.json({ updated: false, status: 'READY' })
     }
 
-    if (!callSession.dailyRecordingId) {
+    let recordingId = callSession.dailyRecordingId
+
+    if (!recordingId && callSession.dailyRoomName) {
+      const listRes = await fetch(`https://api.daily.co/v1/recordings`, {
+        headers: { Authorization: `Bearer ${DAILY_API_KEY}` },
+      })
+
+      if (listRes.ok) {
+        const listData = await listRes.json().catch(() => ({}))
+        const items =
+          listData?.data || listData?.recordings || listData?.items || []
+
+        const match = items.find(
+          (item: any) =>
+            item?.room_name === callSession.dailyRoomName ||
+            item?.room === callSession.dailyRoomName
+        )
+
+        recordingId = match?.recording_id || match?.id || null
+        if (recordingId) {
+          await prisma.callSession.update({
+            where: { id: callSession.id },
+            data: { dailyRecordingId: recordingId },
+          })
+        }
+      }
+    }
+
+    if (!recordingId) {
       return NextResponse.json({ updated: false, status: 'NO_RECORDING_ID' })
     }
 
     const linkRes = await fetch(
-      `https://api.daily.co/v1/recordings/${callSession.dailyRecordingId}/access-link`,
+      `https://api.daily.co/v1/recordings/${recordingId}/access-link`,
       {
         headers: { Authorization: `Bearer ${DAILY_API_KEY}` },
       }
@@ -71,7 +99,7 @@ export async function POST(
     const upload = await uploadToCloudinary(
       buffer,
       'call-recordings',
-      `${callSession.dailyRecordingId}.mp4`,
+      `${recordingId}.mp4`,
       'video'
     )
 
@@ -80,6 +108,7 @@ export async function POST(
       data: {
         recordingStatus: RecordingStatus.READY,
         recordingUrl: upload.secureUrl,
+        dailyRecordingId: recordingId,
       },
     })
 
