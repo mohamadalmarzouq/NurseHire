@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { RecordingStatus } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
-
-const DAILY_API_KEY = process.env.DAILY_API_KEY
 
 export async function POST(
   request: NextRequest,
@@ -43,41 +40,6 @@ export async function POST(
       where: { id: callSession.id },
       data: leftData,
     })
-
-    if (updatedCall.recordingStatus === 'RECORDING') {
-      if (!DAILY_API_KEY) {
-        return NextResponse.json({ error: 'Daily is not configured' }, { status: 500 })
-      }
-
-      if (!updatedCall.dailyRoomName) {
-        return NextResponse.json({ error: 'Call room not ready' }, { status: 400 })
-      }
-
-      const stopRes = await fetch(
-        `https://api.daily.co/v1/rooms/${updatedCall.dailyRoomName}/recordings/stop`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${DAILY_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({}),
-        }
-      )
-
-      if (!stopRes.ok) {
-        const errorData = await stopRes.json().catch(() => ({}))
-        return NextResponse.json(
-          { error: errorData.error || 'Failed to stop recording' },
-          { status: 500 }
-        )
-      }
-
-      await prisma.callSession.update({
-        where: { id: updatedCall.id },
-        data: { recordingStatus: RecordingStatus.PROCESSING },
-      })
-    }
 
     const bothJoined = !!updatedCall.userJoinedAt && !!updatedCall.caretakerJoinedAt
     const bothLeft = !!updatedCall.userLeftAt && !!updatedCall.caretakerLeftAt

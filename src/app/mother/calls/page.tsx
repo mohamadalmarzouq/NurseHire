@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Clock, CheckCircle, XCircle, AlertCircle, Calendar, Video } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
@@ -8,50 +8,17 @@ import DashboardHeader from '@/components/DashboardHeader'
 export default function MotherCallsPage() {
   const [calls, setCalls] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const syncAttemptedRef = useRef(false)
 
   useEffect(() => {
     loadCalls()
   }, [])
 
-  const maybeSyncRecordings = async (items: any[]) => {
-    if (syncAttemptedRef.current) return
-    syncAttemptedRef.current = true
-
-    const syncTargets = items.filter(
-      (call) =>
-        (call.recordingStatus === 'PROCESSING' || call.recordingStatus === 'RECORDING') &&
-        call.dailyRecordingId
-    )
-
-    if (syncTargets.length === 0) return
-
-    try {
-      const results = await Promise.all(
-        syncTargets.map((call) =>
-          fetch(`/api/calls/${call.id}/record/sync`, { method: 'POST' })
-            .then((res) => res.json().catch(() => null))
-            .catch(() => null)
-        )
-      )
-
-      if (results.some((result) => result?.updated)) {
-        await loadCalls(true)
-      }
-    } catch (error) {
-      console.error('Error syncing recordings:', error)
-    }
-  }
-
-  const loadCalls = async (skipSync = false) => {
+  const loadCalls = async () => {
     try {
       const response = await fetch('/api/calls', { cache: 'no-store' })
       if (response.ok) {
         const data = await response.json()
         setCalls(data.calls || [])
-        if (!skipSync) {
-          await maybeSyncRecordings(data.calls || [])
-        }
       }
     } catch (error) {
       console.error('Error loading calls:', error)
@@ -184,11 +151,6 @@ export default function MotherCallsPage() {
                     <p className="text-sm text-gray-600 mt-2">
                       Duration: {call.durationMinutes} minutes
                     </p>
-                    {call.recordingStatus && call.recordingStatus !== 'NONE' && (
-                      <p className="text-sm text-gray-600 mt-2">
-                        Recording: {call.recordingStatus.toLowerCase()}
-                      </p>
-                    )}
                   </div>
                 </div>
 
@@ -210,16 +172,6 @@ export default function MotherCallsPage() {
                       >
                         Cancel
                       </button>
-                    )}
-                    {call.recordingStatus === 'READY' && call.recordingUrl && (
-                      <a
-                        href={call.recordingUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="px-3 py-2 text-sm font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 transition-colors"
-                      >
-                        View Recording
-                      </a>
                     )}
                   </div>
                 </div>
