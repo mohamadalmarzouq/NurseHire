@@ -4,6 +4,10 @@ import { prisma } from '@/lib/prisma'
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY
 const DAILY_DOMAIN = process.env.DAILY_DOMAIN
+const DAILY_BOTS_API_KEY = process.env.DAILY_BOTS_API_KEY
+const DAILY_BOTS_PROFILE = process.env.DAILY_BOTS_PROFILE || 'voice_2024_10'
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY
+const DEEPGRAM_API_KEY = process.env.DEEPGRAM_API_KEY
 const CRON_SECRET = process.env.CRON_SECRET
 
 const MAX_LOOKBACK_MS = 6 * 60 * 60 * 1000
@@ -73,6 +77,80 @@ const startDailyRecording = async (roomName: string) => {
 
   const data = await res.json()
   return data?.recording_id || data?.id || null
+}
+
+const startDailyBot = async (call: {
+  id: string
+  dailyRoomName: string | null
+  dailyRoomUrl: string | null
+  durationMinutes: number
+  aiQuestions: any
+}) => {
+  if (!DAILY_BOTS_API_KEY) {
+    throw new Error('Daily bots is not configured')
+  }
+
+  const roomRef = call.dailyRoomName || call.dailyRoomUrl
+  if (!roomRef) {
+    throw new Error('Daily room is not ready')
+  }
+
+  const questionList: Array<{ text: string; language?: string; voiceId?: string | null }> = Array.isArray(
+    call.aiQuestions
+  )
+    ? call.aiQuestions
+    : []
+
+  const firstQuestion = questionList[0]
+  const fallbackVoiceId =
+    firstQuestion?.language === 'ar'
+      ? process.env.ELEVENLABS_VOICE_ID_AR || null
+      : process.env.ELEVENLABS_VOICE_ID_EN || null
+
+  const script = questionList.map((q, idx) => `${idx + 1}. ${q.text}`).join('\n')
+
+  const maxDuration = Math.max(120, call.durationMinutes * 60 + 120)
+
+  const payload = {
+    room: roomRef,
+    bot_profile: DAILY_BOTS_PROFILE,
+    max_duration: maxDuration,
+    services: {
+      stt: 'deepgram',
+      tts: 'elevenlabs',
+      llm: 'none',
+    },
+    service_options: {
+      deepgram: {
+        api_key: DEEPGRAM_API_KEY,
+      },
+      elevenlabs: {
+        api_key: ELEVENLABS_API_KEY,
+        voice_id: firstQuestion?.voiceId || fallbackVoiceId,
+      },
+    },
+    config: {
+      scripted_questions: script,
+      mode: 'scripted',
+      allow_barge_in: true,
+      max_silence_seconds: 8,
+      max_retries: 2,
+    },
+  }
+
+  const res = await fetch('https://api.daily.co/v1/bots/start', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${DAILY_BOTS_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.error || 'Failed to start Daily bot')
+  }
 }
 
 const stopDailyRecording = async (roomName: string) => {
@@ -156,6 +234,19 @@ export async function POST(request: NextRequest) {
           where: { id: call.id },
           data: updateData,
         })
+
+        try {
+          await startDailyBot(call)
+        } catch (botError) {
+          errors.push({
+            id: call.id,
+            error: botError instanceof Error ? botError.message : 'Failed to start bot',
+          })
+          await prisma.callSession.update({
+            where: { id: call.id },
+            data: { aiInterviewStatus: AiInterviewStatus.FAILED },
+          })
+        }
 
         started.push(call.id)
       } catch (error) {
