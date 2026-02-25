@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { AiInterviewStatus } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
@@ -42,7 +43,13 @@ export async function PUT(
 
     const updatedCall = await prisma.callSession.update({
       where: { id: call.id },
-      data: { status },
+      data: {
+        status,
+        aiInterviewStatus:
+          status === 'ACCEPTED' && call.aiInterviewEnabled
+            ? call.aiInterviewStatus || AiInterviewStatus.SCHEDULED
+            : call.aiInterviewStatus,
+      },
       include: {
         request: true,
         user: { include: { userProfile: true } },

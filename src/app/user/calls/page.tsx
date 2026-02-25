@@ -196,6 +196,11 @@ export default function UserCallsPage() {
                         AI interview scheduled. You do not need to join the call.
                       </p>
                     )}
+                    {call.aiInterviewEnabled && call.aiInterviewStatus && (
+                      <p className="text-xs text-indigo-500 mt-1">
+                        Status: {String(call.aiInterviewStatus).toLowerCase().replace('_', ' ')}
+                      </p>
+                    )}
                     {call.recordingStatus && call.recordingStatus !== 'NONE' && (
                       <p className="text-sm text-gray-600 mt-2">
                         Recording: {call.recordingStatus.toLowerCase()}
