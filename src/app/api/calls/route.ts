@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
@@ -178,7 +179,7 @@ export async function POST(request: NextRequest) {
           const voiceId = language === 'ar' ? voiceIdAr : voiceIdEn
           return { text, language, voiceId }
         })
-      : null
+      : Prisma.JsonNull
 
     const call = await prisma.callSession.create({
       data: {
