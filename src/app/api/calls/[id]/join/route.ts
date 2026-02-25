@@ -148,11 +148,18 @@ export async function POST(
 
     const tokenData = await tokenRes.json()
 
-    return NextResponse.json({
+    const responsePayload: Record<string, unknown> = {
       roomUrl,
       token: tokenData.token,
       roomName,
-    })
+    }
+
+    if (payload.role === 'USER') {
+      responsePayload.recordingStatus = callSession.recordingStatus
+      responsePayload.recordingUrl = callSession.recordingUrl
+    }
+
+    return NextResponse.json(responsePayload)
   } catch (error) {
     console.error('Error joining call:', error)
     return NextResponse.json({ error: 'Failed to join call' }, { status: 500 })
