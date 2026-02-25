@@ -176,6 +176,11 @@ export default function UserCallsPage() {
                         {getStatusIcon(call.status)}
                         {formatStatusLabel(call.status)}
                       </span>
+                      {call.aiInterviewEnabled && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+                          AI Interview
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-3 text-sm text-gray-600">
                       <Calendar className="w-4 h-4" />
@@ -186,6 +191,11 @@ export default function UserCallsPage() {
                     <p className="text-sm text-gray-600 mt-2">
                       Duration: {call.durationMinutes} minutes
                     </p>
+                    {call.aiInterviewEnabled && (
+                      <p className="text-sm text-indigo-700 mt-2">
+                        AI interview scheduled. You do not need to join the call.
+                      </p>
+                    )}
                     {call.recordingStatus && call.recordingStatus !== 'NONE' && (
                       <p className="text-sm text-gray-600 mt-2">
                         Recording: {call.recordingStatus.toLowerCase()}

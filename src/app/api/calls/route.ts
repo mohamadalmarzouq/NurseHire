@@ -66,13 +66,37 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { requestId, caretakerId, scheduledAt, durationMinutes, timezone } = body
+    const {
+      requestId,
+      caretakerId,
+      scheduledAt,
+      durationMinutes,
+      timezone,
+      aiInterviewEnabled,
+      aiQuestions,
+    } = body
 
     if (!scheduledAt || !durationMinutes || !timezone || (!requestId && !caretakerId)) {
       return NextResponse.json(
         { error: 'caretakerId or requestId, scheduledAt, durationMinutes, and timezone are required' },
         { status: 400 }
       )
+    }
+
+    const enableAiInterview = Boolean(aiInterviewEnabled)
+    const questionItems: string[] = Array.isArray(aiQuestions)
+      ? aiQuestions.map((q: any) => String(q || '').trim()).filter(Boolean)
+      : []
+
+    if (enableAiInterview && questionItems.length === 0) {
+      return NextResponse.json(
+        { error: 'At least one interview question is required for AI calls' },
+        { status: 400 }
+      )
+    }
+
+    if (questionItems.length > 12) {
+      return NextResponse.json({ error: 'Maximum 12 questions allowed' }, { status: 400 })
     }
 
     const scheduledDate = new Date(scheduledAt)
@@ -145,6 +169,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const detectArabic = (text: string) => /[\u0600-\u06FF]/.test(text)
+    const voiceIdEn = process.env.ELEVENLABS_VOICE_ID_EN || null
+    const voiceIdAr = process.env.ELEVENLABS_VOICE_ID_AR || null
+    const aiQuestionsPayload = enableAiInterview
+      ? questionItems.map((text: string) => {
+          const language = detectArabic(text) ? 'ar' : 'en'
+          const voiceId = language === 'ar' ? voiceIdAr : voiceIdEn
+          return { text, language, voiceId }
+        })
+      : null
+
     const call = await prisma.callSession.create({
       data: {
         requestId: resolvedRequestId,
@@ -154,6 +189,9 @@ export async function POST(request: NextRequest) {
         durationMinutes: durationValue,
         timezone,
         status: 'REQUESTED',
+        aiInterviewEnabled: enableAiInterview,
+        aiInterviewStatus: enableAiInterview ? 'SCHEDULED' : null,
+        aiQuestions: aiQuestionsPayload,
       },
       include: {
         request: true,

@@ -56,6 +56,14 @@ enum RecordingStatus {
   FAILED
 }
 
+enum AiInterviewStatus {
+  SCHEDULED
+  RUNNING
+  COMPLETED
+  FAILED
+  NO_SHOW
+}
+
 enum SubscriptionStatus {
   NONE
   ACTIVE
@@ -207,6 +215,9 @@ model CallSession {
   dailyRecordingId String?
   recordingUrl    String?
   recordingDurationSeconds Int?
+  aiInterviewEnabled Boolean @default(false)
+  aiInterviewStatus  AiInterviewStatus?
+  aiQuestions        Json?
   startedAt       DateTime?
   callActivatedAt DateTime?
   endedAt         DateTime?

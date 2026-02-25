@@ -157,6 +157,11 @@ export default function CaretakerCallsPage() {
                         {getStatusIcon(call.status)}
                         {formatStatusLabel(call.status)}
                       </span>
+                      {call.aiInterviewEnabled && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+                          AI Interview
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-3 text-sm text-gray-600">
                       <Calendar className="w-4 h-4" />
