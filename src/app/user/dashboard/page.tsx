@@ -129,21 +129,21 @@ export default function UserDashboard() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Link href="/caretakers" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)',
-            border: '1px solid #BAE6FD',
+            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+            border: '1px solid #A5F3FC',
             transition: 'all 0.3s ease'
           }}>
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="p-4 rounded-2xl" style={{
-                background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
-                boxShadow: '0 6px 16px rgba(59, 130, 246, 0.3)'
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
               }}>
                 <Search className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#1E40AF'}}>{t('user.dashboard.findCareTakers')}</h3>
-                <p className="text-sm mb-3" style={{color: '#1E40AF', opacity: 0.8}}>{t('user.dashboard.findCareTakersDesc')}</p>
-                <div className="text-xs font-medium" style={{color: '#1E40AF', opacity: 0.7}}>
+                <h3 className="text-xl font-bold mb-2" style={{color: '#0E7490'}}>{t('user.dashboard.findCareTakers')}</h3>
+                <p className="text-sm mb-3" style={{color: '#0E7490', opacity: 0.8}}>{t('user.dashboard.findCareTakersDesc')}</p>
+                <div className="text-xs font-medium" style={{color: '#0E7490', opacity: 0.7}}>
                   {t('user.dashboard.discoverTrustedCare')} →
                 </div>
               </div>
@@ -151,21 +151,21 @@ export default function UserDashboard() {
           </Link>
 
           <Link href="/user/requests" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
-            border: '1px solid #BBF7D0',
+            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+            border: '1px solid #A5F3FC',
             transition: 'all 0.3s ease'
           }}>
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="p-4 rounded-2xl" style={{
-                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                boxShadow: '0 6px 16px rgba(16, 185, 129, 0.3)'
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
               }}>
                 <MessageCircle className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#047857'}}>{t('user.dashboard.myRequests')}</h3>
-                <p className="text-sm mb-3" style={{color: '#047857', opacity: 0.8}}>{t('user.dashboard.myRequestsDesc')}</p>
-                <div className="text-xs font-medium" style={{color: '#047857', opacity: 0.7}}>
+                <h3 className="text-xl font-bold mb-2" style={{color: '#0E7490'}}>{t('user.dashboard.myRequests')}</h3>
+                <p className="text-sm mb-3" style={{color: '#0E7490', opacity: 0.8}}>{t('user.dashboard.myRequestsDesc')}</p>
+                <div className="text-xs font-medium" style={{color: '#0E7490', opacity: 0.7}}>
                   {t('user.dashboard.trackRequests')} →
                 </div>
               </div>
@@ -173,21 +173,21 @@ export default function UserDashboard() {
           </Link>
 
           <Link href="/user/messages" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #FDF4FF 0%, #FAE8FF 100%)',
-            border: '1px solid #E9D5FF',
+            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+            border: '1px solid #A5F3FC',
             transition: 'all 0.3s ease'
           }}>
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="p-4 rounded-2xl" style={{
-                background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
-                boxShadow: '0 6px 16px rgba(139, 92, 246, 0.3)'
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
               }}>
                 <MessageCircle className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#6B21A8'}}>{t('user.dashboard.myMessages')}</h3>
-                <p className="text-sm mb-3" style={{color: '#6B21A8', opacity: 0.8}}>{t('user.dashboard.myMessagesDesc')}</p>
-                <div className="text-xs font-medium" style={{color: '#6B21A8', opacity: 0.7}}>
+                <h3 className="text-xl font-bold mb-2" style={{color: '#0E7490'}}>{t('user.dashboard.myMessages')}</h3>
+                <p className="text-sm mb-3" style={{color: '#0E7490', opacity: 0.8}}>{t('user.dashboard.myMessagesDesc')}</p>
+                <div className="text-xs font-medium" style={{color: '#0E7490', opacity: 0.7}}>
                   {t('user.dashboard.connectCommunicate')} →
                 </div>
               </div>
@@ -217,21 +217,21 @@ export default function UserDashboard() {
           </Link>
 
           <Link href="/user/reviews" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
-            border: '1px solid #FDE68A',
+            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+            border: '1px solid #A5F3FC',
             transition: 'all 0.3s ease'
           }}>
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="p-4 rounded-2xl" style={{
-                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                boxShadow: '0 6px 16px rgba(245, 158, 11, 0.3)'
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
               }}>
                 <Star className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#92400E'}}>{t('user.dashboard.myReviews')}</h3>
-                <p className="text-sm mb-3" style={{color: '#92400E', opacity: 0.8}}>{t('user.dashboard.myReviewsDesc')}</p>
-                <div className="text-xs font-medium" style={{color: '#92400E', opacity: 0.7}}>
+                <h3 className="text-xl font-bold mb-2" style={{color: '#0E7490'}}>{t('user.dashboard.myReviews')}</h3>
+                <p className="text-sm mb-3" style={{color: '#0E7490', opacity: 0.8}}>{t('user.dashboard.myReviewsDesc')}</p>
+                <div className="text-xs font-medium" style={{color: '#0E7490', opacity: 0.7}}>
                   {t('user.dashboard.shareExperience')} →
                 </div>
               </div>
