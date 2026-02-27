@@ -92,7 +92,7 @@ export default function UserDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Trust strip */}
-        <div className="nh-card mb-6" style={{background:'linear-gradient(90deg,#F0F9FF,#ECFDF5)'}}>
+        <div className="nh-card mb-6" style={{background:'linear-gradient(90deg,#ECFEFF,#CFFAFE)'}}>
           <div className="flex flex-wrap items-center gap-2">
             <span className="nh-badge nh-badge--ok">Verified</span>
             <span className="nh-badge nh-badge--info">Private & Secure</span>
@@ -116,7 +116,7 @@ export default function UserDashboard() {
                         href="/user/subscription"
                         className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                           subscription.isActive
-                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                            ? 'bg-cyan-50 text-cyan-800 hover:bg-cyan-100'
                             : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                         }`}
                       >

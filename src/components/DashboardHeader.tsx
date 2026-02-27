@@ -37,12 +37,12 @@ export default function DashboardHeader({ userName, userRole }: DashboardHeaderP
   }
 
   return (
-    <header className="bg-white shadow-soft sticky top-0 z-50">
+    <header className="bg-white shadow-soft sticky top-0 z-50 border-b border-cyan-100">
       <div className="container-custom">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 no-underline">
-            <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-cyan-700 rounded-lg flex items-center justify-center">
               <Heart className="w-5 h-5 text-white" />
             </div>
             <span className="text-2xl font-bold text-gradient">ENFAS</span>
@@ -60,7 +60,7 @@ export default function DashboardHeader({ userName, userRole }: DashboardHeaderP
                 
                 <button
                   onClick={handleSignOut}
-                  className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                  className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
                 >
                   Sign Out
                 </button>
