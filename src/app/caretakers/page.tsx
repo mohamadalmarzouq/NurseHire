@@ -140,10 +140,11 @@ export default function CareTakersPage() {
           {/* Back Button */}
           {isAuthenticated && (
             <div className="mb-6">
-              <Link 
-                href="/user/dashboard" 
-                className="inline-flex items-center text-cyan-700 hover:text-cyan-800 transition-colors"
-              >
+            <Link 
+              href="/user/dashboard" 
+              className="btn-primary inline-flex items-center"
+              style={{ background: '#06B6D4' }}
+            >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 {t('caretakers.backToDashboard')}
               </Link>
