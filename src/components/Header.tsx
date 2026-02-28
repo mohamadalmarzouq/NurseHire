@@ -97,7 +97,10 @@ export default function Header() {
               </>
             ) : (
               <>
-                <Link href="/auth/login" className="text-neutral-600 hover:text-cyan-700 transition-colors">
+                <Link
+                  href="/auth/login"
+                  className="px-3 py-1.5 rounded-full text-cyan-800 bg-white/70 border border-[#CFEFF4] hover:bg-[#E6FAFC] transition-colors shadow-sm"
+                >
                   {t('common.signIn')}
                 </Link>
                 <Link href="/auth/register" className="btn-primary" style={{background:'#06B6D4'}}>

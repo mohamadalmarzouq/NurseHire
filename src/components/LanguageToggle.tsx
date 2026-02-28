@@ -31,15 +31,15 @@ export default function LanguageToggle() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-2 rounded-lg border border-cyan-100 hover:bg-cyan-50 transition-colors"
+        className="flex items-center space-x-2 px-3 py-1.5 rounded-full border border-[#CFEFF4] bg-[#F2FCFD] hover:bg-[#E6FAFC] transition-colors shadow-sm"
         aria-label="Select language"
       >
         <Globe className="w-4 h-4 text-cyan-700" />
-        <span className="text-sm font-medium text-cyan-800">{currentLang.flag} {currentLang.name}</span>
+        <span className="text-sm font-semibold text-cyan-800">{currentLang.flag} {currentLang.name}</span>
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-lg border border-cyan-100 py-2 min-w-[150px] z-50">
+        <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-lg border border-[#CFEFF4] py-2 min-w-[150px] z-50">
           {languages.map((lang) => (
             <button
               key={lang.code}
@@ -47,8 +47,8 @@ export default function LanguageToggle() {
                 setLanguage(lang.code)
                 setIsOpen(false)
               }}
-              className={`w-full text-left px-4 py-2 text-sm hover:bg-cyan-50 transition-colors flex items-center space-x-2 ${
-                language === lang.code ? 'bg-cyan-50 text-cyan-700' : 'text-neutral-700'
+              className={`w-full text-left px-4 py-2 text-sm hover:bg-[#F2FCFD] transition-colors flex items-center space-x-2 ${
+                language === lang.code ? 'bg-[#E6FAFC] text-cyan-700' : 'text-neutral-700'
               }`}
             >
               <span>{lang.flag}</span>
