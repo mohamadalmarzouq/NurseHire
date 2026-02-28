@@ -134,7 +134,7 @@ export default function CareTakersPage() {
           <div className="mb-6">
             <Link 
               href="/user/dashboard" 
-              className="inline-flex items-center text-primary-600 hover:text-primary-700 transition-colors"
+              className="inline-flex items-center px-3 py-1.5 rounded-full text-cyan-800 bg-white/70 border border-[#CFEFF4] hover:bg-[#E6FAFC] transition-colors shadow-sm"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to User Dashboard
