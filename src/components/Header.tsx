@@ -99,7 +99,8 @@ export default function Header() {
               <>
                 <Link
                   href="/auth/login"
-                  className="px-3 py-1.5 rounded-full text-cyan-800 bg-white/70 border border-[#CFEFF4] hover:bg-[#E6FAFC] transition-colors shadow-sm"
+                  className="btn-primary"
+                  style={{ background: '#06B6D4' }}
                 >
                   {t('common.signIn')}
                 </Link>

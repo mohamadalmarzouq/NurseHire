@@ -31,11 +31,12 @@ export default function LanguageToggle() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-1.5 rounded-full border border-[#CFEFF4] bg-[#F2FCFD] hover:bg-[#E6FAFC] transition-colors shadow-sm"
+        className="btn-primary flex items-center space-x-2"
+        style={{ background: '#06B6D4' }}
         aria-label="Select language"
       >
-        <Globe className="w-4 h-4 text-cyan-700" />
-        <span className="text-sm font-semibold text-cyan-800">{currentLang.flag} {currentLang.name}</span>
+        <Globe className="w-4 h-4 text-white" />
+        <span className="text-sm font-semibold text-white">{currentLang.flag} {currentLang.name}</span>
       </button>
 
       {isOpen && (
