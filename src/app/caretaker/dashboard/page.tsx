@@ -71,7 +71,7 @@ export default function CareTakerDashboard() {
         </div>
 
         {/* Welcome Section */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <div className="nh-card mb-8" style={{background:'linear-gradient(90deg,#ECFEFF,#CFFAFE)'}}>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
             Welcome to your dashboard, {user?.profile?.name || 'Care Taker'}!
           </h1>
@@ -85,10 +85,17 @@ export default function CareTakerDashboard() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Link href="/caretaker/profile" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/caretaker/profile" className="group nh-card nh-card--lift p-6" style={{
+            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+            border: '1px solid #A5F3FC',
+            transition: 'all 0.3s ease'
+          }}>
             <div className="flex items-center">
-              <div className="bg-primary-100 p-3 rounded-lg">
-                <User className="w-6 h-6 text-primary-600" />
+              <div className="p-3 rounded-lg" style={{
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
+              }}>
+                <User className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-900">My Profile</h3>
@@ -97,10 +104,17 @@ export default function CareTakerDashboard() {
             </div>
           </Link>
 
-          <Link href="/caretaker/messages" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/caretaker/messages" className="group nh-card nh-card--lift p-6" style={{
+            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+            border: '1px solid #A5F3FC',
+            transition: 'all 0.3s ease'
+          }}>
             <div className="flex items-center">
-              <div className="bg-green-100 p-3 rounded-lg">
-                <MessageCircle className="w-6 h-6 text-green-600" />
+              <div className="p-3 rounded-lg" style={{
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
+              }}>
+                <MessageCircle className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-900">Messages</h3>
@@ -109,10 +123,17 @@ export default function CareTakerDashboard() {
             </div>
           </Link>
 
-          <Link href="/caretaker/reviews" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/caretaker/reviews" className="group nh-card nh-card--lift p-6" style={{
+            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+            border: '1px solid #A5F3FC',
+            transition: 'all 0.3s ease'
+          }}>
             <div className="flex items-center">
-              <div className="bg-yellow-100 p-3 rounded-lg">
-                <Star className="w-6 h-6 text-yellow-600" />
+              <div className="p-3 rounded-lg" style={{
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
+              }}>
+                <Star className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-900">Reviews</h3>
@@ -121,10 +142,17 @@ export default function CareTakerDashboard() {
             </div>
           </Link>
 
-          <Link href="/caretaker/calls" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/caretaker/calls" className="group nh-card nh-card--lift p-6" style={{
+            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+            border: '1px solid #A5F3FC',
+            transition: 'all 0.3s ease'
+          }}>
             <div className="flex items-center">
-              <div className="bg-cyan-100 p-3 rounded-lg">
-                <Calendar className="w-6 h-6 text-cyan-600" />
+              <div className="p-3 rounded-lg" style={{
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
+              }}>
+                <Calendar className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-900">Calls</h3>
@@ -170,7 +198,7 @@ export default function CareTakerDashboard() {
               </div>
             </div>
             <div className="mt-4 flex space-x-2">
-              <Link href="/caretaker/profile" className="flex-1 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors text-center">
+              <Link href="/caretaker/profile" className="flex-1 bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors text-center">
                 <Edit className="w-4 h-4 inline mr-1" />
                 Edit Profile
               </Link>

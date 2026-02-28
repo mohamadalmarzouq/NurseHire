@@ -250,7 +250,7 @@ export default function UserDashboard() {
               </div>
               <Link
                 href="/caretakers"
-                className="inline-flex items-center text-xs font-medium text-primary-600 hover:text-primary-700"
+                className="inline-flex items-center text-xs font-medium text-cyan-700 hover:text-cyan-800"
               >
                 {t('user.dashboard.viewAll')}
                 <Search className="w-4 h-4 ml-1" />

@@ -52,7 +52,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="nh-section" style={{background:"linear-gradient(135deg,#f0f9ff,#f0fdf4)"}}>
+      <section className="nh-section" style={{background:"linear-gradient(135deg,#ECFEFF,#CFFAFE)"}}>
         <div className="nh-container">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="nh-h1 mb-4 text-balance">
@@ -86,22 +86,22 @@ export default function HomePage() {
         <div className="nh-container">
           <div className="nh-grid nh-grid-3 text-center">
             <div className="nh-card nh-card--lift">
-              <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#e0f2fe'}}>
-                <Shield className="w-6 h-6" color="#0284c7" />
+              <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#CFFAFE'}}>
+                <Shield className="w-6 h-6" color="#0891B2" />
               </div>
               <h3 className="text-xl font-semibold mt-3">{t('homepage.trustIndicators.verified')}</h3>
               <p className="nh-muted text-sm mt-1">{t('homepage.trustIndicators.verifiedDesc')}</p>
             </div>
             <div className="nh-card nh-card--lift">
-              <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#dcfce7'}}>
-                <CheckCircle className="w-6 h-6" color="#10B981" />
+              <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#CFFAFE'}}>
+                <CheckCircle className="w-6 h-6" color="#0891B2" />
               </div>
               <h3 className="text-xl font-semibold mt-3">{t('homepage.trustIndicators.backgroundChecked')}</h3>
               <p className="nh-muted text-sm mt-1">{t('homepage.trustIndicators.backgroundCheckedDesc')}</p>
             </div>
             <div className="nh-card nh-card--lift">
-              <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#FEF3C7'}}>
-                <Star className="w-6 h-6" color="#F59E0B" />
+              <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{background:'#CFFAFE'}}>
+                <Star className="w-6 h-6" color="#0891B2" />
               </div>
               <h3 className="text-xl font-semibold mt-3">{t('homepage.trustIndicators.ratedReviewed')}</h3>
               <p className="nh-muted text-sm mt-1">{t('homepage.trustIndicators.ratedReviewedDesc')}</p>
@@ -116,23 +116,23 @@ export default function HomePage() {
           <div className="text-center" style={{marginBottom: '14px'}}>
             <h2 className="nh-h2" style={{marginBottom:'8px'}}>{t('homepage.howItWorks.title')}</h2>
             <div className="flex justify-center" style={{marginBottom:'14px'}}>
-              <span className="nh-badge nh-badge--info" style={{fontSize:'14px',padding:'6px 12px'}}>{t('homepage.howItWorks.subtitle')}</span>
+              <span className="nh-badge nh-badge--info" style={{fontSize:'14px',padding:'6px 12px',background:'#CFFAFE',color:'#0E7490'}}>{t('homepage.howItWorks.subtitle')}</span>
             </div>
           </div>
 
           <div className="nh-grid nh-grid-3" style={{marginTop:'6px'}}>
             <div className="nh-card nh-card--lift text-center">
-              <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#e0f2fe',color:'#0F73EE',fontWeight:700}}>1</div>
+              <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#CFFAFE',color:'#0891B2',fontWeight:700}}>1</div>
               <h3 className="text-xl font-semibold mb-2">{t('homepage.howItWorks.step1.title')}</h3>
               <p className="nh-muted">{t('homepage.howItWorks.step1.desc')}</p>
             </div>
             <div className="nh-card nh-card--lift text-center">
-              <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#dcfce7',color:'#10B981',fontWeight:700}}>2</div>
+              <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#CFFAFE',color:'#0891B2',fontWeight:700}}>2</div>
               <h3 className="text-xl font-semibold mb-2">{t('homepage.howItWorks.step2.title')}</h3>
               <p className="nh-muted">{t('homepage.howItWorks.step2.desc')}</p>
             </div>
             <div className="nh-card nh-card--lift text-center">
-              <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#FEF3C7',color:'#F59E0B',fontWeight:700}}>3</div>
+              <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4" style={{background:'#CFFAFE',color:'#0891B2',fontWeight:700}}>3</div>
               <h3 className="text-xl font-semibold mb-2">{t('homepage.howItWorks.step3.title')}</h3>
               <p className="nh-muted">{t('homepage.howItWorks.step3.desc')}</p>
             </div>
@@ -149,12 +149,12 @@ export default function HomePage() {
                 {t('homepage.forUsers.title')}
               </h2>
               <div className="mb-4">
-                <span className="nh-badge nh-badge--info" style={{fontSize:'14px',padding:'6px 12px'}}>{t('homepage.forUsers.badge')}</span>
+                <span className="nh-badge nh-badge--info" style={{fontSize:'14px',padding:'6px 12px',background:'#CFFAFE',color:'#0E7490'}}>{t('homepage.forUsers.badge')}</span>
               </div>
               <div className="space-y-5">
                 <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <CheckCircle className="w-4 h-4 text-primary-600" />
+                  <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <CheckCircle className="w-4 h-4 text-cyan-700" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2">{t('homepage.forUsers.verifiedProfessionals.title')}</h3>
@@ -162,8 +162,8 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Clock className="w-4 h-4 text-primary-600" />
+                  <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Clock className="w-4 h-4 text-cyan-700" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2">{t('homepage.forUsers.flexibleScheduling.title')}</h3>
@@ -171,8 +171,8 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Star className="w-4 h-4 text-primary-600" />
+                  <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Star className="w-4 h-4 text-cyan-700" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2">{t('homepage.forUsers.realReviews.title')}</h3>
@@ -184,13 +184,13 @@ export default function HomePage() {
             <div className="relative overflow-hidden rounded-xl bg-white shadow-lg">
               {/* Simple Nurse & Baby Illustration */}
               <div className="relative w-full h-full min-h-[300px] flex items-center justify-center">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-50"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-50 via-white to-cyan-50"></div>
                 
                 {/* Simple Background Pattern */}
                 <div className="absolute inset-0 opacity-10">
-                  <div className="absolute top-4 left-4 w-20 h-20 bg-blue-200 rounded-full"></div>
-                  <div className="absolute top-1/3 right-8 w-16 h-16 bg-blue-300 rounded-full"></div>
-                  <div className="absolute bottom-1/4 left-1/3 w-12 h-12 bg-blue-200 rounded-full"></div>
+                  <div className="absolute top-4 left-4 w-20 h-20 bg-cyan-200 rounded-full"></div>
+                  <div className="absolute top-1/3 right-8 w-16 h-16 bg-cyan-300 rounded-full"></div>
+                  <div className="absolute bottom-1/4 left-1/3 w-12 h-12 bg-cyan-200 rounded-full"></div>
                 </div>
                 
                 {/* Main Content */}
@@ -204,15 +204,15 @@ export default function HomePage() {
                   {/* Stats */}
                   <div className="grid grid-cols-3 gap-6 max-w-lg mx-auto">
                     <div className="text-center">
-                      <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">500+</div>
+                      <div className="text-2xl md:text-3xl font-bold text-cyan-700 mb-2">500+</div>
                       <div className="text-sm md:text-base text-gray-600">{t('homepage.caringProfessional.happyFamilies')}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">50+</div>
+                      <div className="text-2xl md:text-3xl font-bold text-cyan-700 mb-2">50+</div>
                       <div className="text-sm md:text-base text-gray-600">{t('homepage.caringProfessional.expertCareTakers')}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">99%</div>
+                      <div className="text-2xl md:text-3xl font-bold text-cyan-700 mb-2">99%</div>
                       <div className="text-sm md:text-base text-gray-600">{t('homepage.caringProfessional.satisfaction')}</div>
                     </div>
                   </div>
@@ -227,9 +227,9 @@ export default function HomePage() {
       <section className="section-padding bg-neutral-50">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="bg-gradient-to-br from-secondary-50 to-accent-50 rounded-3xl p-8 order-2 lg:order-1">
+            <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-3xl p-8 order-2 lg:order-1">
               <div className="text-center">
-                <Users className="w-16 h-16 text-secondary-600 mx-auto mb-6" />
+                <Users className="w-16 h-16 text-cyan-700 mx-auto mb-6" />
                 <h3 className="text-2xl font-bold text-neutral-900 mb-4">
                   {t('homepage.forCareTakers.findClients.title')}
                 </h3>
@@ -244,8 +244,8 @@ export default function HomePage() {
               </h2>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Users className="w-4 h-4 text-secondary-600" />
+                  <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Users className="w-4 h-4 text-cyan-700" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2">{t('homepage.forCareTakers.findClients.title')}</h3>
@@ -253,8 +253,8 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Shield className="w-4 h-4 text-secondary-600" />
+                  <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Shield className="w-4 h-4 text-cyan-700" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2">{t('homepage.forCareTakers.securePlatform.title')}</h3>
@@ -262,8 +262,8 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Star className="w-4 h-4 text-secondary-600" />
+                  <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Star className="w-4 h-4 text-cyan-700" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2">{t('homepage.forCareTakers.buildReputation.title')}</h3>
@@ -277,7 +277,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="nh-section" style={{background:"linear-gradient(135deg,#0F73EE,#0e5ed3)"}}>
+      <section className="nh-section" style={{background:"linear-gradient(135deg,#0E7490,#0891B2)"}}>
         <div className="nh-container text-center">
           <h2 className="nh-h2 mb-3" style={{color:'#fff'}}>{t('homepage.cta.title')}</h2>
           <p className="text-xl mb-8" style={{color:'rgba(255,255,255,.85)'}}>
@@ -285,7 +285,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/caretakers" className="nh-btn nh-btn--ghost" style={{background:'#fff'}}>{t('homepage.findCareTaker')}</Link>
-            <Link href="/auth/register" className="nh-btn nh-btn--primary" style={{background:'#10B981'}}>{t('homepage.registerAsCareTaker')}</Link>
+            <Link href="/auth/register" className="nh-btn nh-btn--primary" style={{background:'#06B6D4'}}>{t('homepage.registerAsCareTaker')}</Link>
           </div>
         </div>
       </section>
