@@ -46,12 +46,12 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white shadow-soft sticky top-0 z-50">
+    <header className="bg-white shadow-soft sticky top-0 z-50 border-b border-cyan-100">
       <div className="container-custom">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 no-underline">
-            <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-cyan-700 rounded-lg flex items-center justify-center">
               <Heart className="w-5 h-5 text-white" />
             </div>
             <span className="text-2xl font-bold text-gradient">ENFAS</span>
@@ -59,16 +59,16 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/caretakers" className="text-neutral-600 hover:text-primary-600 transition-colors">
+            <Link href="/caretakers" className="text-neutral-600 hover:text-cyan-700 transition-colors">
               {t('common.findCareTakers')}
             </Link>
-            <Link href="/how-it-works" className="text-neutral-600 hover:text-primary-600 transition-colors">
+            <Link href="/how-it-works" className="text-neutral-600 hover:text-cyan-700 transition-colors">
               {t('common.howItWorks')}
             </Link>
-            <Link href="/safety" className="text-neutral-600 hover:text-primary-600 transition-colors">
+            <Link href="/safety" className="text-neutral-600 hover:text-cyan-700 transition-colors">
               {t('common.safety')}
             </Link>
-            <Link href="/about" className="text-neutral-600 hover:text-primary-600 transition-colors">
+            <Link href="/about" className="text-neutral-600 hover:text-cyan-700 transition-colors">
               {t('common.about')}
             </Link>
           </nav>
@@ -80,7 +80,7 @@ export default function Header() {
               <>
                 <Link 
                   href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CARETAKER' ? '/caretaker/dashboard' : '/user/dashboard'}
-                  className="text-neutral-600 hover:text-primary-600 transition-colors"
+                  className="text-neutral-600 hover:text-cyan-700 transition-colors"
                 >
                   {t('common.dashboard')}
                 </Link>
@@ -97,10 +97,10 @@ export default function Header() {
               </>
             ) : (
               <>
-                <Link href="/auth/login" className="text-neutral-600 hover:text-primary-600 transition-colors">
+                <Link href="/auth/login" className="text-neutral-600 hover:text-cyan-700 transition-colors">
                   {t('common.signIn')}
                 </Link>
-                <Link href="/auth/register" className="btn-primary">
+                <Link href="/auth/register" className="btn-primary" style={{background:'#06B6D4'}}>
                   {t('common.getStarted')}
                 </Link>
               </>
@@ -110,7 +110,7 @@ export default function Header() {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+            className="md:hidden p-2 rounded-lg hover:bg-cyan-50 transition-colors"
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -122,28 +122,28 @@ export default function Header() {
             <nav className="flex flex-col space-y-4">
               <Link 
                 href="/caretakers" 
-                className="text-neutral-600 hover:text-primary-600 transition-colors px-4 py-2"
+                className="text-neutral-600 hover:text-cyan-700 transition-colors px-4 py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('common.findCareTakers')}
               </Link>
               <Link 
                 href="/how-it-works" 
-                className="text-neutral-600 hover:text-primary-600 transition-colors px-4 py-2"
+                className="text-neutral-600 hover:text-cyan-700 transition-colors px-4 py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('common.howItWorks')}
               </Link>
               <Link 
                 href="/safety" 
-                className="text-neutral-600 hover:text-primary-600 transition-colors px-4 py-2"
+                className="text-neutral-600 hover:text-cyan-700 transition-colors px-4 py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('common.safety')}
               </Link>
               <Link 
                 href="/about" 
-                className="text-neutral-600 hover:text-primary-600 transition-colors px-4 py-2"
+                className="text-neutral-600 hover:text-cyan-700 transition-colors px-4 py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('common.about')}
@@ -156,7 +156,7 @@ export default function Header() {
                   <>
                     <Link 
                       href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CARETAKER' ? '/caretaker/dashboard' : '/user/dashboard'}
-                      className="block text-neutral-600 hover:text-primary-600 transition-colors py-2"
+                      className="block text-neutral-600 hover:text-cyan-700 transition-colors py-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {t('common.dashboard')}
@@ -176,7 +176,7 @@ export default function Header() {
                   <>
                     <Link 
                       href="/auth/login" 
-                      className="block text-neutral-600 hover:text-primary-600 transition-colors py-2"
+                      className="block text-neutral-600 hover:text-cyan-700 transition-colors py-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {t('common.signIn')}
@@ -184,6 +184,7 @@ export default function Header() {
                     <Link 
                       href="/auth/register" 
                       className="block btn-primary text-center"
+                      style={{background:'#06B6D4'}}
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {t('common.getStarted')}
