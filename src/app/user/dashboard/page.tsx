@@ -114,11 +114,10 @@ export default function UserDashboard() {
                     {subscription && (
                       <Link
                         href="/user/subscription"
-                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                          subscription.isActive
-                            ? 'bg-cyan-50 text-cyan-800 hover:bg-cyan-100'
-                            : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                        className={`btn-primary ${
+                          subscription.isActive ? '' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                         }`}
+                        style={subscription.isActive ? { background: '#06B6D4' } : undefined}
                       >
                         {subscription.isActive ? `✓ ${t('user.dashboard.activeSubscription')}` : t('user.dashboard.viewSubscription')}
                       </Link>
