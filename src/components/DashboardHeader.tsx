@@ -60,7 +60,8 @@ export default function DashboardHeader({ userName, userRole }: DashboardHeaderP
                 
                 <button
                   onClick={handleSignOut}
-                  className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                  className="btn-primary"
+                  style={{ background: '#06B6D4' }}
                 >
                   Sign Out
                 </button>
