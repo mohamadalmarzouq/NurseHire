@@ -31,15 +31,15 @@ export default function LanguageToggle() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-neutral-100 transition-colors"
+        className="flex items-center space-x-2 px-3 py-2 rounded-lg border border-cyan-100 hover:bg-cyan-50 transition-colors"
         aria-label="Select language"
       >
-        <Globe className="w-4 h-4 text-neutral-600" />
-        <span className="text-sm font-medium text-neutral-700">{currentLang.flag} {currentLang.name}</span>
+        <Globe className="w-4 h-4 text-cyan-700" />
+        <span className="text-sm font-medium text-cyan-800">{currentLang.flag} {currentLang.name}</span>
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-lg border border-neutral-200 py-2 min-w-[150px] z-50">
+        <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-lg border border-cyan-100 py-2 min-w-[150px] z-50">
           {languages.map((lang) => (
             <button
               key={lang.code}
@@ -47,14 +47,14 @@ export default function LanguageToggle() {
                 setLanguage(lang.code)
                 setIsOpen(false)
               }}
-              className={`w-full text-left px-4 py-2 text-sm hover:bg-neutral-50 transition-colors flex items-center space-x-2 ${
-                language === lang.code ? 'bg-primary-50 text-primary-600' : 'text-neutral-700'
+              className={`w-full text-left px-4 py-2 text-sm hover:bg-cyan-50 transition-colors flex items-center space-x-2 ${
+                language === lang.code ? 'bg-cyan-50 text-cyan-700' : 'text-neutral-700'
               }`}
             >
               <span>{lang.flag}</span>
               <span>{lang.name}</span>
               {language === lang.code && (
-                <span className="ml-auto text-primary-600">✓</span>
+                <span className="ml-auto text-cyan-700">✓</span>
               )}
             </button>
           ))}

@@ -488,7 +488,7 @@ export default function CareTakerProfilePage() {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto mb-4"></div>
           <p className="text-neutral-600">Loading care taker profile...</p>
         </div>
       </div>
@@ -526,7 +526,7 @@ export default function CareTakerProfilePage() {
       <div className="bg-white shadow-soft">
         <div className="container-custom py-6">
           <div className="flex items-center justify-between">
-            <Link href="/caretakers" className="flex items-center text-neutral-600 hover:text-neutral-900">
+            <Link href="/caretakers" className="flex items-center text-neutral-600 hover:text-cyan-800">
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Care Takers
             </Link>
@@ -631,13 +631,13 @@ export default function CareTakerProfilePage() {
       <div className="container-custom py-8">
         {/* Sign-up Banner for non-authenticated users */}
         {!isAuthenticated && (
-          <div className="nh-card mb-6" style={{background:'linear-gradient(135deg,#0F73EE,#10B981)'}}>
+          <div className="nh-card mb-6" style={{background:'linear-gradient(135deg,#0E7490,#0891B2)'}}>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-white mb-1">Sign up to contact this caretaker</h3>
                 <p className="text-white/90 text-sm">Create a free account to view contact information, send messages, and read reviews</p>
               </div>
-              <Link href="/auth/register" className="px-6 py-2 bg-white text-primary-600 rounded-lg font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">
+              <Link href="/auth/register" className="px-6 py-2 bg-white text-cyan-700 rounded-lg font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">
                 Sign Up Free
               </Link>
             </div>
@@ -650,7 +650,7 @@ export default function CareTakerProfilePage() {
             {/* Profile Header */}
             <div className="card">
               <div className="flex items-start space-x-6">
-                <div className="w-24 h-24 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
+                <div className="w-24 h-24 bg-gradient-to-r from-cyan-100 to-cyan-200 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
                   {caretaker.profileImageUrl ? (
                     <button
                       type="button"
@@ -665,7 +665,7 @@ export default function CareTakerProfilePage() {
                       />
                     </button>
                   ) : (
-                    <User className="w-12 h-12 text-primary-600" />
+                    <User className="w-12 h-12 text-cyan-700" />
                   )}
                 </div>
                 <div className="flex-1">
@@ -686,7 +686,7 @@ export default function CareTakerProfilePage() {
                   )}
                   {!isAuthenticated && (
                     <div className="mb-4">
-                      <Link href="/auth/register" className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium">
+                      <Link href="/auth/register" className="inline-flex items-center px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors text-sm font-medium">
                         Sign up to see ratings and reviews
                       </Link>
                     </div>
@@ -695,7 +695,7 @@ export default function CareTakerProfilePage() {
                     {caretaker.availability.map((avail) => (
                       <span
                         key={avail}
-                        className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium"
+                        className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium"
                       >
                         {avail}
                       </span>
@@ -741,7 +741,7 @@ export default function CareTakerProfilePage() {
                       caretaker.languages.map((language) => (
                         <span
                           key={language}
-                          className="px-3 py-1 bg-secondary-100 text-secondary-700 rounded-full text-sm"
+                          className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm"
                         >
                           {language}
                         </span>
@@ -762,7 +762,7 @@ export default function CareTakerProfilePage() {
                   {caretaker.skills.map((skill) => (
                     <span
                       key={skill}
-                      className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium"
+                      className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium"
                     >
                       {skill}
                     </span>
@@ -775,7 +775,7 @@ export default function CareTakerProfilePage() {
             {caretaker.certifications && caretaker.certifications.length > 0 && (
               <div className="card">
                 <h2 className="text-xl font-semibold text-neutral-900 mb-4 flex items-center">
-                  <Award className="w-5 h-5 mr-2 text-primary-600" />
+                  <Award className="w-5 h-5 mr-2 text-cyan-700" />
                   Certifications & Credentials
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -789,7 +789,7 @@ export default function CareTakerProfilePage() {
                         key={index}
                         type="button"
                         onClick={() => handleViewFile(certUrl)}
-                        className="border border-neutral-200 rounded-xl p-4 hover:border-primary-300 hover:shadow-lg transition-all group text-left min-h-[100px] flex items-center"
+                        className="border border-neutral-200 rounded-xl p-4 hover:border-cyan-300 hover:shadow-lg transition-all group text-left min-h-[100px] flex items-center"
                       >
                         <div className="flex items-start gap-3 w-full">
                           <div className="flex-shrink-0 w-16 h-16 rounded-xl bg-neutral-100 flex items-center justify-center overflow-hidden">
@@ -806,7 +806,7 @@ export default function CareTakerProfilePage() {
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-neutral-900 truncate group-hover:text-primary-600">
+                            <p className="text-sm font-medium text-neutral-900 truncate group-hover:text-cyan-700">
                               {fileName.length > 30 ? fileName.substring(0, 30) + '...' : fileName}
                             </p>
                             <p className="text-xs text-neutral-500 mt-1">
@@ -891,7 +891,7 @@ export default function CareTakerProfilePage() {
                   <p className="text-neutral-600 mb-6">
                     Create a free account to read reviews from other users who have worked with this caretaker.
                   </p>
-                  <Link href="/auth/register" className="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium">
+                  <Link href="/auth/register" className="inline-flex items-center px-6 py-3 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors font-medium">
                     Sign Up Free
                   </Link>
                 </div>
@@ -906,20 +906,20 @@ export default function CareTakerProfilePage() {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center">
                   <span className="text-neutral-600">Part-time Rate</span>
-                  <span className="text-xl font-bold text-primary-600">
+                  <span className="text-xl font-bold text-cyan-700">
                     {caretaker.partTimeSalary} KD/hour
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-neutral-600">Full-time Rate</span>
-                  <span className="text-xl font-bold text-primary-600">
+                  <span className="text-xl font-bold text-cyan-700">
                     {caretaker.fullTimeSalary} KD/hour
                   </span>
                 </div>
                 {caretaker.expectedSalary && (
                   <div className="flex justify-between items-center">
                     <span className="text-neutral-600">Expected Salary</span>
-                    <span className="text-xl font-bold text-primary-600">
+                    <span className="text-xl font-bold text-cyan-700">
                       {caretaker.expectedSalary} KD/hour
                     </span>
                   </div>
@@ -951,7 +951,7 @@ export default function CareTakerProfilePage() {
                     <div className="flex items-center text-neutral-600">
                       <Phone className="w-4 h-4 mr-2 text-gray-500" />
                       <span className="text-neutral-600">Phone:</span>
-                      <a href={`tel:${caretaker.phone}`} className="ml-2 font-medium text-primary-600 hover:text-primary-700">
+                      <a href={`tel:${caretaker.phone}`} className="ml-2 font-medium text-cyan-700 hover:text-cyan-800">
                         {caretaker.phone}
                       </a>
                     </div>
@@ -1279,8 +1279,8 @@ export default function CareTakerProfilePage() {
                     className="w-16 h-16 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center">
-                    <User className="w-8 h-8 text-primary-600" />
+                  <div className="w-16 h-16 rounded-full bg-cyan-100 flex items-center justify-center">
+                    <User className="w-8 h-8 text-cyan-700" />
                   </div>
                 )}
                 <div>
@@ -1362,7 +1362,7 @@ export default function CareTakerProfilePage() {
                   Additional Comments (Optional)
                 </label>
                 <textarea
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none bg-white"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent resize-none bg-white"
                   rows={4}
                   placeholder="Share your experience with this caretaker... (e.g., punctuality, communication, professionalism, etc.)"
                   value={reviewForm.comment}
@@ -1404,7 +1404,7 @@ export default function CareTakerProfilePage() {
                 </button>
                 <button
                   onClick={handleSubmitReview}
-                  className="px-6 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-sm hover:shadow-md"
+                  className="px-6 py-2.5 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-sm hover:shadow-md"
                   disabled={isSubmitting || reviewForm.appearance === 0 || reviewForm.attitude === 0 || reviewForm.knowledge === 0 || reviewForm.hygiene === 0 || reviewForm.salary === 0}
                 >
                   {isSubmitting ? (

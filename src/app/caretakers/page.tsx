@@ -142,7 +142,7 @@ export default function CareTakersPage() {
             <div className="mb-6">
               <Link 
                 href="/user/dashboard" 
-                className="inline-flex items-center text-primary-600 hover:text-primary-700 transition-colors"
+                className="inline-flex items-center text-cyan-700 hover:text-cyan-800 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 {t('caretakers.backToDashboard')}
@@ -164,13 +164,13 @@ export default function CareTakersPage() {
       <div className="container-custom py-8">
         {/* Sign-up Banner for non-authenticated users */}
         {!isAuthenticated && (
-          <div className="nh-card mb-6" style={{background:'linear-gradient(135deg,#0F73EE,#10B981)'}}>
+          <div className="nh-card mb-6" style={{background:'linear-gradient(135deg,#0E7490,#0891B2)'}}>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-white mb-1">{t('caretakers.profile.signUpToContact')}</h3>
                 <p className="text-white/90 text-sm">{t('caretakers.profile.signUpToContactDesc')}</p>
               </div>
-              <Link href="/auth/register" className="px-6 py-2 bg-white text-primary-600 rounded-lg font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">
+              <Link href="/auth/register" className="px-6 py-2 bg-white text-cyan-700 rounded-lg font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">
                 {t('caretakers.profile.signUpFree')}
               </Link>
             </div>
@@ -178,7 +178,7 @@ export default function CareTakersPage() {
         )}
 
         {/* Trust strip */}
-        <div className="nh-card mb-6" style={{background:'linear-gradient(90deg,#F0F9FF,#ECFDF5)'}}>
+        <div className="nh-card mb-6" style={{background:'linear-gradient(90deg,#ECFEFF,#CFFAFE)'}}>
           <div className="flex flex-wrap items-center gap-2">
             <span className="nh-badge nh-badge--ok">Verified</span>
             <span className="nh-badge nh-badge--info">Private & Secure</span>
