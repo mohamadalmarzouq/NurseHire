@@ -52,10 +52,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{background:'linear-gradient(180deg,#F6FAFF, #FFFFFF)'}}>
+    <div className="min-h-screen" style={{background:'linear-gradient(180deg,#ECFEFF, #FFFFFF)'}}>
       <div className="nh-container" style={{minHeight:'calc(100vh - 140px)',display:'grid',alignItems:'center',padding:'40px 0'}}>
         <div className="nh-grid nh-grid-2" style={{alignItems:'stretch',gap:'24px',maxWidth:1120,margin:'0 auto'}}>
-          <div className="nh-card" style={{minHeight:'460px',width:'100%',justifySelf:'stretch'}}>
+          <div className="nh-card" style={{minHeight:'460px',width:'100%',justifySelf:'stretch',borderColor:'#CFFAFE'}}>
           <div className="text-center mb-4">
             <h1 className="nh-h2">{t('auth.login.title')}</h1>
             <p className="nh-sub">{t('auth.login.welcome')}</p>
@@ -104,18 +104,18 @@ export default function LoginPage() {
         </form>
 
             <p className="mt-4 text-center text-sm nh-muted">
-              {t('auth.login.dontHaveAccount')}{' '}<Link href="/auth/register" className="text-primary-600">{t('common.signUp')}</Link>
+              {t('auth.login.dontHaveAccount')}{' '}<Link href="/auth/register" className="text-cyan-700 hover:text-cyan-800">{t('common.signUp')}</Link>
             </p>
 
             <Link href="/" className="block mt-2 text-center text-sm nh-muted">{t('common.backToHome')}</Link>
           </div>
 
           {/* Benefits panel */}
-          <div className="nh-card" style={{background:'linear-gradient(180deg,#F8FAFF,#FFFFFF)',borderColor:'#E6EEFF',minHeight:'460px'}}>
+          <div className="nh-card" style={{background:'linear-gradient(180deg,#ECFEFF,#FFFFFF)',borderColor:'#CFFAFE',minHeight:'460px'}}>
             <div style={{maxWidth:480,margin:'0 auto'}}>
-              <div className="w-14 h-14 rounded-full" style={{background:'#E0EAFF',display:'grid',placeItems:'center',margin:'0 auto 12px'}}>
+              <div className="w-14 h-14 rounded-full" style={{background:'#CFFAFE',display:'grid',placeItems:'center',margin:'0 auto 12px'}}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.65-7 10-7 10z" stroke="#0F73EE" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.65-7 10-7 10z" stroke="#0891B2" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
               <h2 className="text-center nh-h2" style={{fontSize:'22px',marginBottom:'8px'}}>{t('auth.login.whyEnfas')}</h2>
