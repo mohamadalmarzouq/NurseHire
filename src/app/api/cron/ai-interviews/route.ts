@@ -4,8 +4,13 @@ import { prisma } from '@/lib/prisma'
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY
 const DAILY_DOMAIN = process.env.DAILY_DOMAIN
-const DAILY_BOTS_API_KEY = process.env.DAILY_BOTS_API_KEY
-const DAILY_BOTS_PROFILE = process.env.DAILY_BOTS_PROFILE || 'voice_2024_10'
+const PIPECAT_API_KEY =
+  process.env.PIPECAT_PUBLIC_API_KEY ||
+  process.env.PIPECAT_PRIVATE_API_KEY ||
+  process.env.PIPECAT_API_KEY ||
+  process.env.PIPECAT_PRIVATE_KEY
+const PIPECAT_AGENT_NAME = process.env.PIPECAT_AGENT_NAME
+const PIPECAT_BASE_URL = process.env.PIPECAT_BASE_URL || 'https://api.pipecat.daily.co/v1/public'
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY
 const DEEPGRAM_API_KEY = process.env.DEEPGRAM_API_KEY
 const CRON_SECRET = process.env.CRON_SECRET
@@ -79,18 +84,23 @@ const startDailyRecording = async (roomName: string) => {
   return data?.recording_id || data?.id || null
 }
 
-const startDailyBot = async (call: {
-  id: string
-  dailyRoomName: string | null
-  dailyRoomUrl: string | null
-  durationMinutes: number
-  aiQuestions: any
-}) => {
-  if (!DAILY_BOTS_API_KEY) {
-    throw new Error('Daily bots is not configured')
+const startPipecatSession = async (
+  call: {
+    id: string
+    durationMinutes: number
+    aiQuestions: any
+  },
+  room: { name: string | null; url: string | null }
+) => {
+  if (!PIPECAT_API_KEY) {
+    throw new Error('Pipecat Cloud API key is not configured')
   }
 
-  const roomRef = call.dailyRoomName || call.dailyRoomUrl
+  if (!PIPECAT_AGENT_NAME) {
+    throw new Error('Pipecat agent name is not configured')
+  }
+
+  const roomRef = room.url || room.name
   if (!roomRef) {
     throw new Error('Daily room is not ready')
   }
@@ -112,36 +122,29 @@ const startDailyBot = async (call: {
   const maxDuration = Math.max(120, call.durationMinutes * 60 + 120)
 
   const payload = {
-    room: roomRef,
-    bot_profile: DAILY_BOTS_PROFILE,
-    max_duration: maxDuration,
-    services: {
-      stt: 'deepgram',
-      tts: 'elevenlabs',
-      llm: 'none',
-    },
-    service_options: {
-      deepgram: {
-        api_key: DEEPGRAM_API_KEY,
-      },
-      elevenlabs: {
-        api_key: ELEVENLABS_API_KEY,
-        voice_id: firstQuestion?.voiceId || fallbackVoiceId,
-      },
-    },
-    config: {
-      scripted_questions: script,
-      mode: 'scripted',
-      allow_barge_in: true,
-      max_silence_seconds: 8,
-      max_retries: 2,
+    createDailyRoom: false,
+    transport: 'daily',
+    body: {
+      roomUrl: room.url || roomRef,
+      roomName: room.name || undefined,
+      maxDurationSeconds: maxDuration,
+      questions: questionList,
+      script,
+      language: firstQuestion?.language || 'en',
+      voiceId: firstQuestion?.voiceId || fallbackVoiceId,
+      allowBargeIn: true,
+      maxSilenceSeconds: 8,
+      maxRetries: 2,
+      elevenlabsApiKey: ELEVENLABS_API_KEY || undefined,
+      deepgramApiKey: DEEPGRAM_API_KEY || undefined,
     },
   }
 
-  const res = await fetch('https://api.daily.co/v1/bots/start', {
+  const baseUrl = PIPECAT_BASE_URL.replace(/\/$/, '')
+  const res = await fetch(`${baseUrl}/${encodeURIComponent(PIPECAT_AGENT_NAME)}/start`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${DAILY_BOTS_API_KEY}`,
+      Authorization: `Bearer ${PIPECAT_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(payload),
@@ -149,7 +152,7 @@ const startDailyBot = async (call: {
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}))
-    throw new Error(errorData.error || 'Failed to start Daily bot')
+    throw new Error(errorData.error || 'Failed to start Pipecat session')
   }
 }
 
@@ -236,7 +239,7 @@ export async function POST(request: NextRequest) {
         })
 
         try {
-          await startDailyBot(call)
+          await startPipecatSession(call, { name: roomName, url: roomUrl })
         } catch (botError) {
           errors.push({
             id: call.id,
