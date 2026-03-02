@@ -194,70 +194,37 @@ export default function CallPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="flex items-center justify-between p-4 border-b border-gray-800">
-        <div>
-          <h1 className="text-lg font-semibold">Video Call</h1>
-          {isJoining && <p className="text-sm text-gray-400">Joining...</p>}
-        </div>
-        <div className="flex items-center gap-2">
-          {userRole === 'USER' && (
-            <>
-              <button
-                onClick={handleRecordToggle}
-                className={`px-4 py-2 rounded-md text-sm font-medium ${
-                  recordingStatus === 'RECORDING'
-                    ? 'bg-red-600 hover:bg-red-700'
-                    : 'bg-gray-800 hover:bg-gray-700'
-                }`}
-              >
-                {recordingStatus === 'RECORDING' ? 'Stop Recording' : 'Record'}
-              </button>
-              {recordingStatus === 'RECORDING' && (
-                <span className="text-xs text-red-300">● Recording</span>
-              )}
-              {recordingStatus === 'PROCESSING' && (
-                <span className="text-xs text-yellow-300">Processing...</span>
-              )}
-              {recordingStatus === 'READY' && recordingUrl && (
-                <a
-                  href={recordingUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-xs text-green-300 underline"
-                >
-                  View recording
-                </a>
-              )}
-            </>
-          )}
-          <button
-            onClick={handleLeave}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium"
-          >
-            End Call
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 p-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-black rounded-lg overflow-hidden aspect-video">
-            <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
-          </div>
-          <div className="bg-black rounded-lg overflow-hidden aspect-video">
-            <div className="relative w-full h-full">
-              <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
-              {!hasRemote && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-sm text-gray-200">
-                  Waiting for the other participant to join...
-                </div>
-              )}
+    <div className="min-h-screen bg-gray-900 text-white pb-20">
+      <div className="px-4 pt-4">
+        <div className="max-w-6xl mx-auto bg-gray-950/70 border border-gray-800 rounded-2xl p-4 md:p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-lg font-semibold">Video Call</h1>
+              {isJoining && <p className="text-sm text-gray-400">Joining...</p>}
+            </div>
+            <div className="text-xs text-gray-400">
+              {participants.length > 0 ? `${participants.length} connected` : 'Waiting for others'}
             </div>
           </div>
-        </div>
 
-        <div className="bg-white rounded-lg p-4 flex flex-col gap-4 text-gray-900 max-h-[calc(100vh-140px)] min-h-[360px]">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-black rounded-xl overflow-hidden" style={{ aspectRatio: '16 / 9' }}>
+                <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
+              </div>
+              <div className="bg-black rounded-xl overflow-hidden" style={{ aspectRatio: '16 / 9' }}>
+                <div className="relative w-full h-full">
+                  <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
+                  {!hasRemote && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-sm text-gray-200">
+                      Waiting for the other participant to join...
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl p-4 flex flex-col gap-4 text-gray-900 max-h-[calc(100vh-220px)] min-h-[360px]">
           <div>
             <h2 className="text-sm font-semibold text-gray-800 mb-2">Participants</h2>
             <div className="space-y-2">
@@ -277,6 +244,57 @@ export default function CallPage() {
                 ))
               )}
             </div>
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="fixed bottom-0 left-0 right-0 border-t border-gray-800 bg-gray-950/95 backdrop-blur">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <span className="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-gray-800/80">
+              Live
+            </span>
+            {isJoining && <span>Joining call…</span>}
+          </div>
+          <div className="flex items-center gap-2">
+            {userRole === 'USER' && (
+              <>
+                <button
+                  onClick={handleRecordToggle}
+                  className={`px-4 py-2 rounded-full text-sm font-medium ${
+                    recordingStatus === 'RECORDING'
+                      ? 'bg-red-600 hover:bg-red-700'
+                      : 'bg-gray-800 hover:bg-gray-700'
+                  }`}
+                >
+                  {recordingStatus === 'RECORDING' ? 'Stop Recording' : 'Record'}
+                </button>
+                {recordingStatus === 'RECORDING' && (
+                  <span className="text-xs text-red-300">● Recording</span>
+                )}
+                {recordingStatus === 'PROCESSING' && (
+                  <span className="text-xs text-yellow-300">Processing...</span>
+                )}
+                {recordingStatus === 'READY' && recordingUrl && (
+                  <a
+                    href={recordingUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-green-300 underline"
+                  >
+                    View recording
+                  </a>
+                )}
+              </>
+            )}
+            <button
+              onClick={handleLeave}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-full text-sm font-medium"
+            >
+              End Call
+            </button>
           </div>
         </div>
       </div>
