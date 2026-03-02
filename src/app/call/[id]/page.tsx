@@ -194,16 +194,56 @@ export default function CallPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white pb-24">
+    <div className="min-h-screen bg-gray-900 text-white">
       <div className="px-4 pt-4">
         <div className="max-w-6xl mx-auto bg-gray-950/70 border border-gray-800 rounded-2xl p-4 md:p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div>
               <h1 className="text-lg font-semibold">Video Call</h1>
               {isJoining && <p className="text-sm text-gray-400">Joining...</p>}
             </div>
-            <div className="text-xs text-gray-400">
-              {participants.length > 0 ? `${participants.length} connected` : 'Waiting for others'}
+            <div className="flex items-center gap-3">
+              <div className="text-xs text-gray-400">
+                {participants.length > 0 ? `${participants.length} connected` : 'Waiting for others'}
+              </div>
+              <div className="flex items-center gap-2">
+                {userRole === 'USER' && (
+                  <>
+                    <button
+                      onClick={handleRecordToggle}
+                      className={`px-4 py-2 rounded-full text-sm font-semibold shadow-md transition-colors ${
+                        recordingStatus === 'RECORDING'
+                          ? 'bg-red-600 hover:bg-red-700'
+                          : 'bg-[#06B6D4] hover:bg-[#0891B2]'
+                      }`}
+                    >
+                      {recordingStatus === 'RECORDING' ? 'Stop Recording' : 'Record'}
+                    </button>
+                    {recordingStatus === 'RECORDING' && (
+                      <span className="text-xs text-red-300">● Recording</span>
+                    )}
+                    {recordingStatus === 'PROCESSING' && (
+                      <span className="text-xs text-yellow-300">Processing...</span>
+                    )}
+                    {recordingStatus === 'READY' && recordingUrl && (
+                      <a
+                        href={recordingUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs text-green-300 underline"
+                      >
+                        View recording
+                      </a>
+                    )}
+                  </>
+                )}
+                <button
+                  onClick={handleLeave}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-full text-sm font-semibold shadow-md transition-colors"
+                >
+                  End Call
+                </button>
+              </div>
             </div>
           </div>
 
@@ -250,54 +290,6 @@ export default function CallPage() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-800 bg-gray-950/95 backdrop-blur">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-xs text-gray-400">
-            <span className="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-gray-800/80">
-              Live
-            </span>
-            {isJoining && <span>Joining call…</span>}
-          </div>
-          <div className="flex items-center gap-2">
-            {userRole === 'USER' && (
-              <>
-                <button
-                  onClick={handleRecordToggle}
-                  className={`px-5 py-2.5 rounded-full text-sm font-semibold shadow-md transition-colors ${
-                    recordingStatus === 'RECORDING'
-                      ? 'bg-red-600 hover:bg-red-700'
-                      : 'bg-[#06B6D4] hover:bg-[#0891B2]'
-                  }`}
-                >
-                  {recordingStatus === 'RECORDING' ? 'Stop Recording' : 'Record'}
-                </button>
-                {recordingStatus === 'RECORDING' && (
-                  <span className="text-xs text-red-300">● Recording</span>
-                )}
-                {recordingStatus === 'PROCESSING' && (
-                  <span className="text-xs text-yellow-300">Processing...</span>
-                )}
-                {recordingStatus === 'READY' && recordingUrl && (
-                  <a
-                    href={recordingUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs text-green-300 underline"
-                  >
-                    View recording
-                  </a>
-                )}
-              </>
-            )}
-            <button
-              onClick={handleLeave}
-              className="px-5 py-2.5 bg-red-600 hover:bg-red-700 rounded-full text-sm font-semibold shadow-md transition-colors"
-            >
-              End Call
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
