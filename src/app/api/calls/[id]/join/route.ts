@@ -106,6 +106,7 @@ const startPipecatSession = async (
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}))
+    console.error('Pipecat start failed:', { status: res.status, error: errorData })
     throw new Error(errorData.error || 'Failed to start Pipecat session')
   }
 }
@@ -224,12 +225,22 @@ export async function POST(
     }
 
     if (payload.role === 'CARETAKER' && callSession.aiInterviewEnabled) {
+      console.info('AI interview join detected', {
+        callId: callSession.id,
+        status: callSession.status,
+        aiInterviewStatus: callSession.aiInterviewStatus,
+        roomName,
+      })
       const refreshed = await prisma.callSession.findUnique({ where: { id: callSession.id } })
       if (
         refreshed &&
         refreshed.status === 'ACCEPTED' &&
         refreshed.aiInterviewStatus === AiInterviewStatus.SCHEDULED
       ) {
+        console.info('Starting AI interview on join', {
+          callId: refreshed.id,
+          roomName: refreshed.dailyRoomName || roomName,
+        })
         const roomForCall = {
           name: refreshed.dailyRoomName || roomName,
           url:
