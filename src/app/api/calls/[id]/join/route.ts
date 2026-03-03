@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { AiInterviewStatus, RecordingStatus } from '@prisma/client'
+import { AiInterviewStatus, CallStatus, Prisma, RecordingStatus } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
@@ -193,16 +193,7 @@ export async function POST(
       })
     }
 
-    const joinData: {
-      userJoinedAt?: Date
-      caretakerJoinedAt?: Date
-      startedAt?: Date
-      callActivatedAt?: Date
-      userLeftAt?: null
-      caretakerLeftAt?: null
-      status?: string
-      aiInterviewStatus?: AiInterviewStatus | null
-    } = {}
+    const joinData: Prisma.CallSessionUpdateInput = {}
     if (payload.role === 'CARETAKER' && !callSession.caretakerJoinedAt) {
       joinData.caretakerJoinedAt = new Date()
     }
@@ -220,7 +211,7 @@ export async function POST(
       joinData.caretakerLeftAt = null
     }
     if (payload.role === 'CARETAKER' && callSession.status === 'REQUESTED') {
-      joinData.status = 'ACCEPTED'
+      joinData.status = CallStatus.ACCEPTED
     }
     if (callSession.aiInterviewEnabled && !callSession.aiInterviewStatus) {
       joinData.aiInterviewStatus = AiInterviewStatus.SCHEDULED
