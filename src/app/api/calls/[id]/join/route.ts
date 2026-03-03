@@ -1,9 +1,114 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { AiInterviewStatus, RecordingStatus } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY
 const DAILY_DOMAIN = process.env.DAILY_DOMAIN
+const PIPECAT_API_KEY =
+  process.env.PIPECAT_PUBLIC_API_KEY ||
+  process.env.PIPECAT_PRIVATE_API_KEY ||
+  process.env.PIPECAT_API_KEY ||
+  process.env.PIPECAT_PRIVATE_KEY
+const PIPECAT_AGENT_NAME = process.env.PIPECAT_AGENT_NAME
+const PIPECAT_BASE_URL = process.env.PIPECAT_BASE_URL || 'https://api.pipecat.daily.co/v1/public'
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY
+const DEEPGRAM_API_KEY = process.env.DEEPGRAM_API_KEY
+
+const startDailyRecording = async (roomName: string) => {
+  if (!DAILY_API_KEY) {
+    throw new Error('Daily is not configured')
+  }
+
+  const res = await fetch(`https://api.daily.co/v1/rooms/${roomName}/recordings/start`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${DAILY_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ type: 'cloud' }),
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.error || 'Failed to start recording')
+  }
+
+  const data = await res.json()
+  return data?.recording_id || data?.id || null
+}
+
+const startPipecatSession = async (
+  call: {
+    id: string
+    durationMinutes: number
+    aiQuestions: any
+  },
+  room: { name: string | null; url: string | null }
+) => {
+  if (!PIPECAT_API_KEY) {
+    throw new Error('Pipecat Cloud API key is not configured')
+  }
+
+  if (!PIPECAT_AGENT_NAME) {
+    throw new Error('Pipecat agent name is not configured')
+  }
+
+  const roomRef = room.url || room.name
+  if (!roomRef) {
+    throw new Error('Daily room is not ready')
+  }
+
+  const questionList: Array<{ text: string; language?: string; voiceId?: string | null }> = Array.isArray(
+    call.aiQuestions
+  )
+    ? call.aiQuestions
+    : []
+
+  const firstQuestion = questionList[0]
+  const fallbackVoiceId =
+    firstQuestion?.language === 'ar'
+      ? process.env.ELEVENLABS_VOICE_ID_AR || null
+      : process.env.ELEVENLABS_VOICE_ID_EN || null
+
+  const script = questionList.map((q, idx) => `${idx + 1}. ${q.text}`).join('\n')
+
+  const maxDuration = Math.max(120, call.durationMinutes * 60 + 120)
+
+  const payload = {
+    createDailyRoom: false,
+    transport: 'daily',
+    body: {
+      roomUrl: room.url || roomRef,
+      roomName: room.name || undefined,
+      maxDurationSeconds: maxDuration,
+      questions: questionList,
+      script,
+      language: firstQuestion?.language || 'en',
+      voiceId: firstQuestion?.voiceId || fallbackVoiceId,
+      allowBargeIn: true,
+      maxSilenceSeconds: 8,
+      maxRetries: 2,
+      elevenlabsApiKey: ELEVENLABS_API_KEY || undefined,
+      deepgramApiKey: DEEPGRAM_API_KEY || undefined,
+    },
+  }
+
+  const baseUrl = PIPECAT_BASE_URL.replace(/\/$/, '')
+  const res = await fetch(`${baseUrl}/${encodeURIComponent(PIPECAT_AGENT_NAME)}/start`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${PIPECAT_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.error || 'Failed to start Pipecat session')
+  }
+}
 
 export async function POST(
   request: NextRequest,
@@ -95,6 +200,8 @@ export async function POST(
       callActivatedAt?: Date
       userLeftAt?: null
       caretakerLeftAt?: null
+      status?: string
+      aiInterviewStatus?: AiInterviewStatus | null
     } = {}
     if (payload.role === 'CARETAKER' && !callSession.caretakerJoinedAt) {
       joinData.caretakerJoinedAt = new Date()
@@ -112,11 +219,72 @@ export async function POST(
       joinData.userLeftAt = null
       joinData.caretakerLeftAt = null
     }
+    if (payload.role === 'CARETAKER' && callSession.status === 'REQUESTED') {
+      joinData.status = 'ACCEPTED'
+    }
+    if (callSession.aiInterviewEnabled && !callSession.aiInterviewStatus) {
+      joinData.aiInterviewStatus = AiInterviewStatus.SCHEDULED
+    }
     if (Object.keys(joinData).length > 0) {
       await prisma.callSession.update({
         where: { id: callSession.id },
         data: joinData,
       })
+    }
+
+    if (payload.role === 'CARETAKER' && callSession.aiInterviewEnabled) {
+      const refreshed = await prisma.callSession.findUnique({ where: { id: callSession.id } })
+      if (
+        refreshed &&
+        refreshed.status === 'ACCEPTED' &&
+        refreshed.aiInterviewStatus === AiInterviewStatus.SCHEDULED
+      ) {
+        const roomForCall = {
+          name: refreshed.dailyRoomName || roomName,
+          url:
+            refreshed.dailyRoomUrl ||
+            (DAILY_DOMAIN && (refreshed.dailyRoomName || roomName)
+              ? `https://${DAILY_DOMAIN}/${refreshed.dailyRoomName || roomName}`
+              : null),
+        }
+
+        const marked = await prisma.callSession.updateMany({
+          where: {
+            id: refreshed.id,
+            aiInterviewStatus: AiInterviewStatus.SCHEDULED,
+          },
+          data: {
+            aiInterviewStatus: AiInterviewStatus.RUNNING,
+            startedAt: refreshed.startedAt || new Date(),
+          },
+        })
+
+        if (marked.count > 0) {
+          try {
+            if (
+              refreshed.recordingStatus !== RecordingStatus.RECORDING &&
+              roomForCall.name
+            ) {
+              const recordingId = await startDailyRecording(roomForCall.name)
+              await prisma.callSession.update({
+                where: { id: refreshed.id },
+                data: {
+                  recordingStatus: RecordingStatus.RECORDING,
+                  dailyRecordingId: recordingId,
+                },
+              })
+            }
+
+            await startPipecatSession(refreshed, roomForCall)
+          } catch (error) {
+            await prisma.callSession.update({
+              where: { id: refreshed.id },
+              data: { aiInterviewStatus: AiInterviewStatus.FAILED },
+            })
+            console.error('AI interview start-on-join error:', error)
+          }
+        }
+      }
     }
 
     const displayName =
