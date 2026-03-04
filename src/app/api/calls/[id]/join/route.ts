@@ -95,7 +95,13 @@ const startPipecatSession = async (
   }
 
   const baseUrl = PIPECAT_BASE_URL.replace(/\/$/, '')
-  const res = await fetch(`${baseUrl}/${encodeURIComponent(PIPECAT_AGENT_NAME)}/start`, {
+  const startUrl = `${baseUrl}/${encodeURIComponent(PIPECAT_AGENT_NAME)}/start`
+  console.info('Pipecat start request', {
+    baseUrl,
+    agentName: PIPECAT_AGENT_NAME,
+    startUrl,
+  })
+  const res = await fetch(startUrl, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${PIPECAT_API_KEY}`,
