@@ -139,7 +139,7 @@ export default function MotherReviewsPage() {
   const getRequestsToReview = () => {
     return requests.filter(request => 
       request.status === 'COMPLETED' && 
-      !reviews.some(review => review.receiverId === request.caretaker.id)
+      !reviews.some(review => review.receiverId === request.candidate.id)
     )
   }
 
@@ -196,15 +196,15 @@ export default function MotherReviewsPage() {
                       </div>
                     </div>
                     <button
-                      onClick={() => setShowReviewForm(showReviewForm === request.caretaker.id ? null : request.caretaker.id)}
+                      onClick={() => setShowReviewForm(showReviewForm === request.candidate.id ? null : request.candidate.id)}
                       className="nh-btn nh-btn--primary"
                     >
-                      {showReviewForm === request.caretaker.id ? 'Cancel' : 'Write Review'}
+                      {showReviewForm === request.candidate.id ? 'Cancel' : 'Write Review'}
                     </button>
                   </div>
 
                   {/* Review Form */}
-                  {showReviewForm === request.caretaker.id && (
+                  {showReviewForm === request.candidate.id && (
                     <div className="mt-6 pt-6 border-t border-gray-200 pb-4">
                       <h4 className="text-lg font-medium text-gray-900 mb-4">Rate {request.candidate?.candidateProfile?.name || 'Candidate'}</h4>
                       
@@ -259,7 +259,7 @@ export default function MotherReviewsPage() {
                           Cancel
                         </button>
                         <button
-                          onClick={() => handleSubmitReview(request.caretaker.id)}
+                          onClick={() => handleSubmitReview(request.candidate.id)}
                           className="nh-btn nh-btn--primary"
                         >
                           Submit Review

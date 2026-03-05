@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Heart, MessageCircle, Star, Calendar, User, Settings, LogOut } from 'lucide-react'
+import { Search, Heart, MessageCircle, Star, Calendar, User, Settings, LogOut, Bot } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 import BannerAd from '@/components/BannerAd'
 import { useLanguage } from '@/lib/language'
@@ -210,6 +210,32 @@ export default function UserDashboard() {
                 <p className="text-sm mb-3" style={{color: '#0E7490', opacity: 0.8}}>Schedule and manage calls</p>
                 <div className="text-xs font-medium" style={{color: '#0E7490', opacity: 0.7}}>
                   View call requests →
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/user/ai-interviews" className="group nh-card nh-card--lift p-6" style={{
+            background: 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)',
+            border: '1px solid #C7D2FE',
+            transition: 'all 0.3s ease'
+          }}>
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="p-4 rounded-2xl" style={{
+                background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
+                boxShadow: '0 6px 16px rgba(79, 70, 229, 0.3)'
+              }}>
+                <Bot className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2" style={{color: '#4338CA'}}>
+                  {t('user.dashboard.aiInterviews')}
+                </h3>
+                <p className="text-sm mb-3" style={{color: '#4338CA', opacity: 0.8}}>
+                  {t('user.dashboard.aiInterviewsDesc')}
+                </p>
+                <div className="text-xs font-medium" style={{color: '#4338CA', opacity: 0.7}}>
+                  {t('user.dashboard.manageInterviews')} →
                 </div>
               </div>
             </div>

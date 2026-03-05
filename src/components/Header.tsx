@@ -32,7 +32,7 @@ export default function Header() {
     checkAuth()
   }, [])
 
-  // Hide header for dashboard pages and caretakers listing
+  // Hide header for dashboard pages and candidates listing
   const isDashboardPage = pathname?.startsWith('/user/') ||
                          pathname?.startsWith('/caretaker/') ||
                          pathname?.startsWith('/candidate/') ||

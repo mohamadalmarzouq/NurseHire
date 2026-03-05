@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Calendar, MessageCircle, Star, User, Settings, LogOut, Eye, Edit, Clock } from 'lucide-react'
+import { Calendar, MessageCircle, Star, User, Settings, LogOut, Eye, Edit, Clock, Bot } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 import BannerAd from '@/components/BannerAd'
 import { useLanguage } from '@/lib/language'
@@ -84,17 +84,24 @@ export default function CareTakerDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Link href="/candidate/profile" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
-            border: '1px solid #A5F3FC',
-            transition: 'all 0.3s ease'
-          }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+          <Link
+            href="/candidate/profile"
+            className="group nh-card nh-card--lift p-6"
+            style={{
+              background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+              border: '1px solid #A5F3FC',
+              transition: 'all 0.3s ease',
+            }}
+          >
             <div className="flex items-center">
-              <div className="p-3 rounded-lg" style={{
-                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
-              }}>
+              <div
+                className="p-3 rounded-lg"
+                style={{
+                  background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                  boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)',
+                }}
+              >
                 <User className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
@@ -104,16 +111,23 @@ export default function CareTakerDashboard() {
             </div>
           </Link>
 
-          <Link href="/candidate/messages" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
-            border: '1px solid #A5F3FC',
-            transition: 'all 0.3s ease'
-          }}>
+          <Link
+            href="/candidate/messages"
+            className="group nh-card nh-card--lift p-6"
+            style={{
+              background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+              border: '1px solid #A5F3FC',
+              transition: 'all 0.3s ease',
+            }}
+          >
             <div className="flex items-center">
-              <div className="p-3 rounded-lg" style={{
-                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
-              }}>
+              <div
+                className="p-3 rounded-lg"
+                style={{
+                  background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                  boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)',
+                }}
+              >
                 <MessageCircle className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
@@ -123,16 +137,23 @@ export default function CareTakerDashboard() {
             </div>
           </Link>
 
-          <Link href="/candidate/reviews" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
-            border: '1px solid #A5F3FC',
-            transition: 'all 0.3s ease'
-          }}>
+          <Link
+            href="/candidate/reviews"
+            className="group nh-card nh-card--lift p-6"
+            style={{
+              background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+              border: '1px solid #A5F3FC',
+              transition: 'all 0.3s ease',
+            }}
+          >
             <div className="flex items-center">
-              <div className="p-3 rounded-lg" style={{
-                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
-              }}>
+              <div
+                className="p-3 rounded-lg"
+                style={{
+                  background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                  boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)',
+                }}
+              >
                 <Star className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
@@ -142,21 +163,54 @@ export default function CareTakerDashboard() {
             </div>
           </Link>
 
-          <Link href="/candidate/calls" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
-            border: '1px solid #A5F3FC',
-            transition: 'all 0.3s ease'
-          }}>
+          <Link
+            href="/candidate/calls"
+            className="group nh-card nh-card--lift p-6"
+            style={{
+              background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
+              border: '1px solid #A5F3FC',
+              transition: 'all 0.3s ease',
+            }}
+          >
             <div className="flex items-center">
-              <div className="p-3 rounded-lg" style={{
-                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
-              }}>
+              <div
+                className="p-3 rounded-lg"
+                style={{
+                  background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                  boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)',
+                }}
+              >
                 <Calendar className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-900">Calls</h3>
                 <p className="text-gray-600 text-sm">Manage call requests</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link
+            href="/candidate/ai-interviews"
+            className="group nh-card nh-card--lift p-6"
+            style={{
+              background: 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)',
+              border: '1px solid #C7D2FE',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            <div className="flex items-center">
+              <div
+                className="p-3 rounded-lg"
+                style={{
+                  background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
+                  boxShadow: '0 6px 16px rgba(79, 70, 229, 0.3)',
+                }}
+              >
+                <Bot className="w-6 h-6 text-white" />
+              </div>
+              <div className="ml-4">
+                <h3 className="text-lg font-semibold text-gray-900">AI Interviews</h3>
+                <p className="text-gray-600 text-sm">Complete assigned interviews</p>
               </div>
             </div>
           </Link>

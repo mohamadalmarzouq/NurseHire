@@ -1,0 +1,6 @@
+agent_name = "hireme-agent"
+image = "YOUR_DOCKERHUB_USERNAME/hireme-agent:0.1"
+secret_set = "hireme-secrets"
+
+[scaling]
+  min_agents = 1
