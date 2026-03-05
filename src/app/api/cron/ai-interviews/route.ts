@@ -269,7 +269,7 @@ export async function POST(request: NextRequest) {
         }
 
         const nextStatus =
-          call.caretakerJoinedAt || call.userJoinedAt ? AiInterviewStatus.COMPLETED : AiInterviewStatus.NO_SHOW
+          call.candidateJoinedAt || call.userJoinedAt ? AiInterviewStatus.COMPLETED : AiInterviewStatus.NO_SHOW
 
         await prisma.callSession.update({
           where: { id: call.id },
