@@ -1191,41 +1191,6 @@ export default function CareTakerProfilePage() {
                   disabled={!caretaker.hasActiveSubscription}
                 />
               </div>
-              <div className="rounded-xl border border-neutral-200 p-4">
-                <div className="flex items-start gap-3">
-                  <input
-                    id="aiInterviewToggle"
-                    type="checkbox"
-                    className="mt-1"
-                    checked={aiInterviewEnabled}
-                    onChange={(e) => setAiInterviewEnabled(e.target.checked)}
-                    disabled={!caretaker.hasActiveSubscription}
-                  />
-                  <div>
-                    <label htmlFor="aiInterviewToggle" className="text-sm font-semibold text-neutral-900">
-                      AI interview (AI joins and asks your questions)
-                    </label>
-                    <p className="text-xs text-neutral-600 mt-1">
-                      The caretaker joins the call and the AI conducts the interview.
-                    </p>
-                  </div>
-                </div>
-                {aiInterviewEnabled && (
-                  <div className="mt-4 space-y-2">
-                    <label className="label">Interview Questions (one per line)</label>
-                    <textarea
-                      className="input-field min-h-[120px]"
-                      placeholder="Example: Tell me about your experience with elderly care."
-                      value={aiQuestionsText}
-                      onChange={(e) => setAiQuestionsText(e.target.value)}
-                      disabled={!caretaker.hasActiveSubscription}
-                    />
-                    <p className="text-xs text-neutral-600">
-                      English questions use the English voice. Arabic questions use the Arabic voice.
-                    </p>
-                  </div>
-                )}
-              </div>
               <div className="flex space-x-4">
                 <button
                   onClick={() => setShowCallModal(false)}
