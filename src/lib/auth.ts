@@ -48,7 +48,7 @@ export async function authenticateUser(email: string, password: string) {
     where: { email },
     include: {
       userProfile: true,
-      caretakerProfile: true,
+      candidateProfile: true,
       adminProfile: true,
     },
   })
@@ -61,6 +61,6 @@ export async function authenticateUser(email: string, password: string) {
     id: user.id,
     email: user.email,
     role: user.role,
-    profile: user.userProfile || user.caretakerProfile || user.adminProfile,
+    profile: user.userProfile || user.candidateProfile || user.adminProfile,
   }
 }
