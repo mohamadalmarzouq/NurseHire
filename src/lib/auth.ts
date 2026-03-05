@@ -8,7 +8,7 @@ const getSecretKey = () => new TextEncoder().encode(JWT_SECRET)
 export interface UserPayload {
   id: string
   email: string
-  role: 'USER' | 'CARETAKER' | 'ADMIN'
+  role: 'USER' | 'CANDIDATE' | 'ADMIN'
 }
 
 export async function hashPassword(password: string): Promise<string> {
@@ -35,7 +35,7 @@ export async function verifyToken(token: string): Promise<UserPayload | null> {
     return {
       id: payload.id as string,
       email: payload.email as string,
-      role: payload.role as 'USER' | 'CARETAKER' | 'ADMIN',
+      role: payload.role as 'USER' | 'CANDIDATE' | 'ADMIN',
     }
   } catch (error) {
     console.error('Token verification failed:', error)

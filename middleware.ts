@@ -1,14 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyToken } from '@/lib/auth'
 
-const protectedRoutes: Record<string, Array<'USER' | 'CARETAKER' | 'ADMIN'>> = {
+const protectedRoutes: Record<string, Array<'USER' | 'CANDIDATE' | 'ADMIN'>> = {
   '/user': ['USER'],
-  '/caretaker': ['CARETAKER'],
+  '/candidate': ['CANDIDATE'],
   '/admin': ['ADMIN'],
 }
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  if (pathname === '/caretakers' || pathname.startsWith('/caretakers/')) {
+    const url = new URL(pathname.replace('/caretakers', '/candidates'), request.url)
+    return NextResponse.redirect(url)
+  }
+  if (pathname === '/caretaker' || pathname.startsWith('/caretaker/')) {
+    const url = new URL(pathname.replace('/caretaker', '/candidate'), request.url)
+    return NextResponse.redirect(url)
+  }
 
   // Skip middleware for public routes
   const publicRoutes = ['/auth/login', '/auth/register']
@@ -56,7 +65,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/user/:path*', '/caretaker/:path*', '/admin/:path*'],
+  matcher: ['/user/:path*', '/caretaker/:path*', '/candidate/:path*', '/admin/:path*'],
 }
 
 

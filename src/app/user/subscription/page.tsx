@@ -196,11 +196,11 @@ export default function UserSubscriptionPage() {
             <ul className="space-y-3">
               <li className="flex items-start space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                <span className="text-neutral-700">View care taker phone numbers</span>
+                <span className="text-neutral-700">View candidate phone numbers</span>
               </li>
               <li className="flex items-start space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                <span className="text-neutral-700">Send messages directly to care takers</span>
+                <span className="text-neutral-700">Send messages directly to candidates</span>
               </li>
               <li className="flex items-start space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />

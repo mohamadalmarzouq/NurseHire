@@ -10,12 +10,12 @@ export async function PUT(request: NextRequest) {
     }
 
     const payload = await verifyToken(token)
-    if (!payload || payload.role !== 'CARETAKER') {
+    if (!payload || payload.role !== 'CANDIDATE') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const body = await request.json()
-    console.log('Care taker profile update request:', { userId: payload.id, body })
+    console.log('Candidate profile update request:', { userId: payload.id, body })
     
     const {
       name,
@@ -81,10 +81,10 @@ export async function PUT(request: NextRequest) {
     updateData.expectedSalary = parseToIntOrNull(expectedSalary, 'expectedSalary')
     updateData.maritalStatus = maritalStatus || null
 
-    console.log('Updating care taker profile with data:', updateData)
+    console.log('Updating candidate profile with data:', updateData)
 
     // Use upsert to create profile if it doesn't exist, or update if it does
-    const updatedProfile = await prisma.careTakerProfile.upsert({
+    const updatedProfile = await prisma.candidateProfile.upsert({
       where: { userId: payload.id },
       update: updateData,
       create: {
@@ -101,14 +101,14 @@ export async function PUT(request: NextRequest) {
       },
     })
 
-    console.log('Care taker profile updated successfully:', updatedProfile)
+    console.log('Candidate profile updated successfully:', updatedProfile)
 
     return NextResponse.json({
       success: true,
       profile: updatedProfile,
     })
   } catch (error: any) {
-    console.error('Error updating care taker profile:', error)
+    console.error('Error updating candidate profile:', error)
     console.error('Error details:', {
       message: error?.message,
       code: error?.code,

@@ -12,14 +12,16 @@ datasource db {
 
 enum UserRole {
   USER
-  CARETAKER
+  CANDIDATE @map("CARETAKER")
   ADMIN
 }
 
-enum CareTakerStatus {
+enum CandidateStatus {
   PENDING
   APPROVED
   REJECTED
+
+  @@map("CareTakerStatus")
 }
 
 enum RequestStatus {
@@ -86,7 +88,7 @@ model User {
 
   // Relations
   userProfile      UserProfile?
-  caretakerProfile CareTakerProfile?
+  candidateProfile CandidateProfile?
   adminProfile     AdminProfile?
 
   // Chat relations
@@ -95,7 +97,7 @@ model User {
 
   // Information request relations
   sentRequests     InformationRequest[] @relation("InformationRequester")
-  receivedRequests InformationRequest[] @relation("InformationCaretaker")
+  receivedRequests InformationRequest[] @relation("InformationCandidate")
 
   // Review relations
   reviewsGiven   Review[] @relation("ReviewGiver")
@@ -103,7 +105,7 @@ model User {
 
   // Call session relations
   callsRequested CallSession[] @relation("CallRequester")
-  callsReceived  CallSession[] @relation("CallCaretaker")
+  callsReceived  CallSession[] @relation("CallCandidate")
 
   @@map("users")
 }
@@ -123,7 +125,7 @@ model UserProfile {
   @@map("user_profiles")
 }
 
-model CareTakerProfile {
+model CandidateProfile {
   id                    String          @id @default(cuid())
   userId                String          @unique
   name                  String
@@ -141,7 +143,7 @@ model CareTakerProfile {
   cvUrl                 String?
   profileImageUrl       String?
   certifications        String[]        @default([])
-  status                CareTakerStatus @default(PENDING)
+  status                CandidateStatus @default(PENDING)
   languages             String[]        @default([])
   skills                String[]        @default([])
   availability          String[]        @default([])
@@ -183,7 +185,7 @@ model Message {
 model InformationRequest {
   id          String        @id @default(cuid())
   requesterId String
-  caretakerId String
+  candidateId String        @map("caretakerId")
   status      RequestStatus @default(PENDING)
   message     String
   phone       String?
@@ -194,7 +196,7 @@ model InformationRequest {
   updatedAt   DateTime      @updatedAt
 
   requester User @relation("InformationRequester", fields: [requesterId], references: [id], onDelete: Cascade)
-  caretaker User @relation("InformationCaretaker", fields: [caretakerId], references: [id], onDelete: Cascade)
+  candidate User @relation("InformationCandidate", fields: [candidateId], references: [id], onDelete: Cascade)
   callSessions CallSession[]
 
   @@map("information_requests")
@@ -204,7 +206,7 @@ model CallSession {
   id              String     @id @default(cuid())
   requestId       String?
   userId          String
-  caretakerId     String
+  candidateId     String     @map("caretakerId")
   scheduledAt     DateTime
   durationMinutes Int
   timezone        String
@@ -222,19 +224,19 @@ model CallSession {
   callActivatedAt DateTime?
   endedAt         DateTime?
   userJoinedAt    DateTime?
-  caretakerJoinedAt DateTime?
+  candidateJoinedAt DateTime? @map("caretakerJoinedAt")
   userLeftAt      DateTime?
-  caretakerLeftAt DateTime?
+  candidateLeftAt DateTime?   @map("caretakerLeftAt")
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 
   request   InformationRequest? @relation(fields: [requestId], references: [id], onDelete: Cascade)
   user      User               @relation("CallRequester", fields: [userId], references: [id], onDelete: Cascade)
-  caretaker User               @relation("CallCaretaker", fields: [caretakerId], references: [id], onDelete: Cascade)
+  candidate User               @relation("CallCandidate", fields: [candidateId], references: [id], onDelete: Cascade)
 
   @@index([requestId])
   @@index([userId])
-  @@index([caretakerId])
+  @@index([candidateId])
   @@map("call_sessions")
 }
 

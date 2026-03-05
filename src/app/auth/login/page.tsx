@@ -32,7 +32,7 @@ export default function LoginPage() {
         console.log('Login successful, role:', data.user.role)
         // Redirect based on role - use replace for a clean redirect
         const path = data.user.role === 'ADMIN' ? '/admin/dashboard' 
-          : data.user.role === 'CARETAKER' ? '/caretaker/dashboard' 
+          : data.user.role === 'CANDIDATE' ? '/candidate/dashboard' 
           : '/user/dashboard'
         
         console.log('Redirecting to:', path)

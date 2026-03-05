@@ -16,26 +16,26 @@ export async function GET(request: NextRequest) {
 
     // Get all stats in parallel
     const [
-      totalCaretakers,
-      pendingCaretakers,
-      approvedCaretakers,
+      totalCandidates,
+      pendingCandidates,
+      approvedCandidates,
       totalUsers,
       totalRequests,
       totalReviews,
       pendingReviews,
       recentRequests
     ] = await Promise.all([
-      prisma.user.count({ where: { role: 'CARETAKER' } }),
+      prisma.user.count({ where: { role: 'CANDIDATE' } }),
       prisma.user.count({ 
         where: { 
-          role: 'CARETAKER',
-          caretakerProfile: { status: 'PENDING' }
+          role: 'CANDIDATE',
+          candidateProfile: { status: 'PENDING' }
         } 
       }),
       prisma.user.count({ 
         where: { 
-          role: 'CARETAKER',
-          caretakerProfile: { status: 'APPROVED' }
+          role: 'CANDIDATE',
+          candidateProfile: { status: 'APPROVED' }
         } 
       }),
       prisma.user.count({ where: { role: 'USER' } }),
@@ -49,8 +49,8 @@ export async function GET(request: NextRequest) {
           requester: {
             include: { userProfile: true }
           },
-          caretaker: {
-            include: { caretakerProfile: true }
+          candidate: {
+            include: { candidateProfile: true }
           }
         }
       })
@@ -58,9 +58,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       stats: {
-        totalCaretakers,
-        pendingApprovals: pendingCaretakers,
-        approvedCaretakers,
+        totalCandidates,
+        pendingApprovals: pendingCandidates,
+        approvedCandidates,
         totalUsers,
         totalRequests,
         totalReviews,
@@ -75,9 +75,9 @@ export async function GET(request: NextRequest) {
           name: request.requester.userProfile?.name || 'Unknown',
           email: request.requester.email,
         },
-        caretaker: {
-          name: request.caretaker.caretakerProfile?.name || 'Unknown',
-          email: request.caretaker.email,
+        candidate: {
+          name: request.candidate.candidateProfile?.name || 'Unknown',
+          email: request.candidate.email,
         },
       }))
     })

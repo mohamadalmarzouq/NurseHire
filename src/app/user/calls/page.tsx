@@ -156,8 +156,8 @@ export default function UserCallsPage() {
             <p className="text-gray-600 mb-6">
               Schedule a video call from a caretaker profile once your request is submitted.
             </p>
-            <Link href="/caretakers" className="nh-btn nh-btn--primary">
-              Browse Care Takers
+            <Link href="/candidates" className="nh-btn nh-btn--primary">
+              Browse Candidates
             </Link>
           </div>
         ) : (
@@ -168,7 +168,7 @@ export default function UserCallsPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Call with {call.caretaker?.caretakerProfile?.name || 'Care Taker'}
+                        Call with {call.candidate?.candidateProfile?.name || 'Candidate'}
                       </h3>
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(call.status)}`}

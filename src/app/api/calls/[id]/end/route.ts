@@ -24,7 +24,7 @@ export async function POST(
     const callSession = await prisma.callSession.findFirst({
       where: {
         id,
-        OR: [{ userId: payload.id }, { caretakerId: payload.id }],
+        OR: [{ userId: payload.id }, { candidateId: payload.id }],
       },
     })
 
@@ -32,9 +32,9 @@ export async function POST(
       return NextResponse.json({ error: 'Call not found' }, { status: 404 })
     }
 
-    const leftData: { userLeftAt?: Date; caretakerLeftAt?: Date } = {}
-    if (payload.role === 'CARETAKER') {
-      leftData.caretakerLeftAt = new Date()
+    const leftData: { userLeftAt?: Date; candidateLeftAt?: Date } = {}
+    if (payload.role === 'CANDIDATE') {
+      leftData.candidateLeftAt = new Date()
     } else {
       leftData.userLeftAt = new Date()
     }
@@ -79,8 +79,8 @@ export async function POST(
       })
     }
 
-    const bothJoined = !!updatedCall.userJoinedAt && !!updatedCall.caretakerJoinedAt
-    const bothLeft = !!updatedCall.userLeftAt && !!updatedCall.caretakerLeftAt
+    const bothJoined = !!updatedCall.userJoinedAt && !!updatedCall.candidateJoinedAt
+    const bothLeft = !!updatedCall.userLeftAt && !!updatedCall.candidateLeftAt
 
     if (updatedCall.callActivatedAt && bothJoined && bothLeft) {
       const completedCall = await prisma.callSession.update({

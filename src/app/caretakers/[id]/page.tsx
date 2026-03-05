@@ -99,21 +99,21 @@ export default function CareTakerProfilePage() {
   useEffect(() => {
     const loadCaretakerProfile = async () => {
       try {
-        const res = await fetch(`/api/caretakers/${params.id}`, { cache: 'no-store' })
+        const res = await fetch(`/api/candidates/${params.id}`, { cache: 'no-store' })
         if (!res.ok) {
           setIsLoading(false)
           return
         }
         const data = await res.json()
-        if (data.caretaker) {
-          setCaretaker(data.caretaker)
+        if (data.candidate) {
+          setCaretaker(data.candidate)
           // Only set reviews if authenticated
           if (isAuthenticated) {
             setReviews(data.reviews || [])
           }
         }
       } catch (e) {
-        console.error('Error loading care taker profile:', e)
+        console.error('Error loading candidate profile:', e)
       } finally {
         setIsLoading(false)
       }
@@ -159,7 +159,7 @@ export default function CareTakerProfilePage() {
     }
     const loadExistingCall = async () => {
       try {
-        const res = await fetch(`/api/calls?caretakerId=${caretaker.id}`, { cache: 'no-store' })
+        const res = await fetch(`/api/calls?candidateId=${caretaker.id}`, { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
           setExistingCall(data.calls?.[0] || null)
@@ -227,7 +227,7 @@ export default function CareTakerProfilePage() {
     if (!caretaker) return
     
     console.log('Information request - isAuthenticated:', isAuthenticated, 'user role:', user?.role)
-    console.log('Care taker ID:', caretaker.id)
+    console.log('Candidate ID:', caretaker.id)
     
     // Check authentication before proceeding
     if (!isAuthenticated || user?.role !== 'USER') {
@@ -250,7 +250,7 @@ export default function CareTakerProfilePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          caretakerId: caretaker.id,
+          candidateId: caretaker.id,
           message: requestMessage,
           phone: requestPhone || null,
           preferredContactTime: preferredContactTime || null,
@@ -318,7 +318,7 @@ export default function CareTakerProfilePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          caretakerId: caretaker.id,
+          candidateId: caretaker.id,
           scheduledAt: scheduledAt.toISOString(),
           durationMinutes: callDuration,
           timezone: callTimezone,
@@ -334,7 +334,7 @@ export default function CareTakerProfilePage() {
         setCallDateTime('')
         setAiInterviewEnabled(false)
         setAiQuestionsText('')
-        alert('Call request sent. The care taker will need to accept it.')
+        alert('Call request sent. The candidate will need to accept it.')
       } else {
         alert(data.error || 'Failed to schedule call. Please try again.')
       }
@@ -351,7 +351,7 @@ export default function CareTakerProfilePage() {
     
     // Check authentication before proceeding
     if (!isAuthenticated || user?.role !== 'USER') {
-      alert('You must be logged in as a mother to message a care taker. Please sign in.')
+      alert('You must be logged in as a mother to message a candidate. Please sign in.')
       return
     }
     
@@ -364,7 +364,7 @@ export default function CareTakerProfilePage() {
         },
         body: JSON.stringify({
           receiverId: caretaker.id,
-          content: `Hello ${caretaker.name}, I'm interested in your care taking services.`,
+          content: `Hello ${caretaker.name}, I'm interested in your services.`,
         }),
       })
 
@@ -374,12 +374,12 @@ export default function CareTakerProfilePage() {
       } else {
         const error = await res.json()
         if (res.status === 401) {
-          alert('Please sign in to message a care taker.')
+          alert('Please sign in to message a candidate.')
         } else if (res.status === 403 && error.requiresSubscription) {
-          alert('Subscription required: ' + (error.message || 'You need an active subscription to message care takers.'))
+          alert('Subscription required: ' + (error.message || 'You need an active subscription to message candidates.'))
           window.location.href = '/user/subscription'
         } else if (res.status === 403) {
-          alert('Only mothers can message care takers. Please sign in with a mother account.')
+          alert('Only mothers can message candidates. Please sign in with a mother account.')
         } else {
           alert(error.error || 'Failed to send message. Please try again.')
         }
@@ -452,12 +452,12 @@ export default function CareTakerProfilePage() {
           comment: ''
         })
         setHasReviewed(true)
-        // Reload care taker profile to update review count
-        const caretakerRes = await fetch(`/api/caretakers/${params.id}`, { cache: 'no-store' })
+        // Reload candidate profile to update review count
+        const caretakerRes = await fetch(`/api/candidates/${params.id}`, { cache: 'no-store' })
         if (caretakerRes.ok) {
           const caretakerData = await caretakerRes.json()
-          if (caretakerData.caretaker) {
-            setCaretaker(caretakerData.caretaker)
+          if (caretakerData.candidate) {
+            setCaretaker(caretakerData.candidate)
             setReviews(caretakerData.reviews || [])
           }
         }
@@ -489,7 +489,7 @@ export default function CareTakerProfilePage() {
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto mb-4"></div>
-          <p className="text-neutral-600">Loading care taker profile...</p>
+          <p className="text-neutral-600">Loading candidate profile...</p>
         </div>
       </div>
     )
@@ -510,10 +510,10 @@ export default function CareTakerProfilePage() {
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
           <User className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-semibold text-neutral-900 mb-2">Care taker not found</h2>
-          <p className="text-neutral-600 mb-6">The care taker you're looking for doesn't exist.</p>
-          <Link href="/caretakers" className="btn-primary">
-            Browse All Care Takers
+          <h2 className="text-2xl font-semibold text-neutral-900 mb-2">Candidate not found</h2>
+          <p className="text-neutral-600 mb-6">The candidate you're looking for doesn't exist.</p>
+          <Link href="/candidates" className="btn-primary">
+            Browse All Candidates
           </Link>
         </div>
       </div>
@@ -526,9 +526,9 @@ export default function CareTakerProfilePage() {
       <div className="bg-white shadow-soft">
         <div className="container-custom py-6">
           <div className="flex items-center justify-between">
-            <Link href="/caretakers" className="flex items-center text-neutral-600 hover:text-cyan-800">
+            <Link href="/candidates" className="flex items-center text-neutral-600 hover:text-cyan-800">
               <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Care Takers
+              Back to Candidates
             </Link>
             <div className="flex items-center space-x-4">
               {isAuthenticated && user?.role === 'USER' && (
@@ -539,7 +539,7 @@ export default function CareTakerProfilePage() {
                       className="btn-primary"
                     >
                       <Star className="w-4 h-4 mr-2" />
-                      Review this Care Taker
+                      Review this Candidate
                     </button>
                   ) : (
                     <Link 
@@ -634,7 +634,7 @@ export default function CareTakerProfilePage() {
           <div className="nh-card mb-6" style={{background:'linear-gradient(135deg,#0E7490,#0891B2)'}}>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white mb-1">Sign up to contact this caretaker</h3>
+                <h3 className="text-lg font-semibold text-white mb-1">Sign up to contact this candidate</h3>
                 <p className="text-white/90 text-sm">Create a free account to view contact information, send messages, and read reviews</p>
               </div>
               <Link href="/auth/register" className="px-6 py-2 bg-white text-cyan-700 rounded-lg font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">
@@ -889,7 +889,7 @@ export default function CareTakerProfilePage() {
                   <Star className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
                   <h2 className="text-xl font-semibold text-neutral-900 mb-2">Sign up to see reviews</h2>
                   <p className="text-neutral-600 mb-6">
-                    Create a free account to read reviews from other users who have worked with this caretaker.
+                    Create a free account to read reviews from other users who have worked with this candidate.
                   </p>
                   <Link href="/auth/register" className="inline-flex items-center px-6 py-3 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors font-medium">
                     Sign Up Free
@@ -1234,7 +1234,7 @@ export default function CareTakerProfilePage() {
             className="bg-white rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header with care taker info */}
+            {/* Header with candidate info */}
             <div className="flex items-center justify-between mb-6 pb-6 border-b border-neutral-200">
               <div className="flex items-center space-x-4">
                 {caretaker?.profileImageUrl ? (
@@ -1329,7 +1329,7 @@ export default function CareTakerProfilePage() {
                 <textarea
                   className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent resize-none bg-white"
                   rows={4}
-                  placeholder="Share your experience with this caretaker... (e.g., punctuality, communication, professionalism, etc.)"
+                  placeholder="Share your experience with this candidate... (e.g., punctuality, communication, professionalism, etc.)"
                   value={reviewForm.comment}
                   onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
                 />

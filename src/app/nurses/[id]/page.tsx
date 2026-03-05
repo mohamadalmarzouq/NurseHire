@@ -73,18 +73,18 @@ export default function CareTakerProfilePage() {
   useEffect(() => {
     const loadCaretakerProfile = async () => {
       try {
-        const res = await fetch(`/api/caretakers/${params.id}`, { cache: 'no-store' })
+        const res = await fetch(`/api/candidates/${params.id}`, { cache: 'no-store' })
         if (!res.ok) {
           setIsLoading(false)
           return
         }
         const data = await res.json()
-        if (data.caretaker) {
-          setCaretaker(data.caretaker)
+        if (data.candidate) {
+          setCaretaker(data.candidate)
           setReviews(data.reviews || [])
         }
       } catch (e) {
-        console.error('Error loading care taker profile:', e)
+        console.error('Error loading candidate profile:', e)
       } finally {
         setIsLoading(false)
       }
@@ -137,7 +137,7 @@ export default function CareTakerProfilePage() {
     }
     const loadExistingCall = async () => {
       try {
-        const res = await fetch(`/api/calls?caretakerId=${caretaker.id}`, { cache: 'no-store' })
+        const res = await fetch(`/api/calls?candidateId=${caretaker.id}`, { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
           setExistingCall(data.calls?.[0] || null)
@@ -228,7 +228,7 @@ export default function CareTakerProfilePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          caretakerId: caretaker.id,
+          candidateId: caretaker.id,
           message: requestMessage,
           phone: requestPhone || null,
           preferredContactTime: preferredContactTime || null,
@@ -296,7 +296,7 @@ export default function CareTakerProfilePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          caretakerId: caretaker.id,
+          candidateId: caretaker.id,
           scheduledAt: scheduledAt.toISOString(),
           durationMinutes: callDuration,
           timezone: callTimezone,
@@ -329,7 +329,7 @@ export default function CareTakerProfilePage() {
     
     // Check authentication before proceeding
     if (!isAuthenticated || user?.role !== 'USER') {
-      alert('You must be logged in as a mother to message a care taker. Please sign in.')
+      alert('You must be logged in as a mother to message a candidate. Please sign in.')
       return
     }
     
@@ -352,9 +352,9 @@ export default function CareTakerProfilePage() {
       } else {
         const error = await res.json()
         if (res.status === 401) {
-          alert('Please sign in to message a care taker.')
+          alert('Please sign in to message a candidate.')
         } else if (res.status === 403) {
-          alert('Only mothers can message care takers. Please sign in with a mother account.')
+          alert('Only mothers can message candidates. Please sign in with a mother account.')
         } else {
           alert(error.error || 'Failed to send message. Please try again.')
         }
@@ -427,12 +427,12 @@ export default function CareTakerProfilePage() {
           comment: ''
         })
         setHasReviewed(true)
-        // Reload care taker profile to update review count
-        const caretakerRes = await fetch(`/api/caretakers/${params.id}`, { cache: 'no-store' })
+        // Reload candidate profile to update review count
+        const caretakerRes = await fetch(`/api/candidates/${params.id}`, { cache: 'no-store' })
         if (caretakerRes.ok) {
           const caretakerData = await caretakerRes.json()
-          if (caretakerData.caretaker) {
-            setCaretaker(caretakerData.caretaker)
+          if (caretakerData.candidate) {
+            setCaretaker(caretakerData.candidate)
             setReviews(caretakerData.reviews || [])
           }
         }
@@ -464,7 +464,7 @@ export default function CareTakerProfilePage() {
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-neutral-600">Loading care taker profile...</p>
+          <p className="text-neutral-600">Loading candidate profile...</p>
         </div>
       </div>
     )
@@ -486,9 +486,9 @@ export default function CareTakerProfilePage() {
         <div className="text-center">
           <User className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
           <h2 className="text-2xl font-semibold text-neutral-900 mb-2">Care taker not found</h2>
-          <p className="text-neutral-600 mb-6">The care taker you're looking for doesn't exist.</p>
-          <Link href="/caretakers" className="btn-primary">
-            Browse All Care Takers
+          <p className="text-neutral-600 mb-6">The candidate you're looking for doesn't exist.</p>
+          <Link href="/candidates" className="btn-primary">
+            Browse All Candidates
           </Link>
         </div>
       </div>
@@ -501,9 +501,9 @@ export default function CareTakerProfilePage() {
       <div className="bg-white shadow-soft">
         <div className="container-custom py-6">
           <div className="flex items-center justify-between">
-            <Link href="/caretakers" className="flex items-center text-neutral-600 hover:text-neutral-900">
+            <Link href="/candidates" className="flex items-center text-neutral-600 hover:text-neutral-900">
               <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Care Takers
+              Back to Candidates
             </Link>
             <div className="flex items-center space-x-4">
               {isAuthenticated && user?.role === 'USER' && (
@@ -514,7 +514,7 @@ export default function CareTakerProfilePage() {
                       className="btn-primary"
                     >
                       <Star className="w-4 h-4 mr-2" />
-                      Review this Care Taker
+                      Review this Candidate
                     </button>
                   ) : (
                     <Link 
@@ -1076,7 +1076,7 @@ export default function CareTakerProfilePage() {
             className="bg-white rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header with care taker info */}
+            {/* Header with candidate info */}
             <div className="flex items-center justify-between mb-6 pb-6 border-b border-neutral-200">
               <div className="flex items-center space-x-4">
                 {caretaker?.profileImageUrl ? (

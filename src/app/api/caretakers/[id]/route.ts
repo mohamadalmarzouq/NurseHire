@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: caretakerId } = await params
+    const { id: candidateId } = await params
 
     // Check if requesting user is authenticated
     let isAuthenticated = false
@@ -21,23 +21,23 @@ export async function GET(
         if (payload.role === 'USER') {
           hasSubscription = await hasActiveSubscription(payload.id)
         } else {
-          // Non-USER roles (CARETAKER, ADMIN) can see reviews
+          // Non-USER roles (CANDIDATE, ADMIN) can see reviews
           hasSubscription = true
         }
       }
     }
 
-    // Find user with care taker profile
+    // Find user with candidate profile
     const user = await prisma.user.findUnique({
-      where: { id: caretakerId },
+      where: { id: candidateId },
       include: {
-        caretakerProfile: true,
+        candidateProfile: true,
       },
     })
 
-    if (!user || !user.caretakerProfile) {
+    if (!user || !user.candidateProfile) {
       return NextResponse.json(
-        { error: 'Care taker not found' },
+        { error: 'Candidate not found' },
         { status: 404 }
       )
     }
@@ -51,7 +51,7 @@ export async function GET(
       // Authenticated users or non-users can see reviews
       const reviewsData = await prisma.review.findMany({
         where: {
-          receiverId: caretakerId,
+          receiverId: candidateId,
           status: 'APPROVED',
         },
         include: {
@@ -88,39 +88,39 @@ export async function GET(
         : 0
     }
 
-    const caretaker = {
+    const candidate = {
       id: user.id,
-      name: user.caretakerProfile.name,
-      age: user.caretakerProfile.age,
+      name: user.candidateProfile.name,
+      age: user.candidateProfile.age,
       // Only include phone if user has active subscription
-      phone: hasSubscription ? user.caretakerProfile.phone : null,
-      location: user.caretakerProfile.location,
-      totalExperience: user.caretakerProfile.totalExperience,
-      kuwaitExperience: user.caretakerProfile.kuwaitExperience,
-      gccExperience: user.caretakerProfile.gccExperience || 0,
-      partTimeSalary: user.caretakerProfile.partTimeSalary,
-      fullTimeSalary: user.caretakerProfile.fullTimeSalary,
-      expectedSalary: user.caretakerProfile.expectedSalary,
-      maritalStatus: user.caretakerProfile.maritalStatus,
-      aboutMe: user.caretakerProfile.aboutMe || 'No description provided',
-      profileImageUrl: user.caretakerProfile.profileImageUrl,
+      phone: hasSubscription ? user.candidateProfile.phone : null,
+      location: user.candidateProfile.location,
+      totalExperience: user.candidateProfile.totalExperience,
+      kuwaitExperience: user.candidateProfile.kuwaitExperience,
+      gccExperience: user.candidateProfile.gccExperience || 0,
+      partTimeSalary: user.candidateProfile.partTimeSalary,
+      fullTimeSalary: user.candidateProfile.fullTimeSalary,
+      expectedSalary: user.candidateProfile.expectedSalary,
+      maritalStatus: user.candidateProfile.maritalStatus,
+      aboutMe: user.candidateProfile.aboutMe || 'No description provided',
+      profileImageUrl: user.candidateProfile.profileImageUrl,
       averageRating: averageRating || 0,
       reviewCount: reviewCount,
-      languages: user.caretakerProfile.languages || [],
-      skills: user.caretakerProfile.skills || [],
-      availability: user.caretakerProfile.availability || [],
-      status: user.caretakerProfile.status,
-      certifications: user.caretakerProfile.certifications || [],
+      languages: user.candidateProfile.languages || [],
+      skills: user.candidateProfile.skills || [],
+      availability: user.candidateProfile.availability || [],
+      status: user.candidateProfile.status,
+      certifications: user.candidateProfile.certifications || [],
       // Include subscription status for frontend to show prompts
       hasActiveSubscription: hasSubscription,
     }
 
     return NextResponse.json({
-      caretaker,
+      candidate,
       reviews,
     })
   } catch (error) {
-    console.error('Error fetching care taker profile:', error)
+    console.error('Error fetching candidate profile:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

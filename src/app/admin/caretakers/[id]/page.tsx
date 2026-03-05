@@ -72,12 +72,12 @@ export default function AdminCaretakerDetailPage() {
 
   const loadCaretaker = async () => {
     try {
-      const res = await fetch(`/api/caretakers/${params.id}`, { cache: 'no-store' })
+      const res = await fetch(`/api/candidates/${params.id}`, { cache: 'no-store' })
       if (res.ok) {
         const data = await res.json()
         if (data.caretaker) {
           // Also fetch full profile data including email
-          const adminRes = await fetch(`/api/admin/caretakers`, { cache: 'no-store' })
+          const adminRes = await fetch(`/api/admin/candidates`, { cache: 'no-store' })
           if (adminRes.ok) {
             const adminData = await adminRes.json()
             const fullCaretaker = adminData.caretakers?.find((c: any) => c.id === params.id)
@@ -98,7 +98,7 @@ export default function AdminCaretakerDetailPage() {
         }
       }
     } catch (e) {
-      console.error('Error loading care taker:', e)
+      console.error('Error loading candidate:', e)
     } finally {
       setIsLoading(false)
     }
@@ -141,7 +141,7 @@ export default function AdminCaretakerDetailPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading care taker details...</p>
+          <p className="mt-4 text-gray-600">Loading candidate details...</p>
         </div>
       </div>
     )
@@ -152,8 +152,8 @@ export default function AdminCaretakerDetailPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600">Care taker not found</p>
-          <Link href="/admin/caretakers" className="text-primary-600 hover:text-primary-900 mt-4 inline-block">
-            ← Back to Care Takers
+          <Link href="/admin/candidates" className="text-primary-600 hover:text-primary-900 mt-4 inline-block">
+            ← Back to Candidates
           </Link>
         </div>
       </div>
@@ -167,14 +167,14 @@ export default function AdminCaretakerDetailPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/admin/caretakers" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
+          <Link href="/admin/candidates" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Care Takers
+            Back to Candidates
           </Link>
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">{caretaker.name}</h1>
-              <p className="text-gray-600 mt-1">Care Taker Profile Details</p>
+              <p className="text-gray-600 mt-1">Candidate Profile Details</p>
             </div>
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
               caretaker.status === 'APPROVED' ? 'bg-green-100 text-green-800' :

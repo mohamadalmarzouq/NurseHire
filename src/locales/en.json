@@ -1,6 +1,7 @@
 {
   "common": {
-    "findCareTakers": "Find Care Takers",
+    "findCareTakers": "Find Candidates",
+    "findCandidates": "Find Candidates",
     "howItWorks": "How It Works",
     "safety": "Safety",
     "about": "About",
@@ -33,28 +34,30 @@
     "required": "Required"
   },
   "homepage": {
-    "headline": "Communicate with Qualified care takers",
-    "subtitle": "Find vetted caretakers for newborn, child, elderly, and home care—safe and professional support you can trust.",
-    "findCareTaker": "Find a Care Taker",
-    "registerAsCareTaker": "Register as a Care Taker",
+    "headline": "Communicate with qualified candidates",
+    "subtitle": "Find vetted candidates for newborn, child, elderly, and home care—safe and professional support you can trust.",
+    "findCareTaker": "Find a Candidate",
+    "findCandidate": "Find a Candidate",
+    "registerAsCareTaker": "Register as a Candidate",
+    "registerAsCandidate": "Register as a Candidate",
     "trustIndicators": {
       "verified": "Verified",
-      "verifiedDesc": "All care takers are verified by the platform",
+      "verifiedDesc": "All candidates are verified by the platform",
       "backgroundChecked": "Background Checked",
       "backgroundCheckedDesc": "Comprehensive background checks and reference verification",
       "ratedReviewed": "Rated & Reviewed",
-      "ratedReviewedDesc": "Real reviews from mothers who have hired our care takers"
+      "ratedReviewedDesc": "Real reviews from mothers who have hired our candidates"
     },
     "howItWorks": {
       "title": "How It Works",
-      "subtitle": "Simple steps to find the perfect care taker for your newborn",
+      "subtitle": "Simple steps to find the perfect candidate for your newborn",
       "step1": {
         "title": "Browse & Search",
-        "desc": "Search verified care taker profiles with details about experience, availability, and rates."
+        "desc": "Search verified candidate profiles with details about experience, availability, and rates."
       },
       "step2": {
         "title": "Connect & Chat",
-        "desc": "Message care takers directly to discuss your needs and get to know them."
+        "desc": "Message candidates directly to discuss your needs and get to know them."
       },
       "step3": {
         "title": "Book & Hire",
@@ -66,19 +69,34 @@
       "badge": "Verified • Flexible • Reviewed",
       "verifiedProfessionals": {
         "title": "Verified Professionals",
-        "desc": "All care takers are licensed, background-checked, and experienced in newborn care."
+        "desc": "All candidates are licensed, background-checked, and experienced in newborn care."
       },
       "flexibleScheduling": {
         "title": "Flexible Scheduling",
-        "desc": "Find care takers available for part-time, night shifts, or emergency care."
+        "desc": "Find candidates available for part-time, night shifts, or emergency care."
       },
       "realReviews": {
         "title": "Real Reviews",
-        "desc": "Read authentic reviews from other users who have hired our care takers."
+        "desc": "Read authentic reviews from other users who have hired our candidates."
       }
     },
     "forCareTakers": {
-      "title": "For Care Takers",
+      "title": "For Candidates",
+      "findClients": {
+        "title": "Find Clients Easily",
+        "desc": "Connect with families looking for newborn care services in Kuwait."
+      },
+      "securePlatform": {
+        "title": "Secure Platform",
+        "desc": "Work with verified families in a safe, professional environment."
+      },
+      "buildReputation": {
+        "title": "Build Your Reputation",
+        "desc": "Earn reviews and ratings to showcase your expertise and reliability."
+      }
+    },
+    "forCandidates": {
+      "title": "For Candidates",
       "findClients": {
         "title": "Find Clients Easily",
         "desc": "Connect with families looking for newborn care services in Kuwait."
@@ -94,13 +112,13 @@
     },
     "cta": {
       "title": "Ready to Get Started?",
-      "subtitle": "Join hundreds of families and care takers who trust ENFAS for newborn care in Kuwait."
+      "subtitle": "Join hundreds of families and candidates who trust ENFAS for newborn care in Kuwait."
     },
     "caringProfessional": {
       "title": "Caring & Professional",
-      "description": "Our care takers provide gentle, expert care for your newborn with the warmth and professionalism you can trust.",
+      "description": "Our candidates provide gentle, expert care for your newborn with the warmth and professionalism you can trust.",
       "happyFamilies": "Happy Families",
-      "expertCareTakers": "Expert Care Takers",
+      "expertCareTakers": "Expert Candidates",
       "satisfaction": "Satisfaction"
     }
   },
@@ -111,7 +129,7 @@
       "signingIn": "Signing in...",
       "dontHaveAccount": "Don't have an account?",
       "whyEnfas": "Why ENFAS?",
-      "allCareTakersVerified": "All care takers verified",
+      "allCareTakersVerified": "All candidates verified",
       "dataStaysSafe": "Your data stays safe",
       "createAccountMinutes": "Create an account in minutes"
     },
@@ -121,7 +139,7 @@
       "iamA": "I am a",
       "selectRole": "Select role",
       "user": "User",
-      "careTaker": "Care Taker",
+      "careTaker": "Candidate",
       "profilePicture": "Profile Picture",
       "certifications": "Certifications",
       "certificationsUploaded": "certification(s) uploaded successfully",
@@ -135,13 +153,13 @@
     }
   },
   "caretakers": {
-    "title": "Find Your Perfect Care Taker",
-    "subtitle": "Browse our verified caretakers and find the perfect match for your care needs",
-    "noResults": "No care takers found",
+    "title": "Find Your Perfect Candidate",
+    "subtitle": "Browse our verified candidates and find the perfect match for your care needs",
+    "noResults": "No candidates found",
     "noResultsDesc": "Try adjusting your search criteria or filters",
     "clearFilters": "Clear All Filters",
     "backToDashboard": "Back to User Dashboard",
-    "backToCaretakers": "Back to Care Takers",
+    "backToCaretakers": "Back to Candidates",
     "filters": {
       "title": "Filters",
       "search": "Search",
@@ -174,7 +192,7 @@
       "maritalStatus": "Marital Status",
       "phone": "Phone",
       "location": "Location",
-      "signUpToContact": "Sign up to contact this caretaker",
+      "signUpToContact": "Sign up to contact this candidate",
       "signUpToContactDesc": "Create a free account to view contact information, send messages, and read reviews",
       "signUpFree": "Sign Up Free",
       "signUpToSeeRatings": "Sign up to see ratings and reviews",
@@ -182,45 +200,100 @@
       "signUpToRequestInfo": "Sign Up to Request Info",
       "requestInformation": "Request Information",
       "message": "Message",
-      "reviewThisCareTaker": "Review this Care Taker",
+      "reviewThisCareTaker": "Review this Candidate",
       "reviews": "Reviews",
       "noReviews": "No reviews yet",
       "signUpToSeeReviews": "Sign up to see reviews",
-      "signUpToSeeReviewsDesc": "Create a free account to read reviews from other users who have worked with this caretaker."
+      "signUpToSeeReviewsDesc": "Create a free account to read reviews from other users who have worked with this candidate."
+    }
+  },
+  "candidates": {
+    "title": "Find Your Perfect Candidate",
+    "subtitle": "Browse our verified candidates and find the perfect match for your care needs",
+    "noResults": "No candidates found",
+    "noResultsDesc": "Try adjusting your search criteria or filters",
+    "clearFilters": "Clear All Filters",
+    "backToDashboard": "Back to User Dashboard",
+    "backToCandidates": "Back to Candidates",
+    "filters": {
+      "title": "Filters",
+      "search": "Search",
+      "searchPlaceholder": "Search by name or description...",
+      "minExperience": "Minimum Experience (years)",
+      "maxSalary": "Maximum Salary (KD/hour)",
+      "availability": "Availability",
+      "skills": "Skills",
+      "any": "Any"
+    },
+    "profile": {
+      "yearsOld": "years old",
+      "yearsExperience": "years experience",
+      "reviews": "reviews",
+      "about": "About",
+      "experience": "Experience",
+      "totalExperience": "Total Experience",
+      "kuwaitExperience": "Kuwait Experience",
+      "gccExperience": "GCC Experience",
+      "languages": "Languages",
+      "skills": "Skills",
+      "availability": "Availability",
+      "certifications": "Certifications",
+      "pricing": "Pricing",
+      "partTimeRate": "Part-time Rate",
+      "fullTimeRate": "Full-time Rate",
+      "expectedSalary": "Expected Salary",
+      "personalInfo": "Personal Information",
+      "age": "Age",
+      "maritalStatus": "Marital Status",
+      "phone": "Phone",
+      "location": "Location",
+      "signUpToContact": "Sign up to contact this candidate",
+      "signUpToContactDesc": "Create a free account to view contact information, send messages, and read reviews",
+      "signUpFree": "Sign Up Free",
+      "signUpToSeeRatings": "Sign up to see ratings and reviews",
+      "signUpToMessage": "Sign Up to Message",
+      "signUpToRequestInfo": "Sign Up to Request Info",
+      "requestInformation": "Request Information",
+      "message": "Message",
+      "reviewThisCandidate": "Review this Candidate",
+      "reviews": "Reviews",
+      "noReviews": "No reviews yet",
+      "signUpToSeeReviews": "Sign up to see reviews",
+      "signUpToSeeReviewsDesc": "Create a free account to read reviews from other users who have worked with this candidate."
     }
   },
   "user": {
     "dashboard": {
       "welcome": "Welcome",
-      "subtitle": "Find trusted caretakers in Kuwait for newborn, child, elderly, and home care.",
-      "findCareTakers": "Find Care Takers",
-      "findCareTakersDesc": "Browse available care takers",
+      "subtitle": "Find trusted candidates in Kuwait for newborn, child, elderly, and home care.",
+      "findCareTakers": "Find Candidates",
+      "findCareTakersDesc": "Browse available candidates",
       "discoverTrustedCare": "Discover trusted care",
       "myRequests": "My Requests",
       "myRequestsDesc": "View information requests",
       "trackRequests": "Track your requests",
       "myMessages": "My Messages",
-      "myMessagesDesc": "Chat with care takers",
+      "myMessagesDesc": "Chat with candidates",
       "connectCommunicate": "Connect & communicate",
       "myReviews": "My Reviews",
-      "myReviewsDesc": "Rate your care takers",
+      "myReviewsDesc": "Rate your candidates",
       "shareExperience": "Share your experience",
-      "recentCareTakers": "Recent Care Takers",
-      "recentCareTakersDesc": "Latest approved care takers ready to assist your family",
+      "recentCareTakers": "Recent Candidates",
+      "recentCareTakersDesc": "Latest approved candidates ready to assist your family",
       "viewAll": "View all",
       "viewProfile": "View Profile",
       "yrsExperience": "yrs experience",
-      "careTaker": "Care Taker",
-      "noCareTakersAvailable": "No care takers available yet",
+      "careTaker": "Candidate",
+      "noCareTakersAvailable": "No candidates available yet",
       "checkBackSoon": "We're reviewing new applications daily. Please check back soon.",
-      "favoriteCareTakers": "Favorite Care Takers",
-      "favoriteCareTakersDesc": "Keep your top care takers handy for quick booking when you need them most",
+      "favoriteCareTakers": "Favorite Candidates",
+      "favoriteCareTakersDesc": "Keep your top candidates handy for quick booking when you need them most",
       "favorites": "Favorites",
       "noFavoritesYet": "No favorites yet",
-      "favoritesInstruction": "Tap the heart icon on any care taker profile to add them to this list and access them faster next time.",
-      "browseCareTakers": "Browse care takers",
+      "favoritesInstruction": "Tap the heart icon on any candidate profile to add them to this list and access them faster next time.",
+      "browseCareTakers": "Browse candidates",
       "profileInformation": "Profile Information",
-      "profileInformationDesc": "Keep your details up to date so care takers can learn more about your family's needs",
+      "profileInformationDesc": "Keep your details up to date so candidates can learn more about your family's needs",
       "editProfile": "Edit Profile",
       "notSet": "Not set",
       "loading": "Loading dashboard...",
@@ -233,10 +306,10 @@
     },
     "requests": {
       "title": "My Information Requests",
-      "subtitle": "Track your requests for more information about caretakers",
+      "subtitle": "Track your requests for more information about candidates",
       "noRequests": "No Requests Yet",
-      "noRequestsDesc": "You haven't made any information requests yet. Browse caretakers and request more details about them.",
-      "browseCareTakers": "Browse Care Takers",
+      "noRequestsDesc": "You haven't made any information requests yet. Browse candidates and request more details about them.",
+      "browseCareTakers": "Browse Candidates",
       "requestFor": "Request for",
       "pending": "PENDING",
       "inProgress": "IN_PROGRESS",
@@ -258,8 +331,8 @@
       "endDate": "End Date",
       "monthlyFee": "Monthly Fee",
       "benefits": "Subscription Benefits",
-      "benefit1": "View care taker phone numbers",
-      "benefit2": "Send messages directly to care takers",
+      "benefit1": "View candidate phone numbers",
+      "benefit2": "Send messages directly to candidates",
       "benefit3": "Full access to contact information",
       "readyToStart": "Ready to Get Started?",
       "readyToStartDesc": "Contact admin to activate your subscription for 15 KD/month",
@@ -269,13 +342,13 @@
   "caretaker": {
     "dashboard": {
       "welcome": "Welcome to your dashboard",
-      "manageProfile": "Manage your care taker profile information",
+      "manageProfile": "Manage your candidate profile information",
       "viewPublic": "View Public Profile",
       "messages": "Messages",
       "reviews": "Reviews"
     },
     "profile": {
-      "title": "Manage your care taker profile information",
+      "title": "Manage your candidate profile information",
       "personalInfo": "Personal Information",
       "experience": "Experience",
       "rates": "Rates (KD/hour)",
@@ -287,11 +360,12 @@
     }
   },
   "footer": {
-    "description": "Connecting mothers in Kuwait with qualified, vetted care takers for newborn care. Safe, professional, and caring service for your little ones.",
+    "description": "Connecting mothers in Kuwait with qualified, vetted candidates for newborn care. Safe, professional, and caring service for your little ones.",
     "quickLinks": "Quick Links",
     "safetySecurity": "Safety & Security",
     "aboutUs": "About Us",
-    "joinAsCareTaker": "Join as Care Taker",
+    "joinAsCareTaker": "Join as Candidate",
+    "joinAsCandidate": "Join as Candidate",
     "benefits": "Benefits",
     "requirements": "Requirements",
     "support": "Support",

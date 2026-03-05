@@ -63,13 +63,13 @@ export default function UserDashboard() {
   useEffect(() => {
     const loadRecentNurses = async () => {
       try {
-        const res = await fetch('/api/caretakers?limit=3', { cache: 'no-store' })
+        const res = await fetch('/api/candidates?limit=3', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
-          setRecentNurses(data.caretakers || [])
+          setRecentNurses(data.candidates || [])
         }
       } catch (e) {
-        console.error('Error loading recent care takers:', e)
+        console.error('Error loading recent candidates:', e)
       }
     }
     loadRecentNurses()
@@ -127,7 +127,7 @@ export default function UserDashboard() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Link href="/caretakers" className="group nh-card nh-card--lift p-6" style={{
+          <Link href="/candidates" className="group nh-card nh-card--lift p-6" style={{
             background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
             border: '1px solid #A5F3FC',
             transition: 'all 0.3s ease'
@@ -240,7 +240,7 @@ export default function UserDashboard() {
 
         {/* Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Recent Care Takers */}
+          {/* Recent Candidates */}
           <div className="nh-card">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -248,7 +248,7 @@ export default function UserDashboard() {
                 <p className="text-xs text-gray-500">{t('user.dashboard.recentCareTakersDesc')}</p>
               </div>
               <Link
-                href="/caretakers"
+                href="/candidates"
                 className="inline-flex items-center text-xs font-medium text-cyan-700 hover:text-cyan-800"
               >
                 {t('user.dashboard.viewAll')}
@@ -295,7 +295,7 @@ export default function UserDashboard() {
                       </div>
                     </div>
                     <Link
-                      href={`/caretakers/${caretaker.id}`}
+                      href={`/candidates/${caretaker.id}`}
                       className="inline-flex items-center text-xs font-medium text-primary-600 hover:text-primary-700"
                     >
                       {t('user.dashboard.viewProfile')}
@@ -329,7 +329,7 @@ export default function UserDashboard() {
                 {t('user.dashboard.favoritesInstruction')}
               </p>
               <Link
-                href="/caretakers"
+                href="/candidates"
                 className="inline-flex items-center gap-2 rounded-full bg-red-500 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-red-600 transition-colors"
               >
                 {t('user.dashboard.browseCareTakers')}

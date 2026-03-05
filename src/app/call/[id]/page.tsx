@@ -35,8 +35,8 @@ export default function CallPage() {
           if (data?.authenticated) {
             const role = data.user?.role
             setUserRole(role || null)
-            if (role === 'CARETAKER') {
-              setReturnPath('/caretaker/calls')
+            if (role === 'CANDIDATE') {
+              setReturnPath('/candidate/calls')
             } else {
               setReturnPath('/user/calls')
             }

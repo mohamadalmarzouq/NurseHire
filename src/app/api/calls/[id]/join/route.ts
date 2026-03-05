@@ -140,11 +140,11 @@ export async function POST(
     const callSession = await prisma.callSession.findFirst({
       where: {
         id,
-        OR: [{ userId: payload.id }, { caretakerId: payload.id }],
+        OR: [{ userId: payload.id }, { candidateId: payload.id }],
       },
       include: {
         user: { include: { userProfile: true } },
-        caretaker: { include: { caretakerProfile: true } },
+        candidate: { include: { candidateProfile: true } },
       },
     })
 
@@ -201,23 +201,23 @@ export async function POST(
     }
 
     const joinData: Prisma.CallSessionUpdateInput = {}
-    if (payload.role === 'CARETAKER' && !callSession.caretakerJoinedAt) {
-      joinData.caretakerJoinedAt = new Date()
+    if (payload.role === 'CANDIDATE' && !callSession.candidateJoinedAt) {
+      joinData.candidateJoinedAt = new Date()
     }
-    if (payload.role !== 'CARETAKER' && !callSession.userJoinedAt) {
+    if (payload.role !== 'CANDIDATE' && !callSession.userJoinedAt) {
       joinData.userJoinedAt = new Date()
     }
     if (!callSession.startedAt) {
       joinData.startedAt = new Date()
     }
     const userJoined = callSession.userJoinedAt || joinData.userJoinedAt
-    const caretakerJoined = callSession.caretakerJoinedAt || joinData.caretakerJoinedAt
-    if (userJoined && caretakerJoined && !callSession.callActivatedAt) {
+    const candidateJoined = callSession.candidateJoinedAt || joinData.candidateJoinedAt
+    if (userJoined && candidateJoined && !callSession.callActivatedAt) {
       joinData.callActivatedAt = new Date()
       joinData.userLeftAt = null
-      joinData.caretakerLeftAt = null
+      joinData.candidateLeftAt = null
     }
-    if (payload.role === 'CARETAKER' && callSession.status === 'REQUESTED') {
+    if (payload.role === 'CANDIDATE' && callSession.status === 'REQUESTED') {
       joinData.status = CallStatus.ACCEPTED
     }
     if (callSession.aiInterviewEnabled && !callSession.aiInterviewStatus) {
@@ -230,7 +230,7 @@ export async function POST(
       })
     }
 
-    if (payload.role === 'CARETAKER' && callSession.aiInterviewEnabled) {
+    if (payload.role === 'CANDIDATE' && callSession.aiInterviewEnabled) {
       console.info('AI interview join detected', {
         callId: callSession.id,
         status: callSession.status,
@@ -298,7 +298,7 @@ export async function POST(
     const displayName =
       callSession.userId === payload.id
         ? callSession.user.userProfile?.name || 'User'
-        : callSession.caretaker.caretakerProfile?.name || 'Care Taker'
+        : callSession.candidate.candidateProfile?.name || 'Candidate'
 
     const tokenRes = await fetch('https://api.daily.co/v1/meeting-tokens', {
       method: 'POST',

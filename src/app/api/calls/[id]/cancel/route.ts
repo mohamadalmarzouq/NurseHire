@@ -24,7 +24,7 @@ export async function PUT(
         id,
         OR: [
           { userId: payload.id },
-          { caretakerId: payload.id },
+          { candidateId: payload.id },
         ],
       },
     })
@@ -46,7 +46,7 @@ export async function PUT(
       include: {
         request: true,
         user: { include: { userProfile: true } },
-        caretaker: { include: { caretakerProfile: true } },
+        candidate: { include: { candidateProfile: true } },
       },
     })
 

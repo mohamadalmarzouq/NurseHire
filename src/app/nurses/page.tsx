@@ -59,14 +59,14 @@ export default function CareTakersPage() {
   useEffect(() => {
     const loadCaretakers = async () => {
       try {
-        const res = await fetch('/api/caretakers', { cache: 'no-store' })
+        const res = await fetch('/api/candidates', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
-          setCaretakers(data.caretakers || [])
-          setFilteredCaretakers(data.caretakers || [])
+          setCaretakers(data.candidates || [])
+          setFilteredCaretakers(data.candidates || [])
         }
       } catch (e) {
-        console.error('Error loading care takers:', e)
+        console.error('Error loading candidates:', e)
       } finally {
         setIsLoading(false)
       }
@@ -76,7 +76,7 @@ export default function CareTakersPage() {
     }
   }, [isAuthenticated])
 
-  // Filter care takers based on search and filters
+  // Filter candidates based on search and filters
   useEffect(() => {
     let filtered = caretakers
 
@@ -117,7 +117,7 @@ export default function CareTakersPage() {
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-neutral-600">Loading care takers...</p>
+          <p className="text-neutral-600">Loading candidates...</p>
         </div>
       </div>
     )
@@ -143,10 +143,10 @@ export default function CareTakersPage() {
           
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-              Find Your Perfect Care Taker
+              Find Your Perfect Candidate
             </h1>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Browse through our verified care takers and find the perfect match for your newborn's care
+              Browse through our verified candidates and find the perfect match for your newborn's care
             </p>
           </div>
         </div>
@@ -229,18 +229,18 @@ export default function CareTakersPage() {
             </div>
           </div>
 
-          {/* Care Takers Grid */}
+          {/* Candidates Grid */}
           <div className="lg:col-span-3">
             <div className="mb-6">
               <p className="text-neutral-600">
-                Showing {filteredCaretakers.length} of {caretakers.length} care takers
+                Showing {filteredCaretakers.length} of {caretakers.length} candidates
               </p>
             </div>
 
             {filteredCaretakers.length === 0 ? (
               <div className="text-center py-12">
                 <User className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-neutral-900 mb-2">No care takers found</h3>
+                <h3 className="text-xl font-semibold text-neutral-900 mb-2">No candidates found</h3>
                 <p className="text-neutral-600 mb-6">
                   Try adjusting your search criteria or filters
                 </p>
@@ -330,7 +330,7 @@ export default function CareTakersPage() {
                     {/* Actions */}
                     <div className="flex justify-end">
                       <Link
-                        href={`/caretakers/${caretaker.id}`}
+                        href={`/candidates/${caretaker.id}`}
                         className="nh-btn nh-btn--primary text-center w-full sm:w-auto"
                       >
                         View Profile

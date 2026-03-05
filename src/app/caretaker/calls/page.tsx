@@ -123,7 +123,7 @@ export default function CaretakerCallsPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <Link
-            href="/caretaker/dashboard"
+            href="/candidate/dashboard"
             className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />

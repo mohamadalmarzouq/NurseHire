@@ -32,13 +32,13 @@ export default function AdminCaretakersPage() {
   useEffect(() => {
     const loadCaretakers = async () => {
       try {
-        const res = await fetch('/api/admin/caretakers', { cache: 'no-store' })
+        const res = await fetch('/api/admin/candidates', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
-          setCaretakers(data.caretakers || [])
+          setCaretakers(data.candidates || [])
         }
       } catch (e) {
-        console.error('Error loading care takers:', e)
+        console.error('Error loading candidates:', e)
       } finally {
         setIsLoading(false)
       }
@@ -53,26 +53,26 @@ export default function AdminCaretakersPage() {
     return matchesSearch && matchesStatus
   })
 
-  const handleDeleteCaretaker = async (caretakerId: string) => {
-    if (!confirm('Are you sure you want to delete this care taker account? This action cannot be undone.')) {
+  const handleDeleteCandidate = async (candidateId: string) => {
+    if (!confirm('Are you sure you want to delete this candidate account? This action cannot be undone.')) {
       return
     }
 
     try {
-      const res = await fetch(`/api/admin/users/${caretakerId}`, {
+      const res = await fetch(`/api/admin/users/${candidateId}`, {
         method: 'DELETE',
       })
 
       if (res.ok) {
-        setCaretakers(prev => prev.filter(caretaker => caretaker.id !== caretakerId))
-        alert('Care taker account deleted successfully')
+        setCaretakers(prev => prev.filter(caretaker => caretaker.id !== candidateId))
+        alert('Candidate account deleted successfully')
       } else {
         const data = await res.json().catch(() => null)
-        alert(data?.error || 'Failed to delete care taker account')
+        alert(data?.error || 'Failed to delete candidate account')
       }
     } catch (error) {
-      console.error('Error deleting care taker:', error)
-      alert('Failed to delete care taker account')
+      console.error('Error deleting candidate:', error)
+      alert('Failed to delete candidate account')
     }
   }
 
@@ -99,7 +99,7 @@ export default function AdminCaretakersPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading care takers...</p>
+          <p className="mt-4 text-gray-600">Loading candidates...</p>
         </div>
       </div>
     )
@@ -141,8 +141,8 @@ export default function AdminCaretakersPage() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Manage Care Takers</h1>
-          <p className="text-gray-600 mt-2">View and manage all care taker profiles</p>
+          <h1 className="text-3xl font-bold text-gray-900">Manage Candidates</h1>
+          <p className="text-gray-600 mt-2">View and manage all candidate profiles</p>
         </div>
 
         {/* Search and Filters */}
@@ -153,7 +153,7 @@ export default function AdminCaretakersPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
-                  placeholder="Search care takers by name or email..."
+                  placeholder="Search candidates by name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -176,12 +176,12 @@ export default function AdminCaretakersPage() {
           </div>
         </div>
 
-        {/* Care Takers List */}
+        {/* Candidates List */}
         <div className="bg-white rounded-lg shadow-sm">
           {filteredCaretakers.length === 0 ? (
             <div className="text-center py-12">
               <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No care takers found</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No candidates found</h3>
               <p className="text-gray-600">Try adjusting your search or filter criteria</p>
             </div>
           ) : (
@@ -190,7 +190,7 @@ export default function AdminCaretakersPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Care Taker
+                      Candidate
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Experience
@@ -254,14 +254,14 @@ export default function AdminCaretakersPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex items-center gap-3">
                           <Link
-                            href={`/admin/caretakers/${caretaker.id}`}
+                            href={`/admin/candidates/${caretaker.id}`}
                             className="text-primary-600 hover:text-primary-900"
                           >
                             <Eye className="w-4 h-4 inline mr-1" />
                             View Details
                           </Link>
                           <button
-                            onClick={() => handleDeleteCaretaker(caretaker.id)}
+                            onClick={() => handleDeleteCandidate(caretaker.id)}
                             className="text-red-600 hover:text-red-800 inline-flex items-center"
                           >
                             <Trash2 className="w-4 h-4 mr-1" />

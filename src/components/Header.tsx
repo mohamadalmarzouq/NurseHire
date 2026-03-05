@@ -35,8 +35,10 @@ export default function Header() {
   // Hide header for dashboard pages and caretakers listing
   const isDashboardPage = pathname?.startsWith('/user/') ||
                          pathname?.startsWith('/caretaker/') ||
+                         pathname?.startsWith('/candidate/') ||
                          pathname?.startsWith('/admin/') ||
-                         pathname === '/caretakers'
+                         pathname === '/caretakers' ||
+                         pathname === '/candidates'
 
   console.log('Header component - pathname:', pathname, 'isDashboardPage:', isDashboardPage)
 
@@ -59,8 +61,8 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/caretakers" className="text-neutral-600 hover:text-cyan-700 transition-colors">
-              {t('common.findCareTakers')}
+            <Link href="/candidates" className="text-neutral-600 hover:text-cyan-700 transition-colors">
+              {t('common.findCandidates')}
             </Link>
             <Link href="/how-it-works" className="text-neutral-600 hover:text-cyan-700 transition-colors">
               {t('common.howItWorks')}
@@ -79,7 +81,7 @@ export default function Header() {
             {isLoggedIn ? (
               <>
                 <Link 
-                  href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CARETAKER' ? '/caretaker/dashboard' : '/user/dashboard'}
+                  href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CANDIDATE' ? '/candidate/dashboard' : '/user/dashboard'}
                   className="text-neutral-600 hover:text-cyan-700 transition-colors"
                 >
                   {t('common.dashboard')}
@@ -125,11 +127,11 @@ export default function Header() {
           <div className="md:hidden py-4 border-t border-neutral-200">
             <nav className="flex flex-col space-y-4">
               <Link 
-                href="/caretakers" 
+                href="/candidates" 
                 className="text-neutral-600 hover:text-cyan-700 transition-colors px-4 py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('common.findCareTakers')}
+                {t('common.findCandidates')}
               </Link>
               <Link 
                 href="/how-it-works" 
@@ -159,7 +161,7 @@ export default function Header() {
                 {isLoggedIn ? (
                   <>
                     <Link 
-                      href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CARETAKER' ? '/caretaker/dashboard' : '/user/dashboard'}
+                      href={userRole === 'ADMIN' ? '/admin/dashboard' : userRole === 'CANDIDATE' ? '/candidate/dashboard' : '/user/dashboard'}
                       className="block text-neutral-600 hover:text-cyan-700 transition-colors py-2"
                       onClick={() => setIsMenuOpen(false)}
                     >

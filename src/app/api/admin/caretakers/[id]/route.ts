@@ -17,7 +17,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const { id: caretakerId } = await params
+    const { id: candidateId } = await params
     const body = await request.json()
     const { action } = body // 'approve' or 'reject'
 
@@ -25,40 +25,40 @@ export async function PUT(
       return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
     }
 
-    // Check if care taker exists and is pending
-    const caretaker = await prisma.user.findUnique({
-      where: { id: caretakerId },
-      include: { caretakerProfile: true }
+    // Check if candidate exists and is pending
+    const candidate = await prisma.user.findUnique({
+      where: { id: candidateId },
+      include: { candidateProfile: true }
     })
 
-    if (!caretaker || !caretaker.caretakerProfile) {
-      return NextResponse.json({ error: 'Care taker not found' }, { status: 404 })
+    if (!candidate || !candidate.candidateProfile) {
+      return NextResponse.json({ error: 'Candidate not found' }, { status: 404 })
     }
 
-    if (caretaker.caretakerProfile.status !== 'PENDING') {
-      return NextResponse.json({ error: 'Care taker is not pending approval' }, { status: 400 })
+    if (candidate.candidateProfile.status !== 'PENDING') {
+      return NextResponse.json({ error: 'Candidate is not pending approval' }, { status: 400 })
     }
 
-    // Update care taker status
+    // Update candidate status
     const newStatus = action === 'approve' ? 'APPROVED' : 'REJECTED'
     
-    await prisma.careTakerProfile.update({
-      where: { userId: caretakerId },
+    await prisma.candidateProfile.update({
+      where: { userId: candidateId },
       data: { status: newStatus }
     })
 
     return NextResponse.json({
       success: true,
-      message: `Care taker ${action === 'approve' ? 'approved' : 'rejected'} successfully`,
-      caretaker: {
-        id: caretaker.id,
-        name: caretaker.caretakerProfile.name,
-        email: caretaker.email,
+      message: `Candidate ${action === 'approve' ? 'approved' : 'rejected'} successfully`,
+      candidate: {
+        id: candidate.id,
+        name: candidate.candidateProfile.name,
+        email: candidate.email,
         status: newStatus
       }
     })
   } catch (error) {
-    console.error('Error updating care taker status:', error)
+    console.error('Error updating candidate status:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

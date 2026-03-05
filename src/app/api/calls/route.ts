@@ -16,20 +16,20 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url)
-    const caretakerIdParam = searchParams.get('caretakerId')
+    const candidateIdParam = searchParams.get('candidateId')
     const requestIdParam = searchParams.get('requestId')
 
     let whereClause: any = {}
     if (payload.role === 'USER') {
       whereClause = { userId: payload.id }
-      if (caretakerIdParam) {
-        whereClause.caretakerId = caretakerIdParam
+      if (candidateIdParam) {
+        whereClause.candidateId = candidateIdParam
       }
       if (requestIdParam) {
         whereClause.requestId = requestIdParam
       }
-    } else if (payload.role === 'CARETAKER') {
-      whereClause = { caretakerId: payload.id }
+    } else if (payload.role === 'CANDIDATE') {
+      whereClause = { candidateId: payload.id }
       if (requestIdParam) {
         whereClause.requestId = requestIdParam
       }
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       include: {
         request: true,
         user: { include: { userProfile: true } },
-        caretaker: { include: { caretakerProfile: true } },
+        candidate: { include: { candidateProfile: true } },
       },
       orderBy: { scheduledAt: 'desc' },
     })
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const {
       requestId,
-      caretakerId,
+      candidateId,
       scheduledAt,
       durationMinutes,
       timezone,
@@ -77,9 +77,9 @@ export async function POST(request: NextRequest) {
       aiQuestions,
     } = body
 
-    if (!scheduledAt || !durationMinutes || !timezone || (!requestId && !caretakerId)) {
+    if (!scheduledAt || !durationMinutes || !timezone || (!requestId && !candidateId)) {
       return NextResponse.json(
-        { error: 'caretakerId or requestId, scheduledAt, durationMinutes, and timezone are required' },
+        { error: 'candidateId or requestId, scheduledAt, durationMinutes, and timezone are required' },
         { status: 400 }
       )
     }
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid durationMinutes value' }, { status: 400 })
     }
 
-    let resolvedCaretakerId = caretakerId
+    let resolvedCandidateId = candidateId
     let resolvedRequestId = requestId || null
 
     if (requestId) {
@@ -136,21 +136,21 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      resolvedCaretakerId = infoRequest.caretakerId
+      resolvedCandidateId = infoRequest.candidateId
       resolvedRequestId = infoRequest.id
     }
 
-    if (!resolvedCaretakerId) {
-      return NextResponse.json({ error: 'Caretaker not found' }, { status: 404 })
+    if (!resolvedCandidateId) {
+      return NextResponse.json({ error: 'Candidate not found' }, { status: 404 })
     }
 
-    const caretaker = await prisma.user.findFirst({
-      where: { id: resolvedCaretakerId, role: 'CARETAKER' },
-      include: { caretakerProfile: true },
+    const candidate = await prisma.user.findFirst({
+      where: { id: resolvedCandidateId, role: 'CANDIDATE' },
+      include: { candidateProfile: true },
     })
 
-    if (!caretaker || !caretaker.caretakerProfile || caretaker.caretakerProfile.status !== 'APPROVED') {
-      return NextResponse.json({ error: 'Care taker not found or not approved' }, { status: 404 })
+    if (!candidate || !candidate.candidateProfile || candidate.candidateProfile.status !== 'APPROVED') {
+      return NextResponse.json({ error: 'Candidate not found or not approved' }, { status: 404 })
     }
 
     const existingCall = await prisma.callSession.findFirst({
@@ -158,14 +158,14 @@ export async function POST(request: NextRequest) {
         status: { in: ['REQUESTED', 'ACCEPTED'] },
         ...(resolvedRequestId
           ? { requestId: resolvedRequestId }
-          : { userId: payload.id, caretakerId: resolvedCaretakerId }),
+          : { userId: payload.id, candidateId: resolvedCandidateId }),
       },
       orderBy: { scheduledAt: 'desc' },
     })
 
     if (existingCall) {
       return NextResponse.json(
-        { error: 'There is already a pending or accepted call for this caretaker' },
+        { error: 'There is already a pending or accepted call for this candidate' },
         { status: 400 }
       )
     }
@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
       data: {
         requestId: resolvedRequestId,
         userId: payload.id,
-        caretakerId: resolvedCaretakerId,
+        candidateId: resolvedCandidateId,
         scheduledAt: scheduledDate,
         durationMinutes: durationValue,
         timezone,
@@ -197,7 +197,7 @@ export async function POST(request: NextRequest) {
       include: {
         request: true,
         user: { include: { userProfile: true } },
-        caretaker: { include: { caretakerProfile: true } },
+        candidate: { include: { candidateProfile: true } },
       },
     })
 

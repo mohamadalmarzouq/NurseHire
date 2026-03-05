@@ -6,7 +6,7 @@ import { Search, Filter, Star, User, ArrowLeft, CheckCircle } from 'lucide-react
 import DashboardHeader from '@/components/DashboardHeader'
 import { useLanguage } from '@/lib/language'
 
-interface CareTaker {
+interface Candidate {
   id: string
   name: string
   age: number
@@ -22,10 +22,10 @@ interface CareTaker {
   skills?: string[]
 }
 
-export default function CareTakersPage() {
+export default function CandidatesPage() {
   const { t } = useLanguage()
-  const [caretakers, setCaretakers] = useState<CareTaker[]>([])
-  const [filteredCaretakers, setFilteredCaretakers] = useState<CareTaker[]>([])
+  const [candidates, setCandidates] = useState<Candidate[]>([])
+  const [filteredCandidates, setFilteredCandidates] = useState<Candidate[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [filters, setFilters] = useState({
     minExperience: '',
@@ -57,56 +57,56 @@ export default function CareTakersPage() {
   }, [])
 
   useEffect(() => {
-    const loadCaretakers = async () => {
+    const loadCandidates = async () => {
       try {
         setIsLoading(true)
-        const res = await fetch('/api/caretakers', { cache: 'no-store' })
+        const res = await fetch('/api/candidates', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
-          setCaretakers(data.caretakers || [])
-          setFilteredCaretakers(data.caretakers || [])
+          setCandidates(data.candidates || [])
+          setFilteredCandidates(data.candidates || [])
         }
       } catch (e) {
-        console.error('Error loading care takers:', e)
+        console.error('Error loading candidates:', e)
       } finally {
         setIsLoading(false)
       }
     }
-    // Load caretakers regardless of authentication status
-    loadCaretakers()
+    // Load candidates regardless of authentication status
+    loadCandidates()
   }, [])
 
-  // Filter care takers based on search and filters
+  // Filter candidates based on search and filters
   useEffect(() => {
-    let filtered = caretakers
+    let filtered = candidates
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(caretaker =>
-        caretaker.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        caretaker.aboutMe.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(candidate =>
+        candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        candidate.aboutMe.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
     // Experience filter
     if (filters.minExperience) {
-      filtered = filtered.filter(caretaker => caretaker.totalExperience >= parseInt(filters.minExperience))
+      filtered = filtered.filter(candidate => candidate.totalExperience >= parseInt(filters.minExperience))
     }
 
     // Salary filter
     if (filters.maxSalary) {
-      filtered = filtered.filter(caretaker => caretaker.partTimeSalary <= parseInt(filters.maxSalary))
+      filtered = filtered.filter(candidate => candidate.partTimeSalary <= parseInt(filters.maxSalary))
     }
 
     // Skills filter
     if (filters.skill) {
-      filtered = filtered.filter(caretaker => 
-        caretaker.skills && caretaker.skills.includes(filters.skill)
+      filtered = filtered.filter(candidate => 
+        candidate.skills && candidate.skills.includes(filters.skill)
       )
     }
 
-    setFilteredCaretakers(filtered)
-  }, [caretakers, searchTerm, filters])
+    setFilteredCandidates(filtered)
+  }, [candidates, searchTerm, filters])
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -124,7 +124,7 @@ export default function CareTakersPage() {
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-neutral-600">Loading care takers...</p>
+          <p className="text-neutral-600">Loading candidates...</p>
         </div>
       </div>
     )
@@ -146,17 +146,17 @@ export default function CareTakersPage() {
               style={{ background: '#06B6D4' }}
             >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                {t('caretakers.backToDashboard')}
+                {t('candidates.backToDashboard')}
               </Link>
             </div>
           )}
           
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-              {t('caretakers.title')}
+              {t('candidates.title')}
             </h1>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              {t('caretakers.subtitle')}
+              {t('candidates.subtitle')}
             </p>
           </div>
         </div>
@@ -168,11 +168,11 @@ export default function CareTakersPage() {
           <div className="nh-card mb-6" style={{background:'linear-gradient(135deg,#0E7490,#0891B2)'}}>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white mb-1">{t('caretakers.profile.signUpToContact')}</h3>
-                <p className="text-white/90 text-sm">{t('caretakers.profile.signUpToContactDesc')}</p>
+                <h3 className="text-lg font-semibold text-white mb-1">{t('candidates.profile.signUpToContact')}</h3>
+                <p className="text-white/90 text-sm">{t('candidates.profile.signUpToContactDesc')}</p>
               </div>
               <Link href="/auth/register" className="px-6 py-2 bg-white text-cyan-700 rounded-lg font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">
-                {t('caretakers.profile.signUpFree')}
+                {t('candidates.profile.signUpFree')}
               </Link>
             </div>
           </div>
@@ -191,17 +191,17 @@ export default function CareTakersPage() {
             <div className="nh-card sticky top-24">
               <h3 className="text-lg font-semibold mb-6 flex items-center">
                 <Filter className="w-5 h-5 mr-2" />
-                {t('caretakers.filters.title')}
+                {t('candidates.filters.title')}
               </h3>
 
               {/* Search */}
               <div className="mb-6">
-                <label className="label">{t('caretakers.filters.search')}</label>
+                <label className="label">{t('candidates.filters.search')}</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
                   <input
                     type="text"
-                    placeholder={t('caretakers.filters.searchPlaceholder')}
+                    placeholder={t('candidates.filters.searchPlaceholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="nh-input pl-10"
@@ -273,20 +273,20 @@ export default function CareTakersPage() {
             </div>
           </div>
 
-          {/* Care Takers Grid */}
+          {/* Candidates Grid */}
           <div className="lg:col-span-3">
             <div className="mb-6">
               <p className="text-neutral-600">
-                Showing {filteredCaretakers.length} of {caretakers.length} care takers
+                Showing {filteredCandidates.length} of {candidates.length} candidates
               </p>
             </div>
 
-            {filteredCaretakers.length === 0 ? (
+            {filteredCandidates.length === 0 ? (
               <div className="text-center py-12">
                 <User className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-neutral-900 mb-2">{t('caretakers.noResults')}</h3>
+                <h3 className="text-xl font-semibold text-neutral-900 mb-2">{t('candidates.noResults')}</h3>
                 <p className="text-neutral-600 mb-6">
-                  {t('caretakers.noResultsDesc')}
+                  {t('candidates.noResultsDesc')}
                 </p>
                 <button
                   onClick={() => {
@@ -295,14 +295,14 @@ export default function CareTakersPage() {
                   }}
                   className="btn-primary"
                 >
-                  {t('caretakers.clearFilters')}
+                  {t('candidates.clearFilters')}
                 </button>
               </div>
             ) : (
               <div className="space-y-6">
-                {filteredCaretakers.map((caretaker) => (
+                {filteredCandidates.map((candidate) => (
                   <div
-                    key={caretaker.id}
+                    key={candidate.id}
                     className="nh-card nh-card--lift p-6 space-y-6"
                   >
                     {/* Header */}
@@ -310,10 +310,10 @@ export default function CareTakersPage() {
                       <div className="flex items-start gap-4">
                         <div className="relative">
                           <div className="w-16 h-16 rounded-full border border-primary-100 bg-primary-50 overflow-hidden flex items-center justify-center">
-                            {caretaker.profileImageUrl ? (
+                            {candidate.profileImageUrl ? (
                               <img
-                                src={caretaker.profileImageUrl}
-                                alt={caretaker.name}
+                                src={candidate.profileImageUrl}
+                                alt={candidate.name}
                                 className="w-full h-full object-cover"
                               />
                             ) : (
@@ -325,7 +325,7 @@ export default function CareTakersPage() {
                         <div className="space-y-2">
                           <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
                             <h3 className="text-lg font-semibold text-neutral-900 leading-tight line-clamp-1">
-                              {caretaker.name}
+                              {candidate.name}
                             </h3>
                             <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100 sm:mt-0 mt-1 w-max">
                               <CheckCircle className="w-3 h-3" />
@@ -333,22 +333,22 @@ export default function CareTakersPage() {
                             </span>
                           </div>
                           <p className="text-xs text-neutral-600">
-                            {caretaker.age} {t('caretakers.profile.yearsOld')} • {caretaker.totalExperience} {t('caretakers.profile.yearsExperience')}
+                            {candidate.age} {t('candidates.profile.yearsOld')} • {candidate.totalExperience} {t('candidates.profile.yearsExperience')}
                           </p>
                           <p className="text-xs text-neutral-500 line-clamp-2">
-                            {t('caretakers.profile.languages')}: {caretaker.languages?.length ? caretaker.languages.join(', ') : t('caretaker.profile.notSet')}
+                            {t('candidates.profile.languages')}: {candidate.languages?.length ? candidate.languages.join(', ') : t('candidate.profile.notSet')}
                           </p>
                         </div>
                       </div>
-                      {isAuthenticated && caretaker.averageRating !== null && (
+                      {isAuthenticated && candidate.averageRating !== null && (
                         <div className="flex items-center gap-2 text-xs text-neutral-600">
                           <span className="flex items-center gap-1 text-primary-500">
-                            {renderStars(caretaker.averageRating)}
+                            {renderStars(candidate.averageRating)}
                           </span>
                           <span className="font-medium text-neutral-800">
-                            {caretaker.averageRating}/5
+                            {candidate.averageRating}/5
                           </span>
-                          <span>• {caretaker.reviewCount} review{caretaker.reviewCount === 1 ? '' : 's'}</span>
+                          <span>• {candidate.reviewCount} review{candidate.reviewCount === 1 ? '' : 's'}</span>
                         </div>
                       )}
                     </div>
@@ -356,27 +356,27 @@ export default function CareTakersPage() {
                     {/* Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-neutral-600">
                       <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
-                        <p className="uppercase tracking-wide text-neutral-400 mb-1">{t('caretakers.profile.partTimeRate')}</p>
-                        <p className="text-base font-semibold text-primary-600">{caretaker.partTimeSalary} KD/hr</p>
+                        <p className="uppercase tracking-wide text-neutral-400 mb-1">{t('candidates.profile.partTimeRate')}</p>
+                        <p className="text-base font-semibold text-primary-600">{candidate.partTimeSalary} KD/hr</p>
                       </div>
                       <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
-                        <p className="uppercase tracking-wide text-neutral-400 mb-1">{t('caretakers.profile.fullTimeRate')}</p>
-                        <p className="text-base font-semibold text-primary-600">{caretaker.fullTimeSalary} KD/hr</p>
+                        <p className="uppercase tracking-wide text-neutral-400 mb-1">{t('candidates.profile.fullTimeRate')}</p>
+                        <p className="text-base font-semibold text-primary-600">{candidate.fullTimeSalary} KD/hr</p>
                       </div>
                       <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
                         <p className="uppercase tracking-wide text-neutral-400 mb-1">Kuwait Exp.</p>
-                        <p className="text-base font-semibold text-neutral-800">{caretaker.kuwaitExperience} yrs</p>
+                        <p className="text-base font-semibold text-neutral-800">{candidate.kuwaitExperience} yrs</p>
                       </div>
                       <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
                         <p className="uppercase tracking-wide text-neutral-400 mb-1">Total Exp.</p>
-                        <p className="text-base font-semibold text-neutral-800">{caretaker.totalExperience} yrs</p>
+                        <p className="text-base font-semibold text-neutral-800">{candidate.totalExperience} yrs</p>
                       </div>
                     </div>
 
                     {/* Actions */}
                     <div className="flex justify-end">
                       <Link
-                        href={`/caretakers/${caretaker.id}`}
+                        href={`/candidates/${candidate.id}`}
                         className="nh-btn nh-btn--primary text-center w-full sm:w-auto"
                       >
                         View Profile

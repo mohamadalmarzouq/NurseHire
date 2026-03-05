@@ -44,7 +44,7 @@ export default function CareTakerProfilePage() {
         console.log('Initial user data load:', data)
         if (data?.authenticated) {
           setUser(data.user)
-          const profile = data.user.caretakerProfile || data.user.profile
+          const profile = data.user.candidateProfile || data.user.profile
           console.log('Initial profile data:', profile)
           if (profile) {
             setFormData({
@@ -99,7 +99,7 @@ export default function CareTakerProfilePage() {
     console.log('Saving profile with formData:', formData)
     
     try {
-      const res = await fetch('/api/caretaker/profile', {
+      const res = await fetch('/api/candidate/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ export default function CareTakerProfilePage() {
         console.log('Reloaded user data after update:', userData)
         if (userData?.authenticated) {
           setUser(userData.user)
-          const profile = userData.user.caretakerProfile || userData.user.profile
+          const profile = userData.user.candidateProfile || userData.user.profile
           console.log('Profile data after reload:', profile)
           if (profile) {
             setFormData({
@@ -178,7 +178,7 @@ export default function CareTakerProfilePage() {
 
   // Helper to get profile from user object
   const getProfile = () => {
-    return user?.caretakerProfile || user?.profile || null
+    return user?.candidateProfile || user?.profile || null
   }
 
   const profile = getProfile()
@@ -195,7 +195,7 @@ export default function CareTakerProfilePage() {
               </Link>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/caretaker/dashboard" className="text-gray-600 hover:text-gray-900">
+              <Link href="/candidate/dashboard" className="text-gray-600 hover:text-gray-900">
                 Dashboard
               </Link>
               <button 
@@ -215,12 +215,12 @@ export default function CareTakerProfilePage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <Link href="/caretaker/dashboard" className="flex items-center text-gray-600 hover:text-gray-900 mb-2">
+            <Link href="/candidate/dashboard" className="flex items-center text-gray-600 hover:text-gray-900 mb-2">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Link>
             <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-            <p className="text-gray-600 mt-1">Manage your care taker profile information</p>
+            <p className="text-gray-600 mt-1">Manage your candidate profile information</p>
           </div>
           {!isEditing && (
             <button

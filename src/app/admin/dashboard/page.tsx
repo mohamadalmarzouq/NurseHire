@@ -9,14 +9,14 @@ export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [stats, setStats] = useState({
-    totalCaretakers: 0,
+    totalCandidates: 0,
     pendingApprovals: 0,
-    approvedCaretakers: 0,
+    approvedCandidates: 0,
     totalMothers: 0,
     totalRequests: 0,
     pendingReviews: 0
   })
-  const [pendingCaretakers, setPendingCaretakers] = useState<any[]>([])
+  const [pendingCandidates, setPendingCandidates] = useState<any[]>([])
 
   useEffect(() => {
     const loadUser = async () => {
@@ -52,25 +52,25 @@ export default function AdminDashboard() {
   }, [])
 
   useEffect(() => {
-    const loadPendingNurses = async () => {
+    const loadPendingCandidates = async () => {
       try {
-        const res = await fetch('/api/admin/pending-caretakers', { cache: 'no-store' })
+        const res = await fetch('/api/admin/pending-candidates', { cache: 'no-store' })
         if (res.ok) {
           const data = await res.json()
-          setPendingCaretakers(data.caretakers)
+          setPendingCandidates(data.candidates)
         }
       } catch (e) {
-        console.error('Error loading pending care takers:', e)
+        console.error('Error loading pending candidates:', e)
       } finally {
         setIsLoading(false)
       }
     }
-    loadPendingNurses()
+    loadPendingCandidates()
   }, [])
 
-  const handleApproveCaretaker = async (caretakerId: string) => {
+  const handleApproveCandidate = async (candidateId: string) => {
     try {
-      const res = await fetch(`/api/admin/caretakers/${caretakerId}`, {
+      const res = await fetch(`/api/admin/candidates/${candidateId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -80,26 +80,26 @@ export default function AdminDashboard() {
 
       if (res.ok) {
         // Remove from pending list and update stats
-        setPendingCaretakers(prev => prev.filter(caretaker => caretaker.id !== caretakerId))
+        setPendingCandidates(prev => prev.filter(candidate => candidate.id !== candidateId))
         setStats(prev => ({
           ...prev,
           pendingApprovals: prev.pendingApprovals - 1,
-          approvedCaretakers: prev.approvedCaretakers + 1
+          approvedCandidates: prev.approvedCandidates + 1
         }))
-        alert('Care taker approved successfully!')
+        alert('Candidate approved successfully!')
       } else {
         const error = await res.json()
-        alert(error.error || 'Failed to approve care taker')
+        alert(error.error || 'Failed to approve candidate')
       }
     } catch (error) {
-      console.error('Error approving care taker:', error)
-      alert('Failed to approve care taker')
+      console.error('Error approving candidate:', error)
+      alert('Failed to approve candidate')
     }
   }
 
-  const handleRejectCaretaker = async (caretakerId: string) => {
+  const handleRejectCandidate = async (candidateId: string) => {
     try {
-      const res = await fetch(`/api/admin/caretakers/${caretakerId}`, {
+      const res = await fetch(`/api/admin/candidates/${candidateId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -109,19 +109,19 @@ export default function AdminDashboard() {
 
       if (res.ok) {
         // Remove from pending list and update stats
-        setPendingCaretakers(prev => prev.filter(caretaker => caretaker.id !== caretakerId))
+        setPendingCandidates(prev => prev.filter(candidate => candidate.id !== candidateId))
         setStats(prev => ({
           ...prev,
           pendingApprovals: prev.pendingApprovals - 1
         }))
-        alert('Care taker rejected successfully!')
+        alert('Candidate rejected successfully!')
       } else {
         const error = await res.json()
-        alert(error.error || 'Failed to reject care taker')
+        alert(error.error || 'Failed to reject candidate')
       }
     } catch (error) {
-      console.error('Error rejecting care taker:', error)
-      alert('Failed to reject care taker')
+      console.error('Error rejecting candidate:', error)
+      alert('Failed to reject candidate')
     }
   }
 
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
             Admin Dashboard
           </h1>
           <p className="text-gray-600">
-            Manage care taker approvals, monitor platform activity, and oversee the community.
+            Manage candidate approvals, monitor platform activity, and oversee the community.
           </p>
         </div>
 
@@ -159,8 +159,8 @@ export default function AdminDashboard() {
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Care Takers</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.totalCaretakers}</p>
+                <p className="text-sm font-medium text-gray-600">Total Candidates</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.totalCandidates}</p>
               </div>
             </div>
           </div>
@@ -183,8 +183,8 @@ export default function AdminDashboard() {
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Approved Care Takers</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.approvedCaretakers}</p>
+                <p className="text-sm font-medium text-gray-600">Approved Candidates</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.approvedCandidates}</p>
               </div>
             </div>
           </div>
@@ -226,56 +226,56 @@ export default function AdminDashboard() {
           </Link>
         </div>
 
-        {/* Pending Nurse Approvals */}
+        {/* Pending Candidate Approvals */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Pending Care Taker Approvals</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Pending Candidate Approvals</h2>
             <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
               {stats.pendingApprovals} pending
             </span>
           </div>
           
-          {pendingCaretakers.length === 0 ? (
+          {pendingCandidates.length === 0 ? (
             <div className="text-center py-8">
               <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
               <p className="text-gray-600">No pending approvals</p>
-              <p className="text-sm text-gray-500">All care taker applications have been reviewed</p>
+              <p className="text-sm text-gray-500">All candidate applications have been reviewed</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {pendingCaretakers.map((caretaker) => (
-                <div key={caretaker.id} className="border border-gray-200 rounded-lg p-4">
+              {pendingCandidates.map((candidate) => (
+                <div key={candidate.id} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <h3 className="text-sm font-medium text-gray-900">{caretaker.name}</h3>
-                      <p className="text-sm text-gray-600">{caretaker.email}</p>
+                      <h3 className="text-sm font-medium text-gray-900">{candidate.name}</h3>
+                      <p className="text-sm text-gray-600">{candidate.email}</p>
                       <div className="mt-2 flex items-center space-x-4 text-xs text-gray-500">
-                        <span>{caretaker.totalExperience} years total experience</span>
-                        <span>{caretaker.kuwaitExperience} years in Kuwait</span>
-                        <span>KD {caretaker.partTimeSalary}/hour part-time</span>
-                        <span>Submitted {new Date(caretaker.submittedAt).toLocaleDateString()}</span>
+                        <span>{candidate.totalExperience} years total experience</span>
+                        <span>{candidate.kuwaitExperience} years in Kuwait</span>
+                        <span>KD {candidate.partTimeSalary}/hour part-time</span>
+                        <span>Submitted {new Date(candidate.submittedAt).toLocaleDateString()}</span>
                       </div>
-                      {caretaker.aboutMe && (
-                        <p className="text-xs text-gray-600 mt-2 line-clamp-2">{caretaker.aboutMe}</p>
+                      {candidate.aboutMe && (
+                        <p className="text-xs text-gray-600 mt-2 line-clamp-2">{candidate.aboutMe}</p>
                       )}
                     </div>
                     <div className="flex items-center space-x-2">
                       <Link 
-                        href={`/admin/caretakers/${caretaker.id}`}
+                        href={`/admin/candidates/${candidate.id}`}
                         className="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-200 transition-colors text-sm"
                       >
                         <Eye className="w-4 h-4 inline mr-1" />
                         View Details
                       </Link>
                       <button
-                        onClick={() => handleApproveCaretaker(caretaker.id)}
+                        onClick={() => handleApproveCandidate(candidate.id)}
                         className="bg-green-600 text-white px-3 py-1 rounded-lg hover:bg-green-700 transition-colors text-sm"
                       >
                         <CheckCircle className="w-4 h-4 inline mr-1" />
                         Approve
                       </button>
                       <button
-                        onClick={() => handleRejectCaretaker(caretaker.id)}
+                        onClick={() => handleRejectCandidate(candidate.id)}
                         className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700 transition-colors text-sm"
                       >
                         <XCircle className="w-4 h-4 inline mr-1" />
@@ -291,7 +291,7 @@ export default function AdminDashboard() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Link href="/admin/caretakers" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+          <Link href="/admin/candidates" className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
               <div className="bg-blue-100 p-3 rounded-lg">
                 <Users className="w-6 h-6 text-blue-600" />

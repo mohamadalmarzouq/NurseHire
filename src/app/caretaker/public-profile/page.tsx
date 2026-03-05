@@ -49,7 +49,7 @@ export default function CareTakerPublicProfilePage() {
   useEffect(() => {
     const loadCaretakerProfile = async () => {
       try {
-        // Get current user's care taker profile
+        // Get current user's candidate profile
         const res = await fetch('/api/auth/me', { cache: 'no-store' })
         if (!res.ok) {
           window.location.href = '/auth/login'
@@ -57,8 +57,8 @@ export default function CareTakerPublicProfilePage() {
         }
         const data = await res.json()
         console.log('Auth data:', data) // Debug log
-        if (data?.authenticated && data.user?.caretakerProfile) {
-          const profile = data.user.caretakerProfile
+        if (data?.authenticated && data.user?.candidateProfile) {
+          const profile = data.user.candidateProfile
           console.log('Profile data:', profile) // Debug log
           setCaretaker({
             id: data.user.id,
@@ -80,13 +80,13 @@ export default function CareTakerPublicProfilePage() {
             availability: profile.availability || [],
           })
           
-          // Load reviews for this care taker
+          // Load reviews for this candidate
           const reviewsRes = await fetch('/api/reviews?type=received', { cache: 'no-store' })
           if (reviewsRes.ok) {
             const reviewsData = await reviewsRes.json()
             setReviews(reviewsData.reviews || [])
             
-            // Update care taker with actual review data
+            // Update candidate with actual review data
             const reviewCount = reviewsData.reviews?.length || 0
             const averageRating = reviewCount > 0 
               ? reviewsData.reviews.reduce((sum: number, review: Review) => sum + review.averageRating, 0) / reviewCount
@@ -102,10 +102,10 @@ export default function CareTakerPublicProfilePage() {
           console.log('No profile found or not authenticated')
           console.log('Authenticated:', data?.authenticated)
           console.log('User:', data?.user)
-          console.log('Profile:', data?.user?.caretakerProfile)
+          console.log('Profile:', data?.user?.candidateProfile)
         }
       } catch (e) {
-        console.error('Error loading care taker profile:', e)
+        console.error('Error loading candidate profile:', e)
         window.location.href = '/auth/login'
       } finally {
         setIsLoading(false)
@@ -143,7 +143,7 @@ export default function CareTakerPublicProfilePage() {
           <User className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
           <h2 className="text-2xl font-semibold text-neutral-900 mb-2">Profile not found</h2>
           <p className="text-neutral-600 mb-6">Unable to load your profile.</p>
-          <Link href="/caretaker/dashboard" className="btn-primary">
+          <Link href="/candidate/dashboard" className="btn-primary">
             Back to Dashboard
           </Link>
         </div>
@@ -157,7 +157,7 @@ export default function CareTakerPublicProfilePage() {
       <div className="bg-white shadow-soft">
         <div className="container-custom py-6">
           <div className="flex items-center justify-between">
-            <Link href="/caretaker/dashboard" className="flex items-center text-neutral-600 hover:text-neutral-900">
+            <Link href="/candidate/dashboard" className="flex items-center text-neutral-600 hover:text-neutral-900">
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Dashboard
             </Link>

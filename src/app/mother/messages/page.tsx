@@ -316,7 +316,7 @@ export default function MotherMessagesPage() {
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-900">{selectedConversation.partnerName}</h3>
                         <p className="text-sm text-gray-500">
-                          {selectedConversation.partnerRole === 'CARETAKER' ? 'Professional Care Taker' : 'Mother'}
+                          {selectedConversation.partnerRole === 'CANDIDATE' ? 'Professional Candidate' : 'Mother'}
                         </p>
                       </div>
                     </div>

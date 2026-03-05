@@ -9,11 +9,13 @@ export default function Footer() {
   const { t } = useLanguage()
   const pathname = usePathname()
 
-  // Hide footer for dashboard pages and care takers listing
+  // Hide footer for dashboard pages and candidates listing
   const isDashboardPage = pathname?.startsWith('/user/') ||
                          pathname?.startsWith('/caretaker/') ||
+                         pathname?.startsWith('/candidate/') ||
                          pathname?.startsWith('/admin/') ||
-                         pathname === '/caretakers'
+                         pathname === '/caretakers' ||
+                         pathname === '/candidates'
 
   if (isDashboardPage) {
     return null
@@ -40,8 +42,8 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4 text-neutral-900">{t('footer.quickLinks')}</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/caretakers" className="text-neutral-600 hover:text-cyan-700 transition-colors">
-                  {t('common.findCareTakers')}
+                <Link href="/candidates" className="text-neutral-600 hover:text-cyan-700 transition-colors">
+                  {t('common.findCandidates')}
                 </Link>
               </li>
               <li>
@@ -62,27 +64,27 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* For Care Takers */}
+          {/* For Candidates */}
           <div>
-            <h3 className="font-semibold text-lg mb-4 text-neutral-900">{t('homepage.forCareTakers.title')}</h3>
+            <h3 className="font-semibold text-lg mb-4 text-neutral-900">{t('homepage.forCandidates.title')}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/auth/register" className="text-neutral-600 hover:text-cyan-700 transition-colors">
-                  {t('footer.joinAsCareTaker')}
+                  {t('footer.joinAsCandidate')}
                 </Link>
               </li>
               <li>
-                <Link href="/caretaker/benefits" className="text-neutral-600 hover:text-cyan-700 transition-colors">
+                <Link href="/candidate/benefits" className="text-neutral-600 hover:text-cyan-700 transition-colors">
                   {t('footer.benefits')}
                 </Link>
               </li>
               <li>
-                <Link href="/caretaker/requirements" className="text-neutral-600 hover:text-cyan-700 transition-colors">
+                <Link href="/candidate/requirements" className="text-neutral-600 hover:text-cyan-700 transition-colors">
                   {t('footer.requirements')}
                 </Link>
               </li>
               <li>
-                <Link href="/caretaker/support" className="text-neutral-600 hover:text-cyan-700 transition-colors">
+                <Link href="/candidate/support" className="text-neutral-600 hover:text-cyan-700 transition-colors">
                   {t('footer.support')}
                 </Link>
               </li>

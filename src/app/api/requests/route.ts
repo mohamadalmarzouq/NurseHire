@@ -21,16 +21,16 @@ export async function GET(request: NextRequest) {
       requests = await prisma.informationRequest.findMany({
         where: { requesterId: payload.id },
         include: {
-          caretaker: {
-            include: { caretakerProfile: true }
+          candidate: {
+            include: { candidateProfile: true }
           }
         },
         orderBy: { createdAt: 'desc' }
       })
-    } else if (payload.role === 'CARETAKER') {
-      // Care takers see requests about them
+    } else if (payload.role === 'CANDIDATE') {
+      // Candidates see requests about them
       requests = await prisma.informationRequest.findMany({
-        where: { caretakerId: payload.id },
+        where: { candidateId: payload.id },
         include: {
           requester: {
             include: { userProfile: true }
@@ -66,29 +66,30 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { caretakerId, message, phone, preferredContactTime, urgency } = body
+    const { message, phone, preferredContactTime, urgency } = body
+    const candidateId = body.candidateId || body.caretakerId
 
-    if (!caretakerId || !message) {
+    if (!candidateId || !message) {
       return NextResponse.json(
-        { error: 'Care taker ID and message are required' },
+        { error: 'Candidate ID and message are required' },
         { status: 400 }
       )
     }
 
-    // Verify care taker exists and is approved
-    const caretaker = await prisma.user.findFirst({
+    // Verify candidate exists and is approved
+    const candidate = await prisma.user.findFirst({
       where: {
-        id: caretakerId,
-        role: 'CARETAKER',
-        caretakerProfile: {
+        id: candidateId,
+        role: 'CANDIDATE',
+        candidateProfile: {
           status: 'APPROVED'
         }
       }
     })
 
-    if (!caretaker) {
+    if (!candidate) {
       return NextResponse.json(
-        { error: 'Care taker not found or not approved' },
+        { error: 'Candidate not found or not approved' },
         { status: 404 }
       )
     }
@@ -96,15 +97,15 @@ export async function POST(request: NextRequest) {
     const informationRequest = await prisma.informationRequest.create({
       data: {
         requesterId: payload.id,
-        caretakerId,
+        candidateId,
         message,
         phone: phone || null,
         preferredContactTime: preferredContactTime || null,
         urgency: urgency || 'MEDIUM',
       },
       include: {
-        caretaker: {
-          include: { caretakerProfile: true }
+        candidate: {
+          include: { candidateProfile: true }
         }
       }
     })

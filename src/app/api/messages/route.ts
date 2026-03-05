@@ -27,13 +27,13 @@ export async function GET(request: NextRequest) {
         sender: {
           include: {
             userProfile: true,
-            caretakerProfile: true,
+            candidateProfile: true,
           },
         },
         receiver: {
           include: {
             userProfile: true,
-            caretakerProfile: true,
+            candidateProfile: true,
           },
         },
       },
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
       if (!conversationMap.has(partnerId)) {
         conversationMap.set(partnerId, {
           partnerId,
-          partnerName: partner.userProfile?.name || partner.caretakerProfile?.name || 'Unknown',
+          partnerName: partner.userProfile?.name || partner.candidateProfile?.name || 'Unknown',
           partnerRole: partner.role,
           lastMessage: message.content,
           lastMessageTime: message.createdAt,
@@ -123,14 +123,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Receiver not found' }, { status: 404 })
     }
 
-    // Check subscription for USER role sending messages to CARETAKER
-    if (payload.role === 'USER' && receiver.role === 'CARETAKER') {
+    // Check subscription for USER role sending messages to CANDIDATE
+    if (payload.role === 'USER' && receiver.role === 'CANDIDATE') {
       const hasSubscription = await hasActiveSubscription(payload.id)
       if (!hasSubscription) {
         return NextResponse.json(
           { 
             error: 'Subscription required',
-            message: 'You need an active subscription to message care takers. Please subscribe to continue.',
+            message: 'You need an active subscription to message candidates. Please subscribe to continue.',
             requiresSubscription: true
           },
           { status: 403 }
@@ -150,13 +150,13 @@ export async function POST(request: NextRequest) {
         sender: {
           include: {
             userProfile: true,
-            caretakerProfile: true,
+            candidateProfile: true,
           },
         },
         receiver: {
           include: {
             userProfile: true,
-            caretakerProfile: true,
+            candidateProfile: true,
           },
         },
       },
@@ -174,12 +174,12 @@ export async function POST(request: NextRequest) {
         fileUrl: message.fileUrl,
         sender: {
           id: message.sender.id,
-          name: message.sender.userProfile?.name || message.sender.caretakerProfile?.name || 'Unknown',
+          name: message.sender.userProfile?.name || message.sender.candidateProfile?.name || 'Unknown',
           role: message.sender.role,
         },
         receiver: {
           id: message.receiver.id,
-          name: message.receiver.userProfile?.name || message.receiver.caretakerProfile?.name || 'Unknown',
+          name: message.receiver.userProfile?.name || message.receiver.candidateProfile?.name || 'Unknown',
           role: message.receiver.role,
         },
       },

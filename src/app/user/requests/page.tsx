@@ -125,10 +125,10 @@ export default function UserRequestsPage() {
               You haven't made any information requests yet. Browse caretakers and request more details about them.
             </p>
             <Link 
-              href="/caretakers" 
+              href="/candidates" 
               className="nh-btn nh-btn--primary"
             >
-              Browse Care Takers
+              Browse Candidates
             </Link>
           </div>
         ) : (
@@ -139,7 +139,7 @@ export default function UserRequestsPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Request for {request.caretaker?.caretakerProfile?.name || 'Care Taker'}
+                        Request for {request.candidate?.candidateProfile?.name || 'Candidate'}
                       </h3>
                       <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(request.status)}`}>
                         {getStatusIcon(request.status)}

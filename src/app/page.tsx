@@ -22,8 +22,8 @@ export default function HomePage() {
             // Redirect logged-in users to their dashboard
             if (data.user.role === 'USER') {
               router.push('/user/dashboard')
-            } else if (data.user.role === 'CARETAKER') {
-              router.push('/caretaker/dashboard')
+            } else if (data.user.role === 'CANDIDATE') {
+              router.push('/candidate/dashboard')
             } else if (data.user.role === 'ADMIN') {
               router.push('/admin/dashboard')
             }
@@ -62,12 +62,12 @@ export default function HomePage() {
               {t('homepage.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/caretakers" className="nh-btn nh-btn--primary">
-                {t('homepage.findCareTaker')}
+              <Link href="/candidates" className="nh-btn nh-btn--primary">
+                {t('homepage.findCandidate')}
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link href="/auth/register" className="nh-btn nh-btn--ghost">
-                {t('homepage.registerAsCareTaker')}
+                {t('homepage.registerAsCandidate')}
               </Link>
             </div>
           </div>
@@ -284,7 +284,7 @@ export default function HomePage() {
             {t('homepage.cta.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/caretakers" className="nh-btn nh-btn--ghost" style={{background:'#fff'}}>{t('homepage.findCareTaker')}</Link>
+            <Link href="/candidates" className="nh-btn nh-btn--ghost" style={{background:'#fff'}}>{t('homepage.findCandidate')}</Link>
             <Link href="/auth/register" className="nh-btn nh-btn--primary" style={{background:'#06B6D4'}}>{t('homepage.registerAsCareTaker')}</Link>
           </div>
         </div>

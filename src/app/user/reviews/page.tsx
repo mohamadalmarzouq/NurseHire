@@ -92,7 +92,7 @@ export default function MotherReviewsPage() {
     }))
   }
 
-  const handleSubmitReview = async (caretakerId: string) => {
+  const handleSubmitReview = async (candidateId: string) => {
     if (reviewForm.appearance === 0 || reviewForm.attitude === 0 || reviewForm.knowledge === 0 || reviewForm.hygiene === 0 || reviewForm.salary === 0) {
       alert('Please rate all categories before submitting your review.')
       return
@@ -105,7 +105,7 @@ export default function MotherReviewsPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          receiverId: caretakerId,
+          receiverId: candidateId,
           ...reviewForm,
         }),
       })
@@ -167,7 +167,7 @@ export default function MotherReviewsPage() {
             Back to Dashboard
           </Link>
           <h1 className="nh-h1">Reviews</h1>
-          <p className="nh-sub mt-1">Rate and review the care takers you've hired</p>
+          <p className="nh-sub mt-1">Rate and review the candidates you've hired</p>
         </div>
 
         {/* Trust strip */}
@@ -191,7 +191,7 @@ export default function MotherReviewsPage() {
                         <User className="w-6 h-6 text-blue-600" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{request.caretaker?.caretakerProfile?.name || 'Care Taker'}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">{request.candidate?.candidateProfile?.name || 'Candidate'}</h3>
                         <p className="text-gray-600">Request completed - Please rate your experience</p>
                       </div>
                     </div>
@@ -206,7 +206,7 @@ export default function MotherReviewsPage() {
                   {/* Review Form */}
                   {showReviewForm === request.caretaker.id && (
                     <div className="mt-6 pt-6 border-t border-gray-200 pb-4">
-                      <h4 className="text-lg font-medium text-gray-900 mb-4">Rate {request.caretaker?.caretakerProfile?.name || 'Care Taker'}</h4>
+                      <h4 className="text-lg font-medium text-gray-900 mb-4">Rate {request.candidate?.candidateProfile?.name || 'Candidate'}</h4>
                       
                       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
                         {[
@@ -245,7 +245,7 @@ export default function MotherReviewsPage() {
                         <textarea
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           rows={3}
-                          placeholder="Share your experience with this care taker..."
+                          placeholder="Share your experience with this candidate..."
                           value={reviewForm.comment}
                           onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
                         />
@@ -279,9 +279,9 @@ export default function MotherReviewsPage() {
             <div className="text-center py-12">
               <Star className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No reviews yet</h3>
-              <p className="text-gray-600 mb-6">Start by booking and hiring a care taker</p>
-              <Link href="/caretakers" className="nh-btn nh-btn--primary">
-                Find Care Takers
+              <p className="text-gray-600 mb-6">Start by booking and hiring a candidate</p>
+              <Link href="/candidates" className="nh-btn nh-btn--primary">
+                Find Candidates
               </Link>
             </div>
           ) : reviews.length > 0 ? (

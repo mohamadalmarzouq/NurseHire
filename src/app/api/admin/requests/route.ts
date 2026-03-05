@@ -20,8 +20,8 @@ export async function GET(request: NextRequest) {
         requester: {
           include: { userProfile: true }
         },
-        caretaker: {
-          include: { caretakerProfile: true }
+        candidate: {
+          include: { candidateProfile: true }
         }
       },
       orderBy: { createdAt: 'desc' }

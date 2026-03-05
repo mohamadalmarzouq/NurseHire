@@ -39,8 +39,8 @@ interface ConversationDetail {
 function formatRole(role: string) {
   if (!role) return 'Unknown'
   switch (role.toUpperCase()) {
-    case 'CARETAKER':
-      return 'Care Taker'
+    case 'CANDIDATE':
+      return 'Candidate'
     case 'USER':
     case 'MOTHER':
       return 'User'

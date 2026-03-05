@@ -14,8 +14,8 @@ export async function PUT(
     }
 
     const payload = await verifyToken(token)
-    if (!payload || payload.role !== 'CARETAKER') {
-      return NextResponse.json({ error: 'Care taker access required' }, { status: 403 })
+    if (!payload || payload.role !== 'CANDIDATE') {
+      return NextResponse.json({ error: 'Candidate access required' }, { status: 403 })
     }
 
     const { id } = await params
@@ -27,7 +27,7 @@ export async function PUT(
     }
 
     const call = await prisma.callSession.findFirst({
-      where: { id, caretakerId: payload.id },
+      where: { id, candidateId: payload.id },
     })
 
     if (!call) {
@@ -53,7 +53,7 @@ export async function PUT(
       include: {
         request: true,
         user: { include: { userProfile: true } },
-        caretaker: { include: { caretakerProfile: true } },
+        candidate: { include: { candidateProfile: true } },
       },
     })
 

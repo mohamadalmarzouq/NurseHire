@@ -14,21 +14,21 @@ export default function SubscriptionPrompt({ type, className = '' }: Subscriptio
       return {
         icon: Phone,
         title: 'Subscribe to View Phone Number',
-        description: 'Get access to care taker contact information with a monthly subscription.',
+        description: 'Get access to candidate contact information with a monthly subscription.',
         buttonText: 'Subscribe Now',
       }
     } else if (type === 'message') {
       return {
         icon: MessageCircle,
         title: 'Subscribe to Send Messages',
-        description: 'Start conversations with care takers by subscribing to our premium service.',
+        description: 'Start conversations with candidates by subscribing to our premium service.',
         buttonText: 'Subscribe Now',
       }
     } else {
       return {
         icon: Lock,
         title: 'Subscribe to Unlock Features',
-        description: 'Subscribe to view phone numbers and send messages to care takers.',
+        description: 'Subscribe to view phone numbers and send messages to candidates.',
         buttonText: 'Subscribe Now',
       }
     }

@@ -14,10 +14,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const caretakers = await prisma.user.findMany({
-      where: { role: 'CARETAKER' },
+    const candidates = await prisma.user.findMany({
+      where: { role: 'CANDIDATE' },
       include: {
-        caretakerProfile: true
+        candidateProfile: true
       },
       orderBy: {
         createdAt: 'desc'
@@ -25,30 +25,30 @@ export async function GET(request: NextRequest) {
     })
 
     return NextResponse.json({
-      caretakers: caretakers.map(caretaker => ({
-        id: caretaker.id,
-        name: caretaker.caretakerProfile?.name || 'Unknown',
-        email: caretaker.email,
-        phone: caretaker.caretakerProfile?.phone,
-        location: caretaker.caretakerProfile?.location,
-        totalExperience: caretaker.caretakerProfile?.totalExperience || 0,
-        kuwaitExperience: caretaker.caretakerProfile?.kuwaitExperience || 0,
-        partTimeSalary: caretaker.caretakerProfile?.partTimeSalary || 0,
-        fullTimeSalary: caretaker.caretakerProfile?.fullTimeSalary || 0,
-        aboutMe: caretaker.caretakerProfile?.aboutMe || '',
-        languages: caretaker.caretakerProfile?.languages || [],
-        availability: caretaker.caretakerProfile?.availability || [],
-        cvUrl: caretaker.caretakerProfile?.cvUrl,
-        profileImageUrl: caretaker.caretakerProfile?.profileImageUrl,
-        certifications: caretaker.caretakerProfile?.certifications || [],
-        status: caretaker.caretakerProfile?.status || 'PENDING',
-        submittedAt: caretaker.createdAt,
-        createdAt: caretaker.createdAt,
-        age: caretaker.caretakerProfile?.age || 0,
+      candidates: candidates.map(candidate => ({
+        id: candidate.id,
+        name: candidate.candidateProfile?.name || 'Unknown',
+        email: candidate.email,
+        phone: candidate.candidateProfile?.phone,
+        location: candidate.candidateProfile?.location,
+        totalExperience: candidate.candidateProfile?.totalExperience || 0,
+        kuwaitExperience: candidate.candidateProfile?.kuwaitExperience || 0,
+        partTimeSalary: candidate.candidateProfile?.partTimeSalary || 0,
+        fullTimeSalary: candidate.candidateProfile?.fullTimeSalary || 0,
+        aboutMe: candidate.candidateProfile?.aboutMe || '',
+        languages: candidate.candidateProfile?.languages || [],
+        availability: candidate.candidateProfile?.availability || [],
+        cvUrl: candidate.candidateProfile?.cvUrl,
+        profileImageUrl: candidate.candidateProfile?.profileImageUrl,
+        certifications: candidate.candidateProfile?.certifications || [],
+        status: candidate.candidateProfile?.status || 'PENDING',
+        submittedAt: candidate.createdAt,
+        createdAt: candidate.createdAt,
+        age: candidate.candidateProfile?.age || 0,
       }))
     })
   } catch (error) {
-    console.error('Error fetching care takers:', error)
+    console.error('Error fetching candidates:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -23,10 +23,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Additional validation for care takers
-    if (role === 'CARETAKER' && !otherData.profileImageUrl) {
+    // Additional validation for candidates
+    if (role === 'CANDIDATE' && !otherData.profileImageUrl) {
       return NextResponse.json(
-        { error: 'Profile picture is required for care taker registration' },
+        { error: 'Profile picture is required for candidate registration' },
         { status: 400 }
       )
     }
@@ -72,9 +72,9 @@ export async function POST(request: NextRequest) {
           location: otherData.location || null,
         },
       })
-    } else if (role === 'CARETAKER') {
+    } else if (role === 'CANDIDATE') {
       const certificationsArray = Array.isArray(otherData.certifications) ? otherData.certifications : []
-      console.log('Register API: Creating care taker profile', {
+      console.log('Register API: Creating candidate profile', {
         userId: user.id,
         name,
         hasProfileImage: !!otherData.profileImageUrl,
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
         certifications: certificationsArray
       })
 
-      profile = await prisma.careTakerProfile.create({
+      profile = await prisma.candidateProfile.create({
         data: {
           userId: user.id,
           name,
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
           maritalStatus: otherData.maritalStatus || null,
           aboutMe: otherData.aboutMe || null,
           cvUrl: otherData.cvUrl || null,
-          profileImageUrl: otherData.profileImageUrl, // Required for care takers
+          profileImageUrl: otherData.profileImageUrl, // Required for candidates
           certifications: certificationsArray,
           languages: otherData.languages || [],
           skills: otherData.skills || [],
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
         },
       })
       
-      console.log('Register API: Care taker profile created successfully', {
+      console.log('Register API: Candidate profile created successfully', {
         profileId: profile.id,
         certificationsCount: profile.certifications.length
       })
