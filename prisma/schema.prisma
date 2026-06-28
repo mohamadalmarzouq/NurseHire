@@ -66,6 +66,13 @@ enum AiInterviewStatus {
   NO_SHOW
 }
 
+enum AiInterviewSessionStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  NO_SHOW
+}
 enum SubscriptionStatus {
   NONE
   ACTIVE
@@ -106,6 +113,11 @@ model User {
   // Call session relations
   callsRequested CallSession[] @relation("CallRequester")
   callsReceived  CallSession[] @relation("CallCandidate")
+
+  // AI interview relations
+  aiInterviewsCreated  AiInterview[]        @relation("AiInterviewCreator")
+  aiInterviewsReceived AiInterview[]        @relation("AiInterviewCandidate")
+  aiInterviewSessions  AiInterviewSession[] @relation("AiInterviewSessionCandidate")
 
   @@map("users")
 }
@@ -238,6 +250,49 @@ model CallSession {
   @@index([userId])
   @@index([candidateId])
   @@map("call_sessions")
+}
+
+model AiInterview {
+  id            String            @id @default(cuid())
+  userId        String
+  candidateId   String
+  title         String
+  description   String
+  requirements  String?
+  status        AiInterviewStatus @default(SCHEDULED)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  user       User               @relation("AiInterviewCreator", fields: [userId], references: [id], onDelete: Cascade)
+  candidate  User               @relation("AiInterviewCandidate", fields: [candidateId], references: [id], onDelete: Cascade)
+  sessions   AiInterviewSession[]
+
+  @@index([userId])
+  @@index([candidateId])
+  @@map("ai_interviews")
+}
+
+model AiInterviewSession {
+  id                String                   @id @default(cuid())
+  interviewId       String
+  candidateId       String
+  status            AiInterviewSessionStatus @default(PENDING)
+  startedAt         DateTime?
+  endedAt           DateTime?
+  recordingStatus   RecordingStatus          @default(NONE)
+  recordingUrl      String?
+  recordingPublicId String?
+  transcript        String?
+  attemptNumber     Int                      @default(1)
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+
+  interview AiInterview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  candidate User        @relation("AiInterviewSessionCandidate", fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@unique([interviewId, candidateId])
+  @@index([candidateId])
+  @@map("ai_interview_sessions")
 }
 
 model Review {
