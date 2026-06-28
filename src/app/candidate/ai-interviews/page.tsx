@@ -55,9 +55,9 @@ export default function CandidateAiInterviewsPage() {
         return
       }
 
-      const signedUrlRes = await fetch('/api/elevenlabs/signed-url')
-      if (!signedUrlRes.ok) {
-        const data = await signedUrlRes.json().catch(() => null)
+      const tokenRes = await fetch('/api/elevenlabs/conversation-token')
+      if (!tokenRes.ok) {
+        const data = await tokenRes.json().catch(() => null)
         const errorMessage =
           typeof data?.error === 'string'
             ? data.error
@@ -66,7 +66,7 @@ export default function CandidateAiInterviewsPage() {
         return
       }
 
-      const { signedUrl } = await signedUrlRes.json()
+      const { conversationToken } = await tokenRes.json()
 
       try {
         await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -81,8 +81,8 @@ export default function CandidateAiInterviewsPage() {
       setTranscriptItems([])
 
       conversationRef.current = await Conversation.startSession({
-        signedUrl,
-        connectionType: 'websocket',
+        conversationToken,
+        connectionType: 'webrtc',
         onMessage: (message: any) => {
           const text =
             typeof message === 'string' ? message : typeof message?.text === 'string' ? message.text : null
