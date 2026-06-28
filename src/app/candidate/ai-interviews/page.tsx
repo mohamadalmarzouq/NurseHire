@@ -11,6 +11,9 @@ export default function CandidateAiInterviewsPage() {
   const [ending, setEnding] = useState(false)
   const [interviews, setInterviews] = useState<any[]>([])
   const [activeInterviewId, setActiveInterviewId] = useState<string | null>(null)
+  const [transcriptItems, setTranscriptItems] = useState<
+    { id: string; role: 'agent' | 'candidate'; text: string }[]
+  >([])
   const conversationRef = useRef<any | null>(null)
   const conversationIdRef = useRef<string | null>(null)
   const transcriptRef = useRef<string>('')
@@ -75,6 +78,7 @@ export default function CandidateAiInterviewsPage() {
 
       const { Conversation } = await import('@elevenlabs/client')
       transcriptRef.current = ''
+      setTranscriptItems([])
 
       conversationRef.current = await Conversation.startSession({
         signedUrl,
@@ -82,10 +86,26 @@ export default function CandidateAiInterviewsPage() {
         onMessage: (message: any) => {
           const text =
             typeof message === 'string' ? message : typeof message?.text === 'string' ? message.text : null
+          const role =
+            typeof message?.role === 'string'
+              ? message.role
+              : typeof message?.speaker === 'string'
+                ? message.speaker
+                : typeof message?.from === 'string'
+                  ? message.from
+                  : null
           if (text) {
             transcriptRef.current = transcriptRef.current
               ? `${transcriptRef.current}\n${text}`
               : text
+            setTranscriptItems((prev) => [
+              ...prev,
+              {
+                id: `${Date.now()}-${prev.length}`,
+                role: role === 'assistant' || role === 'agent' ? 'agent' : 'candidate',
+                text,
+              },
+            ])
           }
         },
       })
@@ -131,6 +151,7 @@ export default function CandidateAiInterviewsPage() {
       }
 
       transcriptRef.current = ''
+      setTranscriptItems([])
       conversationIdRef.current = null
       setActiveInterviewId(null)
       await loadInterviews()
@@ -257,6 +278,28 @@ export default function CandidateAiInterviewsPage() {
                       <p className="text-xs text-gray-500 mt-2">Interview in progress. Speak to the AI agent.</p>
                     )}
                   </div>
+                  {isActive && (
+                    <div className="mt-4 border border-gray-100 rounded-lg bg-white">
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <p className="text-sm font-medium text-gray-700">Live Transcript</p>
+                        <p className="text-xs text-gray-500">Use this to confirm your mic is working.</p>
+                      </div>
+                      <div className="max-h-64 overflow-y-auto px-4 py-3 space-y-3">
+                        {transcriptItems.length === 0 ? (
+                          <p className="text-sm text-gray-500">Waiting for the first response...</p>
+                        ) : (
+                          transcriptItems.map((item) => (
+                            <div key={item.id} className="text-sm text-gray-700">
+                              <span className="font-semibold">
+                                {item.role === 'agent' ? 'AI' : 'You'}:
+                              </span>{' '}
+                              {item.text}
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )
             })}
