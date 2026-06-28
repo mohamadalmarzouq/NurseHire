@@ -31,6 +31,9 @@ export async function POST(
     })
 
     if (existingSession) {
+      if (existingSession.status === 'IN_PROGRESS') {
+        return NextResponse.json({ session: existingSession, resumed: true })
+      }
       return NextResponse.json(
         { error: 'Interview already started for this candidate' },
         { status: 400 }

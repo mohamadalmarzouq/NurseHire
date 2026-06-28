@@ -44,14 +44,22 @@ export default function CandidateAiInterviewsPage() {
       const res = await fetch(`/api/ai-interviews/${interviewId}/start`, { method: 'POST' })
       if (!res.ok) {
         const data = await res.json().catch(() => null)
-        alert(data?.error || 'Unable to start interview')
+        const errorMessage =
+          typeof data?.error === 'string'
+            ? data.error
+            : data?.error?.message || 'Unable to start interview'
+        alert(errorMessage)
         return
       }
 
       const signedUrlRes = await fetch('/api/elevenlabs/signed-url')
       if (!signedUrlRes.ok) {
         const data = await signedUrlRes.json().catch(() => null)
-        alert(data?.error || 'Unable to start ElevenLabs session')
+        const errorMessage =
+          typeof data?.error === 'string'
+            ? data.error
+            : data?.error?.message || 'Unable to start ElevenLabs session'
+        alert(errorMessage)
         return
       }
 
@@ -135,7 +143,8 @@ export default function CandidateAiInterviewsPage() {
   }
 
   const renderStatus = (interview: any) => {
-    const status = interview.status
+    const sessionStatus = interview.sessions?.[0]?.status
+    const status = sessionStatus || interview.status
     if (status === 'COMPLETED') {
       return (
         <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
@@ -144,7 +153,7 @@ export default function CandidateAiInterviewsPage() {
         </span>
       )
     }
-    if (status === 'RUNNING') {
+    if (status === 'RUNNING' || status === 'IN_PROGRESS') {
       return (
         <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
           <Clock className="mr-1 h-3 w-3" />
@@ -200,7 +209,8 @@ export default function CandidateAiInterviewsPage() {
           <div className="space-y-4">
             {interviews.map((interview) => {
               const session = interview.sessions?.[0]
-              const alreadyStarted = !!session
+              const alreadyCompleted = session?.status === 'COMPLETED'
+              const canResume = session?.status === 'IN_PROGRESS'
               const isActive = activeInterviewId === interview.id
               const ownerName = interview.user?.userProfile?.name || 'User'
               return (
@@ -226,17 +236,19 @@ export default function CandidateAiInterviewsPage() {
                     ) : (
                       <button
                         className="btn-primary"
-                        disabled={alreadyStarted || starting === interview.id}
+                        disabled={alreadyCompleted || starting === interview.id}
                         onClick={() => handleStart(interview.id)}
                       >
-                        {alreadyStarted
+                        {alreadyCompleted
                           ? 'Interview Completed'
+                          : canResume
+                            ? 'Resume Interview'
                           : starting === interview.id
                             ? 'Starting...'
                             : 'Start Interview'}
                       </button>
                     )}
-                    {alreadyStarted && !isActive && (
+                    {alreadyCompleted && !isActive && (
                       <p className="text-xs text-gray-500 mt-2">
                         This interview can only be completed once.
                       </p>
