@@ -19,10 +19,17 @@ const linkKnowledgeBaseDocument = async (documentId: string, apiKey: string) => 
     }),
   })
 
+  const responseData = await res.json().catch(() => ({}))
+  console.info('ElevenLabs KB link response', {
+    agentId,
+    documentId,
+    responseData,
+    status: res.status,
+  })
+
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}))
     throw new Error(
-      errorData?.detail || errorData?.message || 'Failed to link knowledge base document'
+      responseData?.detail || responseData?.message || 'Failed to link knowledge base document'
     )
   }
 }
@@ -51,9 +58,18 @@ const publishAgentDraft = async (apiKey: string) => {
     }
   )
 
+  const responseData = await res.json().catch(() => ({}))
+  console.info('ElevenLabs draft publish response', {
+    agentId,
+    branchId,
+    responseData,
+    status: res.status,
+  })
+
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}))
-    throw new Error(errorData?.detail || errorData?.message || 'Failed to publish agent draft')
+    throw new Error(
+      responseData?.detail || responseData?.message || 'Failed to publish agent draft'
+    )
   }
 }
 
@@ -240,7 +256,11 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json({ interview })
+    return NextResponse.json({
+      interview,
+      knowledgeBaseDocumentId,
+      knowledgeBaseSource,
+    })
   } catch (error) {
     console.error('Error creating AI interview:', error)
     return NextResponse.json({ error: 'Failed to create AI interview' }, { status: 500 })
