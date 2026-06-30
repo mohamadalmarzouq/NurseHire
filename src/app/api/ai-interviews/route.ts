@@ -50,6 +50,7 @@ const linkKnowledgeBaseDocument = async (
   documentId: string,
   documentName: string,
   documentType: 'file' | 'text',
+  promptOverride: string,
   apiKey: string
 ) => {
   const agentId = process.env.ELEVENLABS_AGENT_ID
@@ -72,11 +73,13 @@ const linkKnowledgeBaseDocument = async (
       conversation_config: {
         agent: {
           prompt: {
+            prompt: promptOverride,
             knowledge_base: [
               {
                 id: documentId,
                 name: documentName,
                 type: documentType,
+                usage_mode: 'prompt',
               },
             ],
           },
@@ -311,12 +314,13 @@ export async function POST(request: NextRequest) {
       if (knowledgeBaseDocumentId) {
         try {
         await waitForKnowledgeBaseDocument(knowledgeBaseDocumentId, apiKey)
-          await linkKnowledgeBaseDocument(
-            knowledgeBaseDocumentId,
-            `${title} interview questions`,
-            knowledgeBaseSource || 'text',
-            apiKey
-          )
+        await linkKnowledgeBaseDocument(
+          knowledgeBaseDocumentId,
+          `${title} interview questions`,
+          knowledgeBaseSource || 'text',
+          'Use only the provided interview materials to ask questions and evaluate answers.',
+          apiKey
+        )
           await publishAgentDraft(apiKey)
         } catch (error) {
           console.error('Failed to link knowledge base document:', error)
