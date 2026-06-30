@@ -17,13 +17,11 @@ export default function UserAiInterviewsPage() {
   const [saving, setSaving] = useState(false)
   const [candidates, setCandidates] = useState<CandidateOption[]>([])
   const [interviews, setInterviews] = useState<any[]>([])
-  const [questionsFile, setQuestionsFile] = useState<File | null>(null)
   const [formData, setFormData] = useState({
     candidateId: '',
     title: '',
     description: '',
     requirements: '',
-    questionsText: '',
   })
 
   const loadCandidates = async () => {
@@ -66,21 +64,15 @@ export default function UserAiInterviewsPage() {
     event.preventDefault()
     setSaving(true)
     try {
-      const payload = new FormData()
-      payload.append('candidateId', formData.candidateId)
-      payload.append('title', formData.title)
-      payload.append('description', formData.description)
-      payload.append('requirements', formData.requirements)
-      if (formData.questionsText.trim()) {
-        payload.append('questionsText', formData.questionsText.trim())
-      }
-      if (questionsFile) {
-        payload.append('questionsFile', questionsFile, questionsFile.name)
-      }
-
       const res = await fetch('/api/ai-interviews', {
         method: 'POST',
-        body: payload,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          candidateId: formData.candidateId,
+          title: formData.title,
+          description: formData.description,
+          requirements: formData.requirements,
+        }),
       })
 
       if (!res.ok) {
@@ -89,14 +81,7 @@ export default function UserAiInterviewsPage() {
         return
       }
 
-      setFormData({
-        candidateId: '',
-        title: '',
-        description: '',
-        requirements: '',
-        questionsText: '',
-      })
-      setQuestionsFile(null)
+      setFormData({ candidateId: '', title: '', description: '', requirements: '' })
       await loadInterviews()
     } catch (error) {
       console.error('Error creating interview:', error)
@@ -227,38 +212,6 @@ export default function UserAiInterviewsPage() {
                       setFormData((prev) => ({ ...prev, requirements: event.target.value }))
                     }
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Interview Questions (optional)
-                  </label>
-                  <textarea
-                    className="nh-input min-h-[120px]"
-                    placeholder="Type interview questions or paste a list. (Optional)"
-                    value={formData.questionsText}
-                    onChange={(event) =>
-                      setFormData((prev) => ({ ...prev, questionsText: event.target.value }))
-                    }
-                  />
-                  <p className="text-xs text-gray-500 mt-2">
-                    You can also upload a file instead of typing questions.
-                  </p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Questions File (optional)
-                  </label>
-                  <input
-                    type="file"
-                    accept=".txt,.pdf,.doc,.docx"
-                    onChange={(event) =>
-                      setQuestionsFile(event.target.files?.[0] || null)
-                    }
-                    className="block w-full text-sm text-gray-700"
-                  />
-                  {questionsFile && (
-                    <p className="text-xs text-gray-500 mt-1">Selected: {questionsFile.name}</p>
-                  )}
                 </div>
                 <button
                   type="submit"

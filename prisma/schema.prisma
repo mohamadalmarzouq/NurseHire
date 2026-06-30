@@ -259,9 +259,6 @@ model AiInterview {
   title         String
   description   String
   requirements  String?
-  questionsText String?
-  knowledgeBaseDocumentId String?
-  knowledgeBaseSource String?
   status        AiInterviewStatus @default(SCHEDULED)
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
