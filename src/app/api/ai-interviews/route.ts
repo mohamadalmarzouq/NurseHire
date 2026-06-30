@@ -45,8 +45,36 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User access required' }, { status: 403 })
     }
 
-    const body = await request.json()
-    const { candidateId, title, description, requirements } = body
+    const contentType = request.headers.get('content-type') || ''
+    let candidateId = ''
+    let title = ''
+    let description = ''
+    let requirements = ''
+    let questionsText: string | null = null
+    let questionsFile: File | null = null
+
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await request.formData()
+      candidateId = String(formData.get('candidateId') || '')
+      title = String(formData.get('title') || '')
+      description = String(formData.get('description') || '')
+      requirements = String(formData.get('requirements') || '')
+      const textValue = formData.get('questionsText')
+      if (typeof textValue === 'string') {
+        questionsText = textValue.trim() || null
+      }
+      const fileValue = formData.get('questionsFile')
+      if (fileValue instanceof File && fileValue.size > 0) {
+        questionsFile = fileValue
+      }
+    } else {
+      const body = await request.json()
+      candidateId = body?.candidateId || ''
+      title = body?.title || ''
+      description = body?.description || ''
+      requirements = body?.requirements || ''
+      questionsText = typeof body?.questionsText === 'string' ? body.questionsText.trim() : null
+    }
 
     if (!candidateId || !title || !description) {
       return NextResponse.json(
@@ -67,6 +95,62 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Candidate not found or not approved' }, { status: 404 })
     }
 
+    let knowledgeBaseDocumentId: string | null = null
+    let knowledgeBaseSource: string | null = null
+
+    const apiKey = process.env.ELEVENLABS_API_KEY
+    if ((questionsText || questionsFile) && !apiKey) {
+      return NextResponse.json(
+        { error: 'ElevenLabs API key missing for knowledge base upload' },
+        { status: 500 }
+      )
+    }
+
+    if (apiKey && (questionsText || questionsFile)) {
+      if (questionsFile) {
+        const uploadBody = new FormData()
+        uploadBody.append('file', questionsFile, questionsFile.name)
+        uploadBody.append('name', `${title} interview questions`)
+        const uploadRes = await fetch('https://api.elevenlabs.io/v1/convai/knowledge-base/file', {
+          method: 'POST',
+          headers: { 'xi-api-key': apiKey },
+          body: uploadBody,
+        })
+        if (!uploadRes.ok) {
+          const errorData = await uploadRes.json().catch(() => ({}))
+          return NextResponse.json(
+            { error: errorData?.detail || errorData?.message || 'Failed to upload questions file' },
+            { status: 500 }
+          )
+        }
+        const uploadData = await uploadRes.json().catch(() => ({}))
+        knowledgeBaseDocumentId = uploadData?.document_id || uploadData?.id || null
+        knowledgeBaseSource = 'file'
+      } else if (questionsText) {
+        const uploadRes = await fetch('https://api.elevenlabs.io/v1/convai/knowledge-base/text', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'xi-api-key': apiKey,
+          },
+          body: JSON.stringify({
+            name: `${title} interview questions`,
+            text: questionsText,
+          }),
+        })
+        if (!uploadRes.ok) {
+          const errorData = await uploadRes.json().catch(() => ({}))
+          return NextResponse.json(
+            { error: errorData?.detail || errorData?.message || 'Failed to upload questions text' },
+            { status: 500 }
+          )
+        }
+        const uploadData = await uploadRes.json().catch(() => ({}))
+        knowledgeBaseDocumentId = uploadData?.document_id || uploadData?.id || null
+        knowledgeBaseSource = 'text'
+      }
+    }
+
     const interview = await prisma.aiInterview.create({
       data: {
         userId: payload.id,
@@ -74,6 +158,9 @@ export async function POST(request: NextRequest) {
         title,
         description,
         requirements: requirements || null,
+        questionsText: questionsText || null,
+        knowledgeBaseDocumentId,
+        knowledgeBaseSource,
       },
       include: {
         candidate: { include: { candidateProfile: true } },
