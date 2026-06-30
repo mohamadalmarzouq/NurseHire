@@ -2,11 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
-const DEFAULT_AGENT_ID = 'agent_3101kw6v9cqje6b98n60x9vpfbyk'
-
 const linkKnowledgeBaseDocument = async (documentId: string, apiKey: string) => {
-  const agentId = process.env.ELEVENLABS_AGENT_ID || DEFAULT_AGENT_ID
-  const res = await fetch(`https://api.elevenlabs.io/v1/convai/agents/${agentId}`, {
+  const agentId = process.env.ELEVENLABS_AGENT_ID
+  const branchId = process.env.ELEVENLABS_AGENT_BRANCH_ID
+  if (!agentId) {
+    throw new Error('ElevenLabs agent ID missing')
+  }
+  if (!branchId) {
+    throw new Error('ElevenLabs agent branch ID missing')
+  }
+  const res = await fetch(
+    `https://api.elevenlabs.io/v1/convai/agents/${agentId}?branch_id=${branchId}`,
+    {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -17,11 +24,13 @@ const linkKnowledgeBaseDocument = async (documentId: string, apiKey: string) => 
         document_ids: [documentId],
       },
     }),
-  })
+  }
+  )
 
   const responseData = await res.json().catch(() => ({}))
   console.info('ElevenLabs KB link response', {
     agentId,
+    branchId,
     documentId,
     responseData,
     status: res.status,
@@ -35,8 +44,11 @@ const linkKnowledgeBaseDocument = async (documentId: string, apiKey: string) => 
 }
 
 const publishAgentDraft = async (apiKey: string) => {
-  const agentId = process.env.ELEVENLABS_AGENT_ID || DEFAULT_AGENT_ID
+  const agentId = process.env.ELEVENLABS_AGENT_ID
   const branchId = process.env.ELEVENLABS_AGENT_BRANCH_ID
+  if (!agentId) {
+    throw new Error('ElevenLabs agent ID missing')
+  }
   if (!branchId) {
     throw new Error('ElevenLabs agent branch ID missing')
   }
