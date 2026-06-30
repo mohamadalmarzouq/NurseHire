@@ -264,7 +264,16 @@ export async function POST(request: NextRequest) {
           )
         }
         const uploadData = await uploadRes.json().catch(() => ({}))
-        knowledgeBaseDocumentId = uploadData?.document_id || uploadData?.id || null
+        console.info('ElevenLabs KB file upload response', uploadData)
+        const resolvedDocumentId =
+          uploadData?.document_id || uploadData?.document?.id || uploadData?.id || null
+        if (typeof resolvedDocumentId === 'string' && resolvedDocumentId.startsWith('agent_')) {
+          return NextResponse.json(
+            { error: 'Unexpected KB document ID from ElevenLabs upload' },
+            { status: 500 }
+          )
+        }
+        knowledgeBaseDocumentId = resolvedDocumentId
         knowledgeBaseSource = 'file'
       } else if (questionsText) {
         const uploadRes = await fetch('https://api.elevenlabs.io/v1/convai/knowledge-base/text', {
@@ -286,7 +295,16 @@ export async function POST(request: NextRequest) {
           )
         }
         const uploadData = await uploadRes.json().catch(() => ({}))
-        knowledgeBaseDocumentId = uploadData?.document_id || uploadData?.id || null
+        console.info('ElevenLabs KB text upload response', uploadData)
+        const resolvedDocumentId =
+          uploadData?.document_id || uploadData?.document?.id || uploadData?.id || null
+        if (typeof resolvedDocumentId === 'string' && resolvedDocumentId.startsWith('agent_')) {
+          return NextResponse.json(
+            { error: 'Unexpected KB document ID from ElevenLabs upload' },
+            { status: 500 }
+          )
+        }
+        knowledgeBaseDocumentId = resolvedDocumentId
         knowledgeBaseSource = 'text'
       }
 
