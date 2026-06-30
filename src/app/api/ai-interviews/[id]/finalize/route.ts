@@ -3,6 +3,32 @@ import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 import { uploadToCloudinary } from '@/lib/cloudinary'
 
+const fetchConversationAudio = async (conversationId: string, apiKey: string) => {
+  let lastStatus: number | null = null
+
+  for (let attempt = 1; attempt <= 4; attempt += 1) {
+    const audioResponse = await fetch(
+      `https://api.elevenlabs.io/v1/convai/conversations/${conversationId}/audio`,
+      {
+        headers: { 'xi-api-key': apiKey },
+      }
+    )
+
+    lastStatus = audioResponse.status
+    if (audioResponse.ok) {
+      return { buffer: Buffer.from(await audioResponse.arrayBuffer()), status: audioResponse.status }
+    }
+
+    if (audioResponse.status !== 404 && audioResponse.status !== 409 && audioResponse.status !== 425) {
+      break
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 1200 * attempt))
+  }
+
+  return { buffer: null, status: lastStatus }
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -47,15 +73,8 @@ export async function POST(
 
     const apiKey = process.env.ELEVENLABS_API_KEY
     if (apiKey && conversationId) {
-      const audioResponse = await fetch(
-        `https://api.elevenlabs.io/v1/convai/conversations/${conversationId}/audio`,
-        {
-          headers: { 'xi-api-key': apiKey },
-        }
-      )
-
-      if (audioResponse.ok) {
-        const audioBuffer = Buffer.from(await audioResponse.arrayBuffer())
+      const { buffer: audioBuffer, status } = await fetchConversationAudio(conversationId, apiKey)
+      if (audioBuffer) {
         const fileName = `ai-interview-${id}-${session.id}.mp3`
         const upload = await uploadToCloudinary(
           audioBuffer,
@@ -67,7 +86,7 @@ export async function POST(
         recordingPublicId = upload.publicId
         recordingStatus = 'READY'
       } else {
-        recordingError = `Audio fetch failed (${audioResponse.status})`
+        recordingError = `Audio fetch failed (${status ?? 'unknown'})`
       }
     } else {
       recordingError = apiKey ? 'Missing conversation ID' : 'Missing ElevenLabs API key'
