@@ -71,6 +71,13 @@ export async function POST(
     let recordingStatus: 'READY' | 'FAILED' = 'FAILED'
     let recordingError: string | null = null
 
+    console.info('AI interview finalize started', {
+      interviewId: id,
+      sessionId: session.id,
+      candidateId: payload.id,
+      conversationId: conversationId ?? 'missing',
+    })
+
     const apiKey = process.env.ELEVENLABS_API_KEY
     if (apiKey && conversationId) {
       const { buffer: audioBuffer, status } = await fetchConversationAudio(conversationId, apiKey)
@@ -85,11 +92,26 @@ export async function POST(
         recordingUrl = upload.secureUrl
         recordingPublicId = upload.publicId
         recordingStatus = 'READY'
+        console.info('AI interview recording uploaded', {
+          interviewId: id,
+          sessionId: session.id,
+          recordingPublicId,
+        })
       } else {
         recordingError = `Audio fetch failed (${status ?? 'unknown'})`
+        console.warn('AI interview audio fetch failed', {
+          interviewId: id,
+          sessionId: session.id,
+          status: status ?? 'unknown',
+        })
       }
     } else {
       recordingError = apiKey ? 'Missing conversation ID' : 'Missing ElevenLabs API key'
+      console.warn('AI interview recording skipped', {
+        interviewId: id,
+        sessionId: session.id,
+        reason: recordingError,
+      })
     }
 
     const updatedSession = await prisma.aiInterviewSession.update({

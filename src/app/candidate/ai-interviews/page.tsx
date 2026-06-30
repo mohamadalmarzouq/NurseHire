@@ -148,6 +148,7 @@ export default function CandidateAiInterviewsPage() {
       const finalizeData = await finalizeRes.json().catch(() => null)
       if (finalizeData?.recordingError) {
         console.warn('Recording upload issue:', finalizeData.recordingError)
+        alert(`Recording issue: ${finalizeData.recordingError}`)
       }
 
       transcriptRef.current = ''
