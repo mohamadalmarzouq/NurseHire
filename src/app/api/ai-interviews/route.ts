@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
-const linkKnowledgeBaseDocument = async (documentId: string, apiKey: string) => {
+const linkKnowledgeBaseDocument = async (
+  documentId: string,
+  documentName: string,
+  documentType: 'file' | 'text',
+  apiKey: string
+) => {
   const agentId = process.env.ELEVENLABS_AGENT_ID
   const branchId = process.env.ELEVENLABS_AGENT_BRANCH_ID
   if (!agentId) {
@@ -20,8 +25,18 @@ const linkKnowledgeBaseDocument = async (documentId: string, apiKey: string) => 
       'xi-api-key': apiKey,
     },
     body: JSON.stringify({
-      knowledge_base: {
-        document_ids: [documentId],
+      conversation_config: {
+        agent: {
+          prompt: {
+            knowledge_base: [
+              {
+                id: documentId,
+                name: documentName,
+                type: documentType,
+              },
+            ],
+          },
+        },
       },
     }),
   }
@@ -32,6 +47,8 @@ const linkKnowledgeBaseDocument = async (documentId: string, apiKey: string) => 
     agentId,
     branchId,
     documentId,
+    documentName,
+    documentType,
     responseData,
     status: res.status,
   })
@@ -179,7 +196,7 @@ export async function POST(request: NextRequest) {
     }
 
     let knowledgeBaseDocumentId: string | null = null
-    let knowledgeBaseSource: string | null = null
+    let knowledgeBaseSource: 'file' | 'text' | null = null
 
     const apiKey = process.env.ELEVENLABS_API_KEY
     if ((questionsText || questionsFile) && !apiKey) {
@@ -235,7 +252,12 @@ export async function POST(request: NextRequest) {
 
       if (knowledgeBaseDocumentId) {
         try {
-          await linkKnowledgeBaseDocument(knowledgeBaseDocumentId, apiKey)
+          await linkKnowledgeBaseDocument(
+            knowledgeBaseDocumentId,
+            `${title} interview questions`,
+            knowledgeBaseSource || 'text',
+            apiKey
+          )
           await publishAgentDraft(apiKey)
         } catch (error) {
           console.error('Failed to link knowledge base document:', error)
