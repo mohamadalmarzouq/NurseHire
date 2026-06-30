@@ -27,6 +27,36 @@ const linkKnowledgeBaseDocument = async (documentId: string, apiKey: string) => 
   }
 }
 
+const publishAgentDraft = async (apiKey: string) => {
+  const agentId = process.env.ELEVENLABS_AGENT_ID || DEFAULT_AGENT_ID
+  const branchId = process.env.ELEVENLABS_AGENT_BRANCH_ID
+  if (!branchId) {
+    throw new Error('ElevenLabs agent branch ID missing')
+  }
+
+  const res = await fetch(
+    `https://api.elevenlabs.io/v1/convai/agents/${agentId}/drafts?branch_id=${branchId}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'xi-api-key': apiKey,
+      },
+      body: JSON.stringify({
+        conversation_config: {},
+        platform_settings: {},
+        workflow: {},
+        name: 'Publishing user questions',
+      }),
+    }
+  )
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData?.detail || errorData?.message || 'Failed to publish agent draft')
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
     const token = request.cookies.get('auth-token')?.value
@@ -178,6 +208,7 @@ export async function POST(request: NextRequest) {
       if (knowledgeBaseDocumentId) {
         try {
           await linkKnowledgeBaseDocument(knowledgeBaseDocumentId, apiKey)
+          await publishAgentDraft(apiKey)
         } catch (error) {
           console.error('Failed to link knowledge base document:', error)
           return NextResponse.json(
