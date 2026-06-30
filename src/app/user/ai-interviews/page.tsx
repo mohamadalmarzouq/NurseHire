@@ -11,8 +11,8 @@ interface CandidateOption {
   name: string
   totalExperience: number
   profileImageUrl?: string | null
-  averageRating?: number | null
-  reviewCount?: number | null
+  averageRating: number | null
+  reviewCount: number | null
 }
 
 export default function UserAiInterviewsPage() {
