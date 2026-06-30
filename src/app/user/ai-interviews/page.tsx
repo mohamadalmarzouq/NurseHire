@@ -9,6 +9,10 @@ import { useLanguage } from '@/lib/language'
 interface CandidateOption {
   id: string
   name: string
+  totalExperience: number
+  profileImageUrl?: string | null
+  averageRating?: number | null
+  reviewCount?: number | null
 }
 
 export default function UserAiInterviewsPage() {
@@ -16,9 +20,10 @@ export default function UserAiInterviewsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [candidates, setCandidates] = useState<CandidateOption[]>([])
+  const [candidateSearch, setCandidateSearch] = useState('')
+  const [selectedCandidateIds, setSelectedCandidateIds] = useState<string[]>([])
   const [interviews, setInterviews] = useState<any[]>([])
   const [formData, setFormData] = useState({
-    candidateId: '',
     title: '',
     description: '',
     requirements: '',
@@ -33,6 +38,10 @@ export default function UserAiInterviewsPage() {
           (data.candidates || []).map((candidate: any) => ({
             id: candidate.id,
             name: candidate.name || 'Candidate',
+            totalExperience: candidate.totalExperience || 0,
+            profileImageUrl: candidate.profileImageUrl || null,
+            averageRating: candidate.averageRating ?? null,
+            reviewCount: candidate.reviewCount ?? null,
           }))
         )
       }
@@ -62,13 +71,17 @@ export default function UserAiInterviewsPage() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+    if (selectedCandidateIds.length === 0) {
+      alert('Please select at least one candidate.')
+      return
+    }
     setSaving(true)
     try {
       const res = await fetch('/api/ai-interviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          candidateId: formData.candidateId,
+          candidateIds: selectedCandidateIds,
           title: formData.title,
           description: formData.description,
           requirements: formData.requirements,
@@ -81,7 +94,8 @@ export default function UserAiInterviewsPage() {
         return
       }
 
-      setFormData({ candidateId: '', title: '', description: '', requirements: '' })
+      setFormData({ title: '', description: '', requirements: '' })
+      setSelectedCandidateIds([])
       await loadInterviews()
     } catch (error) {
       console.error('Error creating interview:', error)
@@ -114,6 +128,32 @@ export default function UserAiInterviewsPage() {
         Scheduled
       </span>
     )
+  }
+
+  const filteredCandidates = candidates.filter((candidate) =>
+    candidate.name.toLowerCase().includes(candidateSearch.trim().toLowerCase())
+  )
+  const allVisibleSelected =
+    filteredCandidates.length > 0 &&
+    filteredCandidates.every((candidate) => selectedCandidateIds.includes(candidate.id))
+
+  const toggleCandidate = (candidateId: string) => {
+    setSelectedCandidateIds((prev) =>
+      prev.includes(candidateId) ? prev.filter((id) => id !== candidateId) : [...prev, candidateId]
+    )
+  }
+
+  const toggleAllVisibleCandidates = () => {
+    if (allVisibleSelected) {
+      const visibleIds = new Set(filteredCandidates.map((candidate) => candidate.id))
+      setSelectedCandidateIds((prev) => prev.filter((id) => !visibleIds.has(id)))
+      return
+    }
+    setSelectedCandidateIds((prev) => {
+      const next = new Set(prev)
+      filteredCandidates.forEach((candidate) => next.add(candidate.id))
+      return Array.from(next)
+    })
   }
 
   if (loading) {
@@ -161,21 +201,73 @@ export default function UserAiInterviewsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Candidate
                   </label>
-                  <select
-                    className="nh-input"
-                    value={formData.candidateId}
-                    onChange={(event) =>
-                      setFormData((prev) => ({ ...prev, candidateId: event.target.value }))
-                    }
-                    required
-                  >
-                    <option value="">Select candidate</option>
-                    {candidates.map((candidate) => (
-                      <option key={candidate.id} value={candidate.id}>
-                        {candidate.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="space-y-3">
+                    <input
+                      className="nh-input"
+                      placeholder="Search candidates..."
+                      value={candidateSearch}
+                      onChange={(event) => setCandidateSearch(event.target.value)}
+                    />
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <label className="inline-flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                          checked={allVisibleSelected}
+                          onChange={toggleAllVisibleCandidates}
+                        />
+                        Select all visible
+                      </label>
+                      <span>{selectedCandidateIds.length} selected</span>
+                    </div>
+                    <div className="max-h-64 overflow-y-auto space-y-2 rounded-md border border-gray-200 p-2">
+                      {filteredCandidates.length === 0 ? (
+                        <div className="text-sm text-gray-500 px-2 py-3">
+                          No candidates found.
+                        </div>
+                      ) : (
+                        filteredCandidates.map((candidate) => {
+                          const isSelected = selectedCandidateIds.includes(candidate.id)
+                          return (
+                            <button
+                              key={candidate.id}
+                              type="button"
+                              onClick={() => toggleCandidate(candidate.id)}
+                              className={`w-full rounded-md border px-3 py-2 text-left transition ${
+                                isSelected
+                                  ? 'border-primary-500 bg-primary-50'
+                                  : 'border-gray-200 hover:border-primary-300 hover:bg-gray-50'
+                              }`}
+                            >
+                              <div className="flex items-start gap-3">
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={() => toggleCandidate(candidate.id)}
+                                  className="mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                />
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span className="text-sm font-semibold text-gray-900">
+                                      {candidate.name}
+                                    </span>
+                                    {candidate.averageRating !== null && (
+                                      <span className="text-xs text-gray-500">
+                                        {candidate.averageRating.toFixed(1)}★ ({candidate.reviewCount ?? 0})
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-xs text-gray-500">
+                                    {candidate.totalExperience} yrs experience
+                                  </p>
+                                </div>
+                              </div>
+                            </button>
+                          )
+                        })
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
@@ -215,7 +307,7 @@ export default function UserAiInterviewsPage() {
                 </div>
                 <button
                   type="submit"
-                  disabled={saving}
+                  disabled={saving || selectedCandidateIds.length === 0}
                   className="btn-primary w-full"
                 >
                   {saving ? 'Creating...' : 'Create Interview'}

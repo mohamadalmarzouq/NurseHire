@@ -46,41 +46,56 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { candidateId, title, description, requirements } = body
+    const { candidateId, candidateIds, title, description, requirements } = body
+    const resolvedCandidateIds = Array.isArray(candidateIds)
+      ? candidateIds
+      : candidateId
+        ? [candidateId]
+        : []
+    const uniqueCandidateIds = Array.from(
+      new Set(resolvedCandidateIds.filter((id: unknown) => typeof id === 'string' && id))
+    )
 
-    if (!candidateId || !title || !description) {
+    if (uniqueCandidateIds.length === 0 || !title || !description) {
       return NextResponse.json(
-        { error: 'candidateId, title, and description are required' },
+        { error: 'candidateIds, title, and description are required' },
         { status: 400 }
       )
     }
 
-    const candidate = await prisma.user.findFirst({
+    const candidates = await prisma.user.findMany({
       where: {
-        id: candidateId,
+        id: { in: uniqueCandidateIds },
         role: 'CANDIDATE',
         candidateProfile: { status: 'APPROVED' },
       },
     })
 
-    if (!candidate) {
-      return NextResponse.json({ error: 'Candidate not found or not approved' }, { status: 404 })
+    if (candidates.length !== uniqueCandidateIds.length) {
+      return NextResponse.json(
+        { error: 'One or more candidates were not found or not approved' },
+        { status: 404 }
+      )
     }
 
-    const interview = await prisma.aiInterview.create({
-      data: {
-        userId: payload.id,
-        candidateId,
-        title,
-        description,
-        requirements: requirements || null,
-      },
-      include: {
-        candidate: { include: { candidateProfile: true } },
-      },
-    })
+    const interviews = await prisma.$transaction(
+      uniqueCandidateIds.map((selectedId) =>
+        prisma.aiInterview.create({
+          data: {
+            userId: payload.id,
+            candidateId: selectedId,
+            title,
+            description,
+            requirements: requirements || null,
+          },
+          include: {
+            candidate: { include: { candidateProfile: true } },
+          },
+        })
+      )
+    )
 
-    return NextResponse.json({ interview })
+    return NextResponse.json({ interviews })
   } catch (error) {
     console.error('Error creating AI interview:', error)
     return NextResponse.json({ error: 'Failed to create AI interview' }, { status: 500 })
