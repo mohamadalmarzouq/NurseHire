@@ -2,6 +2,50 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
+const getElevenLabsErrorMessage = (responseData: any, fallback: string) => {
+  if (typeof responseData?.detail === 'string') {
+    return responseData.detail
+  }
+  if (typeof responseData?.detail?.message === 'string') {
+    return responseData.detail.message
+  }
+  if (typeof responseData?.message === 'string') {
+    return responseData.message
+  }
+  return fallback
+}
+
+const waitForKnowledgeBaseDocument = async (documentId: string, apiKey: string) => {
+  let lastResponse: any = null
+
+  for (let attempt = 1; attempt <= 4; attempt += 1) {
+    const res = await fetch(`https://api.elevenlabs.io/v1/convai/knowledge-base/${documentId}`, {
+      method: 'GET',
+      headers: { 'xi-api-key': apiKey },
+    })
+    const responseData = await res.json().catch(() => ({}))
+    lastResponse = responseData
+    console.info('ElevenLabs KB document check', {
+      documentId,
+      attempt,
+      status: res.status,
+      responseData,
+    })
+
+    if (res.ok) {
+      return
+    }
+
+    if (res.status !== 404) {
+      break
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 1200 * attempt))
+  }
+
+  throw new Error(getElevenLabsErrorMessage(lastResponse, 'Knowledge base document not ready'))
+}
+
 const linkKnowledgeBaseDocument = async (
   documentId: string,
   documentName: string,
@@ -54,9 +98,7 @@ const linkKnowledgeBaseDocument = async (
   })
 
   if (!res.ok) {
-    throw new Error(
-      responseData?.detail || responseData?.message || 'Failed to link knowledge base document'
-    )
+    throw new Error(getElevenLabsErrorMessage(responseData, 'Failed to link knowledge base document'))
   }
 }
 
@@ -96,9 +138,7 @@ const publishAgentDraft = async (apiKey: string) => {
   })
 
   if (!res.ok) {
-    throw new Error(
-      responseData?.detail || responseData?.message || 'Failed to publish agent draft'
-    )
+    throw new Error(getElevenLabsErrorMessage(responseData, 'Failed to publish agent draft'))
   }
 }
 
@@ -252,6 +292,7 @@ export async function POST(request: NextRequest) {
 
       if (knowledgeBaseDocumentId) {
         try {
+        await waitForKnowledgeBaseDocument(knowledgeBaseDocumentId, apiKey)
           await linkKnowledgeBaseDocument(
             knowledgeBaseDocumentId,
             `${title} interview questions`,
