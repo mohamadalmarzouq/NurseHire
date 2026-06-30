@@ -2,6 +2,31 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
+const DEFAULT_AGENT_ID = 'agent_3101kw6v9cqje6b98n60x9vpfbyk'
+
+const linkKnowledgeBaseDocument = async (documentId: string, apiKey: string) => {
+  const agentId = process.env.ELEVENLABS_AGENT_ID || DEFAULT_AGENT_ID
+  const res = await fetch(`https://api.elevenlabs.io/v1/convai/agents/${agentId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'xi-api-key': apiKey,
+    },
+    body: JSON.stringify({
+      knowledge_base: {
+        document_ids: [documentId],
+      },
+    }),
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(
+      errorData?.detail || errorData?.message || 'Failed to link knowledge base document'
+    )
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
     const token = request.cookies.get('auth-token')?.value
@@ -148,6 +173,23 @@ export async function POST(request: NextRequest) {
         const uploadData = await uploadRes.json().catch(() => ({}))
         knowledgeBaseDocumentId = uploadData?.document_id || uploadData?.id || null
         knowledgeBaseSource = 'text'
+      }
+
+      if (knowledgeBaseDocumentId) {
+        try {
+          await linkKnowledgeBaseDocument(knowledgeBaseDocumentId, apiKey)
+        } catch (error) {
+          console.error('Failed to link knowledge base document:', error)
+          return NextResponse.json(
+            {
+              error:
+                error instanceof Error
+                  ? error.message
+                  : 'Failed to link knowledge base document',
+            },
+            { status: 500 }
+          )
+        }
       }
     }
 
