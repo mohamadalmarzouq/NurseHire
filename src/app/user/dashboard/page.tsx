@@ -77,25 +77,29 @@ export default function UserDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-100">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('user.dashboard.loading')}</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto"></div>
+          <p className="mt-4 text-slate-300">{t('user.dashboard.loading')}</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-950 text-slate-100">
       <DashboardHeader userName={user?.profile?.name} userRole={user?.role} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Trust strip */}
-        <div className="nh-card mb-6" style={{background:'linear-gradient(90deg,#ECFEFF,#CFFAFE)'}}>
+        <div className="mb-6 rounded-2xl border border-white/10 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.35)]">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="nh-badge nh-badge--ok">Verified</span>
-            <span className="nh-badge nh-badge--info">Private & Secure</span>
+            <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-300">
+              Verified
+            </span>
+            <span className="rounded-full bg-cyan-500/15 px-3 py-1 text-xs font-semibold text-cyan-300">
+              Private & Secure
+            </span>
           </div>
         </div>
 
@@ -105,158 +109,143 @@ export default function UserDashboard() {
         </div>
 
         {/* Welcome Section */}
-                <div className="nh-card mb-8">
-                  <div className="mb-2 flex items-center justify-between">
-                    <div>
-                      <h1 className="nh-h2">{t('user.dashboard.welcome')}, {user?.profile?.name || 'User'}</h1>
-                      <p className="nh-sub">{t('user.dashboard.subtitle')}</p>
-                    </div>
-                    {subscription && (
-                      <Link
-                        href="/user/subscription"
-                        className={`btn-primary ${
-                          subscription.isActive ? '' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                        }`}
-                        style={subscription.isActive ? { background: '#06B6D4' } : undefined}
-                      >
-                        {subscription.isActive ? `✓ ${t('user.dashboard.activeSubscription')}` : t('user.dashboard.viewSubscription')}
-                      </Link>
-                    )}
-                  </div>
-                </div>
+        <div className="mb-8 rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-[0_18px_45px_rgba(15,23,42,0.35)]">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-semibold text-white">
+                {t('user.dashboard.welcome')}, {user?.profile?.name || 'User'}
+              </h1>
+              <p className="text-sm text-slate-300">{t('user.dashboard.subtitle')}</p>
+            </div>
+            {subscription && (
+              <Link
+                href="/user/subscription"
+                className={`rounded-xl px-4 py-2 text-xs font-semibold transition ${
+                  subscription.isActive
+                    ? 'bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 text-white shadow-lg shadow-cyan-500/20'
+                    : 'bg-slate-800 text-slate-200 hover:bg-slate-700'
+                }`}
+              >
+                {subscription.isActive
+                  ? `✓ ${t('user.dashboard.activeSubscription')}`
+                  : t('user.dashboard.viewSubscription')}
+              </Link>
+            )}
+          </div>
+        </div>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Link href="/candidates" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
-            border: '1px solid #A5F3FC',
-            transition: 'all 0.3s ease'
-          }}>
+          <Link
+            href="/candidates"
+            className="group rounded-2xl border border-white/10 bg-slate-900/70 p-6 text-center shadow-[0_16px_40px_rgba(15,23,42,0.35)] transition hover:border-cyan-400/40 hover:bg-slate-900"
+          >
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="p-4 rounded-2xl" style={{
-                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
-              }}>
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-[0_10px_25px_rgba(6,182,212,0.35)]">
                 <Search className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#0E7490'}}>{t('user.dashboard.findCareTakers')}</h3>
-                <p className="text-sm mb-3" style={{color: '#0E7490', opacity: 0.8}}>{t('user.dashboard.findCareTakersDesc')}</p>
-                <div className="text-xs font-medium" style={{color: '#0E7490', opacity: 0.7}}>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {t('user.dashboard.findCareTakers')}
+                </h3>
+                <p className="text-sm mb-3 text-slate-300">{t('user.dashboard.findCareTakersDesc')}</p>
+                <div className="text-xs font-medium text-cyan-300">
                   {t('user.dashboard.discoverTrustedCare')} →
                 </div>
               </div>
             </div>
           </Link>
 
-          <Link href="/user/requests" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
-            border: '1px solid #A5F3FC',
-            transition: 'all 0.3s ease'
-          }}>
+          <Link
+            href="/user/requests"
+            className="group rounded-2xl border border-white/10 bg-slate-900/70 p-6 text-center shadow-[0_16px_40px_rgba(15,23,42,0.35)] transition hover:border-cyan-400/40 hover:bg-slate-900"
+          >
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="p-4 rounded-2xl" style={{
-                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
-              }}>
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-[0_10px_25px_rgba(6,182,212,0.35)]">
                 <MessageCircle className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#0E7490'}}>{t('user.dashboard.myRequests')}</h3>
-                <p className="text-sm mb-3" style={{color: '#0E7490', opacity: 0.8}}>{t('user.dashboard.myRequestsDesc')}</p>
-                <div className="text-xs font-medium" style={{color: '#0E7490', opacity: 0.7}}>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {t('user.dashboard.myRequests')}
+                </h3>
+                <p className="text-sm mb-3 text-slate-300">{t('user.dashboard.myRequestsDesc')}</p>
+                <div className="text-xs font-medium text-cyan-300">
                   {t('user.dashboard.trackRequests')} →
                 </div>
               </div>
             </div>
           </Link>
 
-          <Link href="/user/messages" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
-            border: '1px solid #A5F3FC',
-            transition: 'all 0.3s ease'
-          }}>
+          <Link
+            href="/user/messages"
+            className="group rounded-2xl border border-white/10 bg-slate-900/70 p-6 text-center shadow-[0_16px_40px_rgba(15,23,42,0.35)] transition hover:border-cyan-400/40 hover:bg-slate-900"
+          >
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="p-4 rounded-2xl" style={{
-                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
-              }}>
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-[0_10px_25px_rgba(6,182,212,0.35)]">
                 <MessageCircle className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#0E7490'}}>{t('user.dashboard.myMessages')}</h3>
-                <p className="text-sm mb-3" style={{color: '#0E7490', opacity: 0.8}}>{t('user.dashboard.myMessagesDesc')}</p>
-                <div className="text-xs font-medium" style={{color: '#0E7490', opacity: 0.7}}>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {t('user.dashboard.myMessages')}
+                </h3>
+                <p className="text-sm mb-3 text-slate-300">{t('user.dashboard.myMessagesDesc')}</p>
+                <div className="text-xs font-medium text-cyan-300">
                   {t('user.dashboard.connectCommunicate')} →
                 </div>
               </div>
             </div>
           </Link>
 
-          <Link href="/user/calls" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
-            border: '1px solid #A5F3FC',
-            transition: 'all 0.3s ease'
-          }}>
+          <Link
+            href="/user/calls"
+            className="group rounded-2xl border border-white/10 bg-slate-900/70 p-6 text-center shadow-[0_16px_40px_rgba(15,23,42,0.35)] transition hover:border-cyan-400/40 hover:bg-slate-900"
+          >
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="p-4 rounded-2xl" style={{
-                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
-              }}>
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-[0_10px_25px_rgba(6,182,212,0.35)]">
                 <Calendar className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#0E7490'}}>Calls</h3>
-                <p className="text-sm mb-3" style={{color: '#0E7490', opacity: 0.8}}>Schedule and manage calls</p>
-                <div className="text-xs font-medium" style={{color: '#0E7490', opacity: 0.7}}>
-                  View call requests →
-                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">Calls</h3>
+                <p className="text-sm mb-3 text-slate-300">Schedule and manage calls</p>
+                <div className="text-xs font-medium text-cyan-300">View call requests →</div>
               </div>
             </div>
           </Link>
 
-          <Link href="/user/ai-interviews" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)',
-            border: '1px solid #C7D2FE',
-            transition: 'all 0.3s ease'
-          }}>
+          <Link
+            href="/user/ai-interviews"
+            className="group rounded-2xl border border-indigo-400/30 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/40 p-6 text-center shadow-[0_16px_40px_rgba(15,23,42,0.35)] transition hover:border-indigo-400/60"
+          >
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="p-4 rounded-2xl" style={{
-                background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
-                boxShadow: '0 6px 16px rgba(79, 70, 229, 0.3)'
-              }}>
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-[0_10px_25px_rgba(99,102,241,0.35)]">
                 <Bot className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#4338CA'}}>
+                <h3 className="text-lg font-semibold text-white mb-2">
                   {t('user.dashboard.aiInterviews')}
                 </h3>
-                <p className="text-sm mb-3" style={{color: '#4338CA', opacity: 0.8}}>
-                  {t('user.dashboard.aiInterviewsDesc')}
-                </p>
-                <div className="text-xs font-medium" style={{color: '#4338CA', opacity: 0.7}}>
+                <p className="text-sm mb-3 text-slate-300">{t('user.dashboard.aiInterviewsDesc')}</p>
+                <div className="text-xs font-medium text-indigo-300">
                   {t('user.dashboard.manageInterviews')} →
                 </div>
               </div>
             </div>
           </Link>
 
-          <Link href="/user/reviews" className="group nh-card nh-card--lift p-6" style={{
-            background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)',
-            border: '1px solid #A5F3FC',
-            transition: 'all 0.3s ease'
-          }}>
+          <Link
+            href="/user/reviews"
+            className="group rounded-2xl border border-white/10 bg-slate-900/70 p-6 text-center shadow-[0_16px_40px_rgba(15,23,42,0.35)] transition hover:border-cyan-400/40 hover:bg-slate-900"
+          >
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="p-4 rounded-2xl" style={{
-                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.3)'
-              }}>
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-[0_10px_25px_rgba(6,182,212,0.35)]">
                 <Star className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2" style={{color: '#0E7490'}}>{t('user.dashboard.myReviews')}</h3>
-                <p className="text-sm mb-3" style={{color: '#0E7490', opacity: 0.8}}>{t('user.dashboard.myReviewsDesc')}</p>
-                <div className="text-xs font-medium" style={{color: '#0E7490', opacity: 0.7}}>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {t('user.dashboard.myReviews')}
+                </h3>
+                <p className="text-sm mb-3 text-slate-300">{t('user.dashboard.myReviewsDesc')}</p>
+                <div className="text-xs font-medium text-cyan-300">
                   {t('user.dashboard.shareExperience')} →
                 </div>
               </div>
@@ -267,15 +256,17 @@ export default function UserDashboard() {
         {/* Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Recent Candidates */}
-          <div className="nh-card">
+          <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-[0_16px_40px_rgba(15,23,42,0.35)]">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>{t('user.dashboard.recentCareTakers')}</h2>
-                <p className="text-xs text-gray-500">{t('user.dashboard.recentCareTakersDesc')}</p>
+                <h2 className="text-lg font-semibold text-white mb-1">
+                  {t('user.dashboard.recentCareTakers')}
+                </h2>
+                <p className="text-xs text-slate-400">{t('user.dashboard.recentCareTakersDesc')}</p>
               </div>
               <Link
                 href="/candidates"
-                className="inline-flex items-center text-xs font-medium text-cyan-700 hover:text-cyan-800"
+                className="inline-flex items-center text-xs font-medium text-cyan-300 hover:text-cyan-200"
               >
                 {t('user.dashboard.viewAll')}
                 <Search className="w-4 h-4 ml-1" />
@@ -283,23 +274,23 @@ export default function UserDashboard() {
             </div>
 
             {recentNurses.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-yellow-300 bg-yellow-50/60 p-6 text-center">
-                <p className="text-sm font-medium text-yellow-800 mb-1">{t('user.dashboard.noCareTakersAvailable')}</p>
-                <p className="text-xs text-yellow-700">
-                  {t('user.dashboard.checkBackSoon')}
+              <div className="rounded-xl border border-white/10 bg-slate-950/40 p-6 text-center">
+                <p className="text-sm font-medium text-slate-200 mb-1">
+                  {t('user.dashboard.noCareTakersAvailable')}
                 </p>
+                <p className="text-xs text-slate-400">{t('user.dashboard.checkBackSoon')}</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {recentNurses.map((caretaker) => (
                   <div
                     key={caretaker.id}
-                    className="flex items-center justify-between rounded-xl border border-gray-100 bg-white/70 px-4 py-3 shadow-sm hover:shadow-md transition-shadow"
+                    className="flex items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 shadow-sm hover:border-cyan-400/30 transition"
                   >
                     <div className="flex items-center gap-3">
                       <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center border border-primary-100">
-                          <span className="text-sm font-semibold text-primary-600">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/60 to-blue-500/60 flex items-center justify-center border border-cyan-400/30 text-slate-900">
+                          <span className="text-sm font-semibold">
                             {caretaker.name
                               ? caretaker.name
                                   .split(' ')
@@ -311,18 +302,21 @@ export default function UserDashboard() {
                               : 'C'}
                           </span>
                         </div>
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white" />
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-400 border-2 border-slate-900" />
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-gray-900">{caretaker.name || t('user.dashboard.careTaker')}</p>
-                        <p className="text-xs text-gray-500">
-                          {caretaker.totalExperience} {t('user.dashboard.yrsExperience')} · KD {caretaker.partTimeSalary}/hr
+                        <p className="text-sm font-semibold text-white">
+                          {caretaker.name || t('user.dashboard.careTaker')}
+                        </p>
+                        <p className="text-xs text-slate-400">
+                          {caretaker.totalExperience} {t('user.dashboard.yrsExperience')} · KD{' '}
+                          {caretaker.partTimeSalary}/hr
                         </p>
                       </div>
                     </div>
                     <Link
                       href={`/candidates/${caretaker.id}`}
-                      className="inline-flex items-center text-xs font-medium text-primary-600 hover:text-primary-700"
+                      className="inline-flex items-center text-xs font-medium text-cyan-300 hover:text-cyan-200"
                     >
                       {t('user.dashboard.viewProfile')}
                       <span className="ml-1 text-lg leading-none">→</span>
@@ -334,29 +328,33 @@ export default function UserDashboard() {
           </div>
 
           {/* Favorites */}
-          <div className="nh-card">
+          <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-[0_16px_40px_rgba(15,23,42,0.35)]">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>{t('user.dashboard.favoriteCareTakers')}</h2>
-                <p className="text-xs text-gray-500">
+                <h2 className="text-lg font-semibold text-white mb-1">
+                  {t('user.dashboard.favoriteCareTakers')}
+                </h2>
+                <p className="text-xs text-slate-400">
                   {t('user.dashboard.favoriteCareTakersDesc')}
                 </p>
               </div>
-              <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-500 bg-red-50 px-3 py-1 rounded-full border border-red-100">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-rose-300 bg-rose-500/15 px-3 py-1 rounded-full border border-rose-500/30">
                 <Heart className="w-3 h-3" />
                 {t('user.dashboard.favorites')}
               </span>
             </div>
 
-            <div className="rounded-xl border border-dashed border-red-300 bg-red-50/60 p-6 text-center">
-              <Heart className="w-8 h-8 text-red-400 mx-auto mb-3" />
-              <p className="text-sm font-semibold text-red-700 mb-1">{t('user.dashboard.noFavoritesYet')}</p>
-              <p className="text-xs text-red-600 mb-4">
+            <div className="rounded-xl border border-white/10 bg-slate-950/40 p-6 text-center">
+              <Heart className="w-8 h-8 text-rose-300 mx-auto mb-3" />
+              <p className="text-sm font-semibold text-slate-200 mb-1">
+                {t('user.dashboard.noFavoritesYet')}
+              </p>
+              <p className="text-xs text-slate-400 mb-4">
                 {t('user.dashboard.favoritesInstruction')}
               </p>
               <Link
                 href="/candidates"
-                className="inline-flex items-center gap-2 rounded-full bg-red-500 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-red-600 transition-colors"
+                className="inline-flex items-center gap-2 rounded-full bg-rose-500/80 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-rose-500 transition-colors"
               >
                 {t('user.dashboard.browseCareTakers')}
                 <Heart className="w-4 h-4" />
@@ -366,38 +364,38 @@ export default function UserDashboard() {
         </div>
 
         {/* Profile Section */}
-        <div className="mt-8 nh-card">
+        <div className="mt-8 rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-[0_16px_40px_rgba(15,23,42,0.35)]">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
             <div>
-              <h2 className="nh-h2" style={{ fontSize: '18px', marginBottom: '4px' }}>{t('user.dashboard.profileInformation')}</h2>
-              <p className="text-xs text-gray-500">
-                {t('user.dashboard.profileInformationDesc')}
-              </p>
+              <h2 className="text-lg font-semibold text-white mb-1">
+                {t('user.dashboard.profileInformation')}
+              </h2>
+              <p className="text-xs text-slate-400">{t('user.dashboard.profileInformationDesc')}</p>
             </div>
             <Link
               href="/user/profile"
-              className="inline-flex items-center gap-2 rounded-full bg-primary-600 px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-primary-700 transition-colors"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 px-5 py-2 text-xs font-semibold text-white shadow-sm"
             >
               <span>{t('user.dashboard.editProfile')}</span>
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
-              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">{t('common.fullName')}</p>
-              <p className="text-sm font-semibold text-gray-900">{user?.profile?.name || t('user.dashboard.notSet')}</p>
+            <div className="rounded-xl border border-white/10 bg-slate-950/40 p-4">
+              <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">{t('common.fullName')}</p>
+              <p className="text-sm font-semibold text-white">{user?.profile?.name || t('user.dashboard.notSet')}</p>
             </div>
-            <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
-              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">{t('common.email')}</p>
-              <p className="text-sm font-semibold text-gray-900 break-words">{user?.email || t('user.dashboard.notSet')}</p>
+            <div className="rounded-xl border border-white/10 bg-slate-950/40 p-4">
+              <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">{t('common.email')}</p>
+              <p className="text-sm font-semibold text-white break-words">{user?.email || t('user.dashboard.notSet')}</p>
             </div>
-            <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
-              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">{t('common.phone')}</p>
-              <p className="text-sm font-semibold text-gray-900">{user?.profile?.phone || t('user.dashboard.notSet')}</p>
+            <div className="rounded-xl border border-white/10 bg-slate-950/40 p-4">
+              <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">{t('common.phone')}</p>
+              <p className="text-sm font-semibold text-white">{user?.profile?.phone || t('user.dashboard.notSet')}</p>
             </div>
-            <div className="rounded-xl border border-gray-100 bg-white/60 p-4 shadow-sm">
-              <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">{t('common.location')}</p>
-              <p className="text-sm font-semibold text-gray-900">{user?.profile?.location || t('user.dashboard.notSet')}</p>
+            <div className="rounded-xl border border-white/10 bg-slate-950/40 p-4">
+              <p className="text-xs uppercase tracking-wide text-slate-500 mb-1">{t('common.location')}</p>
+              <p className="text-sm font-semibold text-white">{user?.profile?.location || t('user.dashboard.notSet')}</p>
             </div>
           </div>
         </div>
