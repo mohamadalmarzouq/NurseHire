@@ -108,7 +108,7 @@ export default function UserAiInterviewsPage() {
   const renderStatus = (status: string) => {
     if (status === 'COMPLETED') {
       return (
-        <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+        <span className="inline-flex items-center rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-300">
           <CheckCircle className="mr-1 h-3 w-3" />
           Completed
         </span>
@@ -116,14 +116,14 @@ export default function UserAiInterviewsPage() {
     }
     if (status === 'RUNNING') {
       return (
-        <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+        <span className="inline-flex items-center rounded-full bg-cyan-500/15 px-2 py-0.5 text-xs font-medium text-cyan-300">
           <Clock className="mr-1 h-3 w-3" />
           In Progress
         </span>
       )
     }
     return (
-      <span className="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
+      <span className="inline-flex items-center rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-300">
         <Clock className="mr-1 h-3 w-3" />
         Scheduled
       </span>
@@ -173,46 +173,55 @@ export default function UserAiInterviewsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-950 text-slate-100">
       <DashboardHeader />
 
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
+        <div className="mb-8 rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-6 shadow-[0_20px_50px_rgba(15,23,42,0.35)]">
           <Link
             href="/user/dashboard"
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4"
+            className="inline-flex items-center text-sm text-cyan-300 hover:text-cyan-200 mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
-          <h1 className="nh-h1">{t('user.dashboard.aiInterviews')}</h1>
-          <p className="nh-sub">{t('user.dashboard.aiInterviewsDesc')}</p>
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-300">
+              <Bot className="h-6 w-6" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-semibold tracking-tight">
+                {t('user.dashboard.aiInterviews')}
+              </h1>
+              <p className="text-sm text-slate-300">{t('user.dashboard.aiInterviewsDesc')}</p>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-1">
-            <div className="nh-card">
+            <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-5 shadow-[0_16px_40px_rgba(15,23,42,0.35)]">
               <div className="flex items-center gap-2 mb-4">
-                <Bot className="w-5 h-5 text-primary-600" />
-                <h2 className="text-lg font-semibold text-gray-900">Create AI Interview</h2>
+                <Bot className="w-5 h-5 text-cyan-300" />
+                <h2 className="text-lg font-semibold text-white">Create AI Interview</h2>
               </div>
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
                     Candidate
                   </label>
                   <div className="space-y-3">
                     <input
-                      className="nh-input"
+                      className="w-full rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/30"
                       placeholder="Search candidates..."
                       value={candidateSearch}
                       onChange={(event) => setCandidateSearch(event.target.value)}
                     />
-                    <div className="flex items-center justify-between text-xs text-gray-500">
+                    <div className="flex items-center justify-between text-xs text-slate-400">
                       <label className="inline-flex items-center gap-2">
                         <input
                           type="checkbox"
-                          className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                          className="h-4 w-4 rounded border-white/20 bg-slate-900 text-cyan-400 focus:ring-cyan-400/40"
                           checked={allVisibleSelected}
                           onChange={toggleAllVisibleCandidates}
                         />
@@ -220,9 +229,9 @@ export default function UserAiInterviewsPage() {
                       </label>
                       <span>{selectedCandidateIds.length} selected</span>
                     </div>
-                    <div className="max-h-64 overflow-y-auto space-y-2 rounded-md border border-gray-200 p-2">
+                    <div className="max-h-72 overflow-y-auto space-y-2 rounded-xl border border-white/10 bg-slate-950/40 p-2">
                       {filteredCandidates.length === 0 ? (
-                        <div className="text-sm text-gray-500 px-2 py-3">
+                        <div className="text-sm text-slate-500 px-2 py-3">
                           No candidates found.
                         </div>
                       ) : (
@@ -233,10 +242,10 @@ export default function UserAiInterviewsPage() {
                               key={candidate.id}
                               type="button"
                               onClick={() => toggleCandidate(candidate.id)}
-                              className={`w-full rounded-md border px-3 py-2 text-left transition ${
+                              className={`w-full rounded-xl border px-3 py-2 text-left transition ${
                                 isSelected
-                                  ? 'border-primary-500 bg-primary-50'
-                                  : 'border-gray-200 hover:border-primary-300 hover:bg-gray-50'
+                                  ? 'border-cyan-400/60 bg-cyan-500/10'
+                                  : 'border-white/10 bg-slate-900/60 hover:border-cyan-400/40 hover:bg-slate-900'
                               }`}
                             >
                               <div className="flex items-start gap-3">
@@ -244,20 +253,25 @@ export default function UserAiInterviewsPage() {
                                   type="checkbox"
                                   checked={isSelected}
                                   onChange={() => toggleCandidate(candidate.id)}
-                                  className="mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                  className="mt-1 h-4 w-4 rounded border-white/20 bg-slate-900 text-cyan-400 focus:ring-cyan-400/40"
                                 />
                                 <div className="flex-1">
                                   <div className="flex items-center justify-between gap-2">
-                                    <span className="text-sm font-semibold text-gray-900">
-                                      {candidate.name}
-                                    </span>
+                                    <div className="flex items-center gap-2">
+                                      <div className="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-400/60 to-blue-500/60 text-slate-900 flex items-center justify-center text-xs font-semibold">
+                                        {candidate.name.slice(0, 2).toUpperCase()}
+                                      </div>
+                                      <span className="text-sm font-semibold text-slate-100">
+                                        {candidate.name}
+                                      </span>
+                                    </div>
                                     {candidate.averageRating !== null && (
-                                      <span className="text-xs text-gray-500">
+                                      <span className="text-xs text-slate-400">
                                         {candidate.averageRating.toFixed(1)}★ ({candidate.reviewCount ?? 0})
                                       </span>
                                     )}
                                   </div>
-                                  <p className="text-xs text-gray-500">
+                                  <p className="text-xs text-slate-400">
                                     {candidate.totalExperience} yrs experience
                                   </p>
                                 </div>
@@ -270,9 +284,11 @@ export default function UserAiInterviewsPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
+                    Job Title
+                  </label>
                   <input
-                    className="nh-input"
+                    className="w-full rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/30"
                     value={formData.title}
                     onChange={(event) =>
                       setFormData((prev) => ({ ...prev, title: event.target.value }))
@@ -281,11 +297,11 @@ export default function UserAiInterviewsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
                     Job Description
                   </label>
                   <textarea
-                    className="nh-input min-h-[110px]"
+                    className="w-full rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 min-h-[110px]"
                     value={formData.description}
                     onChange={(event) =>
                       setFormData((prev) => ({ ...prev, description: event.target.value }))
@@ -294,11 +310,11 @@ export default function UserAiInterviewsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
                     Requirements (optional)
                   </label>
                   <textarea
-                    className="nh-input min-h-[80px]"
+                    className="w-full rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 min-h-[80px]"
                     value={formData.requirements}
                     onChange={(event) =>
                       setFormData((prev) => ({ ...prev, requirements: event.target.value }))
@@ -308,7 +324,7 @@ export default function UserAiInterviewsPage() {
                 <button
                   type="submit"
                   disabled={saving || selectedCandidateIds.length === 0}
-                  className="btn-primary w-full"
+                  className="w-full rounded-xl bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition hover:from-cyan-400 hover:via-blue-400 hover:to-indigo-400 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {saving ? 'Creating...' : 'Create Interview'}
                 </button>
@@ -317,10 +333,10 @@ export default function UserAiInterviewsPage() {
           </div>
 
           <div className="lg:col-span-2">
-            <div className="nh-card">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">AI Interviews</h2>
+            <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-5 shadow-[0_16px_40px_rgba(15,23,42,0.35)]">
+              <h2 className="text-lg font-semibold text-white mb-4">AI Interviews</h2>
               {interviews.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-slate-400">
                   No AI interviews created yet.
                 </div>
               ) : (
@@ -332,16 +348,16 @@ export default function UserAiInterviewsPage() {
                     return (
                       <div
                         key={interview.id}
-                        className="rounded-lg border border-gray-200 p-4 flex flex-col gap-3"
+                        className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-4 flex flex-col gap-3 shadow-[0_12px_30px_rgba(15,23,42,0.3)]"
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                           <div>
-                            <h3 className="text-base font-semibold text-gray-900">{interview.title}</h3>
-                            <p className="text-sm text-gray-500">{candidateName}</p>
+                            <h3 className="text-base font-semibold text-white">{interview.title}</h3>
+                            <p className="text-sm text-slate-400">{candidateName}</p>
                           </div>
                           {renderStatus(interview.status)}
                         </div>
-                        <p className="text-sm text-gray-600 line-clamp-2">
+                        <p className="text-sm text-slate-300 line-clamp-2">
                           {interview.description}
                         </p>
                         <div className="flex items-center gap-3">
@@ -350,13 +366,13 @@ export default function UserAiInterviewsPage() {
                               href={session.recordingUrl}
                               target="_blank"
                               rel="noreferrer"
-                              className="inline-flex items-center text-sm text-primary-600 hover:text-primary-700"
+                              className="inline-flex items-center text-sm text-cyan-300 hover:text-cyan-200"
                             >
                               <Video className="w-4 h-4 mr-1" />
                               Replay Interview
                             </a>
                           ) : (
-                            <span className="text-xs text-gray-400">Recording not available yet</span>
+                            <span className="text-xs text-slate-500">Recording not available yet</span>
                           )}
                         </div>
                       </div>
