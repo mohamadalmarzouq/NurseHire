@@ -210,8 +210,12 @@ export default function UserAiInterviewsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-1">
             <div
-              className="rounded-2xl border border-cyan-100 bg-white p-5"
-              style={{ boxShadow: '0 12px 24px rgba(6, 182, 212, 0.12)' }}
+              className="rounded-2xl border p-5"
+              style={{
+                background: 'linear-gradient(135deg, #ECFEFF 0%, #F0FDFF 100%)',
+                borderColor: '#A5F3FC',
+                boxShadow: '0 12px 24px rgba(6, 182, 212, 0.12)',
+              }}
             >
               <div className="flex items-center gap-2 mb-4">
                 <Bot className="w-5 h-5 text-cyan-700" />
@@ -241,7 +245,10 @@ export default function UserAiInterviewsPage() {
                       </label>
                       <span>{selectedCandidateIds.length} selected</span>
                     </div>
-                    <div className="max-h-72 overflow-y-auto space-y-2 rounded-xl border border-cyan-100 bg-cyan-50/40 p-2">
+                    <div
+                      className="max-h-72 overflow-y-auto space-y-2 rounded-xl border p-2"
+                      style={{ borderColor: '#A5F3FC', background: 'rgba(236, 254, 255, 0.7)' }}
+                    >
                       {filteredCandidates.length === 0 ? (
                         <div className="text-sm text-slate-500 px-2 py-3">
                           No candidates found.
@@ -256,8 +263,8 @@ export default function UserAiInterviewsPage() {
                               onClick={() => toggleCandidate(candidate.id)}
                               className={`w-full rounded-xl border px-3 py-2 text-left transition ${
                                 isSelected
-                                  ? 'border-cyan-300 bg-cyan-50'
-                                  : 'border-cyan-100 bg-white hover:border-cyan-300 hover:bg-cyan-50/60'
+                                  ? 'border-cyan-300 bg-white'
+                                  : 'border-cyan-100 bg-white hover:border-cyan-300'
                               }`}
                             >
                               <div className="flex items-start gap-3">
@@ -352,8 +359,12 @@ export default function UserAiInterviewsPage() {
 
           <div className="lg:col-span-2">
             <div
-              className="rounded-2xl border border-cyan-100 bg-white p-5"
-              style={{ boxShadow: '0 12px 24px rgba(6, 182, 212, 0.12)' }}
+              className="rounded-2xl border p-5"
+              style={{
+                background: 'linear-gradient(135deg, #ECFEFF 0%, #F0FDFF 100%)',
+                borderColor: '#A5F3FC',
+                boxShadow: '0 12px 24px rgba(6, 182, 212, 0.12)',
+              }}
             >
               <h2 className="text-lg font-semibold text-slate-900 mb-4">AI Interviews</h2>
               {interviews.length === 0 ? (
@@ -369,8 +380,12 @@ export default function UserAiInterviewsPage() {
                     return (
                       <div
                         key={interview.id}
-                        className="rounded-2xl border border-cyan-100 bg-white p-4 flex flex-col gap-3"
-                        style={{ boxShadow: '0 10px 18px rgba(15, 23, 42, 0.08)' }}
+                        className="rounded-2xl border p-4 flex flex-col gap-3"
+                        style={{
+                          background: 'linear-gradient(135deg, #ECFEFF 0%, #F0FDFF 100%)',
+                          borderColor: '#A5F3FC',
+                          boxShadow: '0 10px 18px rgba(15, 23, 42, 0.08)',
+                        }}
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                           <div>
