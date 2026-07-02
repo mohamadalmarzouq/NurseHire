@@ -2,14 +2,19 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Bot, CheckCircle, Clock, Video } from 'lucide-react'
+import { ArrowLeft, Bot, CheckCircle, Clock, Star, User, Video } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 import { useLanguage } from '@/lib/language'
 
 interface CandidateOption {
   id: string
   name: string
+  age: number
   totalExperience: number
+  kuwaitExperience: number
+  partTimeSalary: number
+  fullTimeSalary: number
+  languages: string[]
   profileImageUrl?: string | null
   averageRating: number | null
   reviewCount: number | null
@@ -38,7 +43,12 @@ export default function UserAiInterviewsPage() {
           (data.candidates || []).map((candidate: any) => ({
             id: candidate.id,
             name: candidate.name || 'Candidate',
+            age: candidate.age || 0,
             totalExperience: candidate.totalExperience || 0,
+            kuwaitExperience: candidate.kuwaitExperience || 0,
+            partTimeSalary: candidate.partTimeSalary || 0,
+            fullTimeSalary: candidate.fullTimeSalary || 0,
+            languages: candidate.languages || [],
             profileImageUrl: candidate.profileImageUrl || null,
             averageRating: candidate.averageRating ?? null,
             reviewCount: candidate.reviewCount ?? null,
@@ -128,6 +138,17 @@ export default function UserAiInterviewsPage() {
         Scheduled
       </span>
     )
+  }
+
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star
+        key={i}
+        className={`w-4 h-4 ${
+          i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-neutral-300'
+        }`}
+      />
+    ))
   }
 
   const filteredCandidates = candidates.filter((candidate) =>
@@ -246,7 +267,7 @@ export default function UserAiInterviewsPage() {
                       <span>{selectedCandidateIds.length} selected</span>
                     </div>
                     <div
-                      className="max-h-72 overflow-y-auto space-y-2 rounded-xl border p-2"
+                      className="max-h-96 overflow-y-auto space-y-4 rounded-xl border p-3"
                       style={{ borderColor: '#A5F3FC', background: 'rgba(236, 254, 255, 0.7)' }}
                     >
                       {filteredCandidates.length === 0 ? (
@@ -261,43 +282,101 @@ export default function UserAiInterviewsPage() {
                               key={candidate.id}
                               type="button"
                               onClick={() => toggleCandidate(candidate.id)}
-                              className={`w-full rounded-xl border px-3 py-2 text-left transition ${
-                                isSelected
-                                  ? 'border-cyan-300 bg-white'
-                                  : 'border-cyan-100 bg-white hover:border-cyan-300'
+                              className={`nh-card nh-card--lift p-4 space-y-4 w-full text-left transition ${
+                                isSelected ? 'ring-2 ring-primary-200' : ''
                               }`}
                             >
-                              <div className="flex items-start gap-3">
-                                <input
-                                  type="checkbox"
-                                  checked={isSelected}
-                                  onChange={() => toggleCandidate(candidate.id)}
-                                  className="mt-1 h-4 w-4 rounded border-cyan-200 text-cyan-600 focus:ring-cyan-200"
-                                />
-                                <div className="flex-1">
-                                  <div className="flex items-center justify-between gap-2">
-                                    <div className="flex items-center gap-2">
-                                      <div
-                                        className="h-8 w-8 rounded-full text-white flex items-center justify-center text-xs font-semibold"
-                                        style={{
-                                          background:
-                                            'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                                        }}
-                                      >
-                                        {candidate.name.slice(0, 2).toUpperCase()}
-                                      </div>
-                                      <span className="text-sm font-semibold text-slate-900">
+                              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                                <div className="flex items-start gap-4">
+                                  <div className="relative">
+                                    <div className="w-16 h-16 rounded-full border border-primary-100 bg-primary-50 overflow-hidden flex items-center justify-center">
+                                      {candidate.profileImageUrl ? (
+                                        <img
+                                          src={candidate.profileImageUrl}
+                                          alt={candidate.name}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      ) : (
+                                        <User className="w-8 h-8 text-primary-500" />
+                                      )}
+                                    </div>
+                                    <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white bg-green-500" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                                      <h3 className="text-lg font-semibold text-neutral-900 leading-tight line-clamp-1">
                                         {candidate.name}
+                                      </h3>
+                                      <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100 sm:mt-0 mt-1 w-max">
+                                        <CheckCircle className="w-3 h-3" />
+                                        Verified
                                       </span>
                                     </div>
-                                    {candidate.averageRating !== null && (
-                                      <span className="text-xs text-slate-500">
-                                        {candidate.averageRating.toFixed(1)}★ ({candidate.reviewCount ?? 0})
-                                      </span>
-                                    )}
+                                    <p className="text-xs text-neutral-600">
+                                      {candidate.age} years old • {candidate.totalExperience} years
+                                      experience
+                                    </p>
+                                    <p className="text-xs text-neutral-500 line-clamp-2">
+                                      Languages:{' '}
+                                      {candidate.languages?.length
+                                        ? candidate.languages.join(', ')
+                                        : 'Not specified'}
+                                    </p>
                                   </div>
-                                  <p className="text-xs text-slate-500">
-                                    {candidate.totalExperience} yrs experience
+                                </div>
+                                <div className="flex items-center justify-between gap-3">
+                                  <div className="flex items-center gap-2 text-xs text-neutral-600">
+                                    <span className="flex items-center gap-1 text-primary-500">
+                                      {renderStars(candidate.averageRating ?? 0)}
+                                    </span>
+                                    <span className="font-medium text-neutral-800">
+                                      {(candidate.averageRating ?? 0).toFixed(1)}/5
+                                    </span>
+                                    <span>
+                                      • {candidate.reviewCount ?? 0} review
+                                      {candidate.reviewCount === 1 ? '' : 's'}
+                                    </span>
+                                  </div>
+                                  <input
+                                    type="checkbox"
+                                    checked={isSelected}
+                                    onChange={(event) => {
+                                      event.stopPropagation()
+                                      toggleCandidate(candidate.id)
+                                    }}
+                                    onClick={(event) => event.stopPropagation()}
+                                    className="h-4 w-4 rounded border-cyan-200 text-cyan-600 focus:ring-cyan-200"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-neutral-600">
+                                <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                                  <p className="uppercase tracking-wide text-neutral-400 mb-1">Part-time</p>
+                                  <p className="text-base font-semibold text-primary-600">
+                                    {candidate.partTimeSalary} KD/hr
+                                  </p>
+                                </div>
+                                <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                                  <p className="uppercase tracking-wide text-neutral-400 mb-1">Full-time</p>
+                                  <p className="text-base font-semibold text-primary-600">
+                                    {candidate.fullTimeSalary} KD/hr
+                                  </p>
+                                </div>
+                                <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                                  <p className="uppercase tracking-wide text-neutral-400 mb-1">
+                                    Kuwait Exp.
+                                  </p>
+                                  <p className="text-base font-semibold text-neutral-800">
+                                    {candidate.kuwaitExperience} yrs
+                                  </p>
+                                </div>
+                                <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                                  <p className="uppercase tracking-wide text-neutral-400 mb-1">
+                                    Total Exp.
+                                  </p>
+                                  <p className="text-base font-semibold text-neutral-800">
+                                    {candidate.totalExperience} yrs
                                   </p>
                                 </div>
                               </div>
