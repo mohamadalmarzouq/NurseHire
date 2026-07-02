@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Bot, CheckCircle, Clock, Star, User, Video } from 'lucide-react'
+import { ArrowLeft, Bot, CheckCircle, Clock, Star, User, Video, X } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 import { useLanguage } from '@/lib/language'
 
@@ -28,6 +28,10 @@ export default function UserAiInterviewsPage() {
   const [candidateSearch, setCandidateSearch] = useState('')
   const [selectedCandidateIds, setSelectedCandidateIds] = useState<string[]>([])
   const [interviews, setInterviews] = useState<any[]>([])
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewLoading, setPreviewLoading] = useState(false)
+  const [previewCandidate, setPreviewCandidate] = useState<any | null>(null)
+  const [previewReviews, setPreviewReviews] = useState<any[]>([])
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -175,6 +179,35 @@ export default function UserAiInterviewsPage() {
       filteredCandidates.forEach((candidate) => next.add(candidate.id))
       return Array.from(next)
     })
+  }
+
+  const openCandidatePreview = async (candidateId: string) => {
+    setPreviewOpen(true)
+    setPreviewLoading(true)
+    try {
+      const res = await fetch(`/api/candidates/${candidateId}`, { cache: 'no-store' })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        alert(data?.error || 'Unable to load candidate profile')
+        setPreviewOpen(false)
+        return
+      }
+      const data = await res.json()
+      setPreviewCandidate(data?.candidate || null)
+      setPreviewReviews(data?.reviews || [])
+    } catch (error) {
+      console.error('Error loading candidate profile:', error)
+      alert('Unable to load candidate profile')
+      setPreviewOpen(false)
+    } finally {
+      setPreviewLoading(false)
+    }
+  }
+
+  const closePreview = () => {
+    setPreviewOpen(false)
+    setPreviewCandidate(null)
+    setPreviewReviews([])
   }
 
   if (loading) {
@@ -380,6 +413,19 @@ export default function UserAiInterviewsPage() {
                                   </p>
                                 </div>
                               </div>
+
+                              <div className="flex justify-end">
+                                <button
+                                  type="button"
+                                  onClick={(event) => {
+                                    event.stopPropagation()
+                                    openCandidatePreview(candidate.id)
+                                  }}
+                                  className="nh-btn nh-btn--primary text-center w-full sm:w-auto"
+                                >
+                                  View Profile
+                                </button>
+                              </div>
                             </button>
                           )
                         })
@@ -499,6 +545,143 @@ export default function UserAiInterviewsPage() {
             </div>
           </div>
         </div>
+
+        {previewOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+            <div className="w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl max-h-[85vh] overflow-y-auto">
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div>
+                  <h3 className="text-xl font-semibold text-neutral-900">Candidate Profile</h3>
+                  {previewCandidate?.name && (
+                    <p className="text-sm text-neutral-600">{previewCandidate.name}</p>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={closePreview}
+                  className="rounded-full border border-neutral-200 p-2 text-neutral-600 hover:bg-neutral-100"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {previewLoading ? (
+                <div className="flex items-center justify-center py-10">
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
+                </div>
+              ) : previewCandidate ? (
+                <div className="space-y-6">
+                  <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <div className="flex items-start gap-4">
+                      <div className="relative">
+                        <div className="w-16 h-16 rounded-full border border-primary-100 bg-primary-50 overflow-hidden flex items-center justify-center">
+                          {previewCandidate.profileImageUrl ? (
+                            <img
+                              src={previewCandidate.profileImageUrl}
+                              alt={previewCandidate.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <User className="w-8 h-8 text-primary-500" />
+                          )}
+                        </div>
+                        <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white bg-green-500" />
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                          <h4 className="text-lg font-semibold text-neutral-900 leading-tight">
+                            {previewCandidate.name}
+                          </h4>
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100 sm:mt-0 mt-1 w-max">
+                            <CheckCircle className="w-3 h-3" />
+                            Verified
+                          </span>
+                        </div>
+                        <p className="text-xs text-neutral-600">
+                          {previewCandidate.age} years old • {previewCandidate.totalExperience} years
+                          experience
+                        </p>
+                        <p className="text-xs text-neutral-500">
+                          Languages:{' '}
+                          {previewCandidate.languages?.length
+                            ? previewCandidate.languages.join(', ')
+                            : 'Not specified'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-neutral-600">
+                      <span className="flex items-center gap-1 text-primary-500">
+                        {renderStars(previewCandidate.averageRating ?? 0)}
+                      </span>
+                      <span className="font-medium text-neutral-800">
+                        {(previewCandidate.averageRating ?? 0).toFixed(1)}/5
+                      </span>
+                      <span>
+                        • {previewCandidate.reviewCount ?? 0} review
+                        {previewCandidate.reviewCount === 1 ? '' : 's'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-neutral-600">
+                    <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                      <p className="uppercase tracking-wide text-neutral-400 mb-1">Part-time</p>
+                      <p className="text-base font-semibold text-primary-600">
+                        {previewCandidate.partTimeSalary} KD/hr
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                      <p className="uppercase tracking-wide text-neutral-400 mb-1">Full-time</p>
+                      <p className="text-base font-semibold text-primary-600">
+                        {previewCandidate.fullTimeSalary} KD/hr
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                      <p className="uppercase tracking-wide text-neutral-400 mb-1">Kuwait Exp.</p>
+                      <p className="text-base font-semibold text-neutral-800">
+                        {previewCandidate.kuwaitExperience} yrs
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-center">
+                      <p className="uppercase tracking-wide text-neutral-400 mb-1">Total Exp.</p>
+                      <p className="text-base font-semibold text-neutral-800">
+                        {previewCandidate.totalExperience} yrs
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-semibold text-neutral-800 mb-2">About</h4>
+                    <p className="text-sm text-neutral-600">
+                      {previewCandidate.aboutMe || 'No description provided'}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                      <p className="text-xs uppercase tracking-wide text-neutral-400 mb-1">Skills</p>
+                      <p className="text-sm text-neutral-700">
+                        {previewCandidate.skills?.length
+                          ? previewCandidate.skills.join(', ')
+                          : 'Not specified'}
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                      <p className="text-xs uppercase tracking-wide text-neutral-400 mb-1">Availability</p>
+                      <p className="text-sm text-neutral-700">
+                        {previewCandidate.availability?.length
+                          ? previewCandidate.availability.join(', ')
+                          : 'Not specified'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-neutral-600">Unable to load candidate profile.</p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
